@@ -17,18 +17,19 @@ Finally, if at any point you need assistance or would like to consult with our t
 
 1. The first thing you'll need to do is [Set up AWS Invoicing at UC Berkeley](https://docs.google.com/document/d/1cDSv0EzEkl09FVYivsTtvel1vyenoFJCDQTiECbGqT4/edit?usp=sharing).
   - **Note**: For researchers at other institutions, this involves simply setting up an AWS account with billing -- if your instituion has a particular method of AWS invoicing, it is recommended that you get that set up.
-  - **Note**: at this point, ensure that the root AWS account is attached to a Special Purpose Account (SPA), or project-specific email that will serve a key role in partitioning least-privileges access to project members
+  - **Note**: At this point, ensure that the root AWS account is attached to a Special Purpose Account (SPA), or project-specific email. This is to ensure that project members are given least-privileges access and to create a central point of administration.
 
 
 2. Next, using the services tab from your root account's AWS console, go to the Identity and Access Management (IAM) console. You will need to complete a set of 5 security tasks that are good practices for securing your root account, visible on the bottom of the dashboard. The 5 tasks are:
   - **Delete your root access keys** -- this is to ensure no program or person can use the root account key credentials to authenticate and thus makes [controlling access to the account much easier](https://docs.aws.amazon.com/general/latest/gr/root-vs-iam.html). Follow the steps on the dashboard.
   - **Activate Multi-Factor Authentication (MFA) on your root account** -- this is to ensure that only the systems/security administrator has access to the root account. Follow the steps on the dashboard.
-  - **Create individual IAM users** -- for now we only need to create a single IAM user to get Terraform set up. Once Terraform builds the setup, each researcher will be assigned their own individual IAM user automatically. Follow the [AWS documentation on Creating an Administrator IAM User and Group (Console)](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html).
+  - **Create individual IAM users** -- for now we only need to create a single IAM user to get Terraform set up. Once Terraform builds the setup, each researcher will be assigned their own individual IAM user automatically. Follow the [AWS documentation on Creating an Administrator IAM User and Group (Console)](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html). Once the user has been  created, be sure to use the `Download .csv` button to download this IAM user's credentials
     - **Note**: you should name this user "Terraform" rather than "Administrator" for additional clarity. The group it is added should still be named "Administrators"
     - **Note**: at Step 4, rather than enable "Console access" and specify a password, you should check the box to enable "Programmatic access"
+    - **Note**: if you don't download the IAM user's credentials immediately after creating them, they won't be available for download later. Instead, you would need to [Create a new Access Key](https://aws.amazon.com/blogs/security/wheres-my-secret-access-key/).
   - **Use Groups to assign permissions** -- ignore this for now -- we've created our Administrator group and Terraform will help us create a group for researcher IAM accounts and a second optional group for log analysis IAM accounts
   - **Apply an IAM Password Policy** -- ignore this for now -- Terraform will set this up to ensure that the passwords required to access the console by the researchers and admin are appropriately secure against standard brute-force and dictionary attacks
 
-3. If you haven't already done so, clone this GitHub repository and in the `Provider_Config.tf` file, replace both the `ACCESS_KEY_HERE` and `SECRET_KEY_HERE` strings with the Terraform IAM user's corresponding access and secret keys as quoted strings.
+3. If you haven't already done so, clone this GitHub repository and in the `Provider_Config.tf` file, replace both the `ACCESS_KEY_HERE` and `SECRET_KEY_HERE` strings with the Terraform IAM user's corresponding access and secret keys as quoted strings. This will provide Terraform with administration access to the AWS Setup while the Terraform IAM user we created exists.
 
 4. Run some sort of Terraform verify and verify that things are working as they should be.

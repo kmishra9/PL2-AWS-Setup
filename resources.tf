@@ -1,7 +1,5 @@
 /* TODO:
 
-- Add pieces on retrieving the access key and secret key from the IAM user upon creation
-
 - Build IAM users (researchers + administrators)
 - Build IAM groups (researchers + log analysis + administrators)
 - IAM Password Policy
@@ -13,13 +11,15 @@
   - The file provisioner in particular would be a nice way to port scripts from the github repo to the instance
   - local-exec will be useful once scripts have been deposited in the appropriate -- you can interpolate resource variables (such as VPC ips, which should be useful for iptables setup)
 
-- What is security hub and how should I use it?
+- What is AWS security hub and how should I use it?
 - Do I still need an elastic IP if I'm connecting within the VPC?
 */
 
 # Configuring the environment
 
 # Configuring IAM users for researchers & administrators
+
+
 
 # Configuring the analysis instance
 data "aws_ami" "cis_ami"  {
