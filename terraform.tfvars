@@ -1,7 +1,7 @@
 # User-specified values for variables for environment configuration
 
-project_name =
+project_name = ">>>>>>>>>>YOUR_PROJECT_NAME_HERE<<<<<<<<<<"
 
-num_researchers =
+access_key = ">>>>>>>>>>YOUR_ACCESS_KEY_HERE<<<<<<<<<<"
 
-num_admins
+secret_key = ">>>>>>>>>>YOUR_SECRET_KEY_HERE<<<<<<<<<<"
