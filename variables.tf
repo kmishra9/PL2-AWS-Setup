@@ -1,4 +1,8 @@
-# Variable definitions for environment configuration
+# Variable declarations for environment configuration
+
+################################################################################
+# Admin defined variables
+################################################################################
 
 variable "project_name" {
   type = "string"
@@ -25,4 +29,22 @@ variable "num_admins" {
   type = "string"
   default = "1"
   description = "The number of administrators who will be participating in this project - creates the given number of Administrator IAM accounts"
+}
+
+################################################################################
+# Build-defined variables
+# Note: these have already been defined, there is no need to modify them unless
+# you are an advanced user and know what changing these does
+################################################################################
+
+variable "region" {
+  type = "string"
+  default = "us-west-2"
+  description = "The region within which the AWS Setup will reside"
+}
+
+variable "availability_zone" {
+  type = "string"
+  default = "a"
+  description = "The availability zone within the region within which the AWS Setup will reside"
 }

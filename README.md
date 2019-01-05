@@ -2,14 +2,14 @@
 
 Note: Projected completion date is January 2019. This document is still under construction.
 
-[PL2 AWS Setup - Documentation Template for Users](https://docs.google.com/document/d/1JzAM7vR4AbKNYL_YJ6qL6J2hG3W9ePVI67BPIZvl8RU/edit?usp=sharing)
 ## Overview
 
 This GitHub Repository hosts Terraform scripts that automatically set up a Protection Level 2 (PL2) High Performance Computing (HPC) environment in Amazon Web Services (AWS) for researchers working with secure big data. This environment is at use at UC Berkeley and is one of Berkeley Research Computing's IaaS solutions for researchers.
 
-Before beginning, it is recommended that you review the [PL2 AWS Setup - Generalized Cost Estimator for HPC](https://docs.google.com/document/d/1VL2TNQnx3wHRkHMnyBUlrT7jW5uFZfDGXvzLvSkOSPw/edit?usp=sharing) which projects expenses for a setup like this.
+Before beginning, it is recommended that you review the [PL2 AWS Setup - Generalized Cost Estimator for HPC](https://docs.google.com/document/d/1VL2TNQnx3wHRkHMnyBUlrT7jW5uFZfDGXvzLvSkOSPw/edit?usp=sharing) which projects expenses for a setup like this. You should also make a copy of this [PL2 AWS Setup - Documentation Template for Users](https://docs.google.com/document/d/1JzAM7vR4AbKNYL_YJ6qL6J2hG3W9ePVI67BPIZvl8RU/edit?usp=sharing), a document that is part of the recommended workflow for this project. As you proceed through the setup, this is a one-stop-shop for documentating pieces of the project that you have control over (such as usernames, passwords, and public keys, for example) that will be readily accessible and shareable among project members. This is useful from a systems administrator perspective and from a security audit perspective as well.  
 
 Finally, if at any point you need assistance or would like to consult with our team on your project, please feel free to email the [BRC Consulting team](mailto:research-it-consulting@berkeley.edu). This guide is intended for the systems or security administrator of a project to use to build the setup.
+
 
 ---
 
