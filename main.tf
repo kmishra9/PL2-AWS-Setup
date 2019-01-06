@@ -26,8 +26,42 @@ provider "aws" {
 ################################################################################
 # Configuring CloudTrail
 
+module "cloudtrail" {
+  source                        = "git::https://github.com/cloudposse/terraform-aws-cloudtrail.git?ref=master"
+
+  name                          = "${var.project_name}_cloudtrail"
+  namespace                     = "${var.organization_name}"
+  s3_bucket_name                = "${module.cloudtrail_s3_bucket.bucket_id}"
+  stage                         = "${local.stage}"
+
+  enable_log_file_validation    = "true"
+  enable_logging                = "true"
+  include_global_service_events = "true"
+  is_multi_region_trail         = "true"
+}
+
+module "cloudtrail_s3_bucket" {
+  source    = "git::https://github.com/cloudposse/terraform-aws-cloudtrail-s3-bucket.git?ref=master"
+
+  name      = "${var.project_name}_logs"
+  namespace = "${var.organization_name}"
+  stage     = "${local.stage}"
+
+  force_destroy = "false"
+  region    = "${local.region}"
+}
+
+# TODO: build s3_bucket_notification, count = "${log_export}"
+
 ################################################################################
-# Configuring IAM privileges
+# Configuring IAM users, roles, groups, and privileges
+
+module "IAM" {
+  source = "./IAM"
+  num_researchers = "${var.num_researchers}"
+  num_admins = "{var.num_admins}"
+  log_role = "{var.log_role}"
+}
 
 ################################################################################
 # Configuring network and firewall
@@ -36,24 +70,9 @@ provider "aws" {
 
 # Security Group Module: https://registry.terraform.io/modules/terraform-aws-modules/security-group/aws/2.10.0
 
-
 ################################################################################
 # Configuring the analysis instance
 
-data "aws_ami" "cis_ami"  {
-  most_recent = true
-  owners = []
-  name_regex = "CIS Ubuntu Linux 18.04 LTS Benchmark Level 1"
-}
-
-resource "aws_instance" "analysis_instance" {
-  count         = 1
-  ami           = "${data.aws_ami.cis_ami.id}"
-  instance_type = "t2.micro"
-  availability_zone = "${var.region}${var.availability_zone}"
-  vpc_security_group_ids = ""
-
-  tags = {
-    Name = "Analysis Instance"
-  }
+module "analysis_instance" {
+  source = "./analysis_instance"
 }
