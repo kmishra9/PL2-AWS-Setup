@@ -20,47 +20,30 @@
 provider "aws" {
   access_key = "${var.access_key}"
   secret_key = "${var.secret_key}"
-  region     = "${var.region}"
+  region     = "${local.region}"
 }
 
 ################################################################################
 # Configuring CloudTrail
 
 module "cloudtrail" {
-  source                        = "git::https://github.com/cloudposse/terraform-aws-cloudtrail.git?ref=master"
-
-  name                          = "${var.project_name}_cloudtrail"
-  namespace                     = "${var.organization_name}"
-  s3_bucket_name                = "${module.cloudtrail_s3_bucket.bucket_id}"
-  stage                         = "${local.stage}"
-
-  enable_log_file_validation    = "true"
-  enable_logging                = "true"
-  include_global_service_events = "true"
-  is_multi_region_trail         = "true"
+  source = "./cloudtrail"
+  project_name = "${var.project_name}"
+  organization_name = "${var.organization_name}"
+  log_export = "${var.log_export}"
+  region = "${local.region}"
+  stage = "${local.stage}"
 }
-
-module "cloudtrail_s3_bucket" {
-  source    = "git::https://github.com/cloudposse/terraform-aws-cloudtrail-s3-bucket.git?ref=master"
-
-  name      = "${var.project_name}_logs"
-  namespace = "${var.organization_name}"
-  stage     = "${local.stage}"
-
-  force_destroy = "false"
-  region    = "${local.region}"
-}
-
-# TODO: build s3_bucket_notification, count = "${log_export}"
 
 ################################################################################
 # Configuring IAM users, roles, groups, and privileges
 
 module "IAM" {
   source = "./IAM"
+  project_name = "${var.project_name}"
   num_researchers = "${var.num_researchers}"
-  num_admins = "{var.num_admins}"
-  log_role = "{var.log_role}"
+  num_admins = "${var.num_admins}"
+  log_export = "${var.log_export}"
 }
 
 ################################################################################

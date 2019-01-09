@@ -6,7 +6,7 @@
 
 variable "project_name" {
   type = "string"
-  description = "The name of the project utilizing this setup (i.e. KaiserFlu). Be sure there is no whitespace (replace spaces with underscores: _ )"
+  description = "The name of the project utilizing this setup (i.e. Kaiser_Flu). Be sure there is no whitespace (replace spaces with underscores: _ )"
 }
 
 variable "organization_name" {
