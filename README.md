@@ -31,8 +31,7 @@ Finally, if at any point you need assistance or would like to consult with our t
   - **Apply an IAM Password Policy** -- ignore this for now -- Terraform will set this up to ensure that the passwords required to access the console by the researchers and admin are appropriately secure against standard brute-force and dictionary attacks.
 
 3. If you haven't already done so, clone this GitHub repository. Then, in a text editor of your choice (such as [Atom](https://atom.io)), open `terraform.tfvars` and `variables.tf`. In `variables.tf`, you will find a set of variable definitions and descriptions for which you will be responsible for assigning values to within the empty `terraform.tfvars` file.
-  - **Example**: To assign a project name, you could type `project_name = "KaiserFlu"` in `terraform.tfvars`. Then, you would skip a line, and proceed to an assignment of the next variable documented in `variables.tf`.
+  - **Example**: To assign a project name, you could type `project_name = "Kaiser_Flu"` in `terraform.tfvars`. Then, you would skip a line, and proceed to an assignment of the next variable documented in `variables.tf`.
   - **Documentation**: Feel free to check out the `Variable Files` section of [Terraform's documentation on input variables](https://www.terraform.io/docs/configuration/variables.html#Variable_Files) for more help.
-  - **Note**: This step will provide Terraform with administration access to the AWS Setup while the Terraform IAM user we created exists.
 
 4. Install Terraform, then run some sort of Terraform verify and verify that things are working as they should be.
