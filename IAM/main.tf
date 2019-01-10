@@ -11,7 +11,7 @@ resource "aws_iam_account_password_policy" "strict" {
   allow_users_to_change_password = true
 }
 
-# Custom IAM Policies
+# Custom IAM Policy Documents
 data "aws_iam_policy_document" "AllowUsersToManageTheirOwnVirtualMFADevice" {
   statement {
     sid = "AllowUsersToCreateEnableResyncDeleteTheirOwnVirtualMFADevice"
@@ -76,21 +76,87 @@ data "aws_iam_policy_document" "EC2ResearcherAccess" {
   }
 }
 
-data "aws_iam_policy_document" "CloudWatchLogsRole" {
+data "aws_iam_policy_document" "CloudWatchLogsPublish" {
   statement {
+    sid = "AllowPublishToCloudWatch"
     effect = "Allow"
     actions = [
       "logs:CreateLogGroup",
       "logs:CreateLogStream",
       "logs:PutLogEvents",
+      "logs:DescribeLogGroups",
       "logs:DescribeLogStreams"
     ]
     resources = [
-      "arn:aws:logs:*:*:*"
+      "*"
     ]
   }
 }
 
+data "aws_iam_policy_document" "FlowLogsTrustCloudWatch" {
+  statement {
+    sid = "FlowLogsTrustCloudWatch"
+    effect = "Allow"
+    actions = [
+      "sts:AssumeRole"
+    ]
+    principals {
+      type = "Service"
+      identifiers = ["vpc-flow-logs.amazonaws.com"]
+    }
+  }
+}
+
+# Custom IAM Policies
 resource "aws_iam_policy" "AllowUsersToManageTheirOwnVirtualMFADevice" {
-  
+  name = "AllowUsersToManageTheirOwnVirtualMFADevice"
+  policy = "${data.aws_iam_policy_document.AllowUsersToManageTheirOwnVirtualMFADevice.json}"
+}
+
+resource "aws_iam_policy" "EC2ResearcherAccess" {
+  name = "EC2ResearcherAccess"
+  policy = "${data.aws_iam_policy_document.EC2ResearcherAccess.json}"
+}
+
+resource "aws_iam_policy" "CloudWatchLogsPublish" {
+  name = "CloudWatchLogsPublish"
+  policy = "${data.aws_iam_policy_document.CloudWatchLogsRole.json}"
+}
+
+# Custom IAM Roles
+resource "aws_iam_role" "FlowLogsRole" {
+  name = "FlowLogsRole"
+  assume_role_policy = "${data.aws_iam_policy_document.FlowLogsTrustCloudWatch.json}"
+}
+
+resource "aws_iam_role_policy_attachment" "AttachCloudWatchLogsPublish" {
+  role       = "${aws_iam_role.FlowLogsRole.name}"
+  policy_arn = "${aws_iam_policy.CloudWatchLogsPublish.arn}"
+}
+
+# IAM Groups
+resource "aws_iam_group" "analysts" {
+  name = "${var.project_name}_Analysts"
+}
+
+resource "aws_iam_group" "administrators" {
+  name = "Administrators"
+}
+
+resource "aws_iam_group" "log_analysts" {
+  count = "${var.log_export}"
+  name = "${var.project_name}_Log_Analysts"
+}
+
+# TODO: Adding policies to groups
+
+# IAM Users
+resource "aws_iam_user" "analysts" {
+  count = "${var.num_researchers}"
+  name = "Researcher_${count.index}"
+}
+
+resource "aws_iam_user" "administrators" {
+  count = "${var.num_admins}"
+  name = "Administrator_${count.index}"
 }
