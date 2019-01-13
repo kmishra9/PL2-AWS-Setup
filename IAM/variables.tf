@@ -1,11 +1,3 @@
-module "IAM" {
-  source = "./IAM"
-  project_name = "${var.project_name}"
-  num_researchers = "${var.num_researchers}"
-  num_admins = "${var.num_admins}"
-  log_export = "${var.log_export}"
-}
-
 variable "project_name" {
   type = "string"
   description = "The name of the project utilizing this setup (i.e. Kaiser_Flu). Be sure there is no whitespace (replace spaces with underscores: _ )"

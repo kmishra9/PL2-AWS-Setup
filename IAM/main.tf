@@ -26,7 +26,7 @@ data "aws_iam_policy_document" "AllowUsersToManageTheirOwnVirtualMFADevice" {
       "iam:DeleteVirtualMFADevice"
     ]
     resources = [
-      "arn:aws:iam::${data.aws_caller_identity.current.account_id}:mfa/$${aws:username}",                # TODO: these arns need to be interpolated
+      "arn:aws:iam::${data.aws_caller_identity.current.account_id}:mfa/$${aws:username}",
       "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/$${aws:username}"
     ]
   }
@@ -38,7 +38,7 @@ data "aws_iam_policy_document" "AllowUsersToManageTheirOwnVirtualMFADevice" {
       "iam:DeactivateMFADevice"
     ]
     resources = [
-      "arn:aws:iam::${data.aws_caller_identity.current.account_id}:mfa/$${aws:username}",                # TODO: these arns need to be interpolated
+      "arn:aws:iam::${data.aws_caller_identity.current.account_id}:mfa/$${aws:username}",
       "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/$${aws:username}"
     ]
     condition {
