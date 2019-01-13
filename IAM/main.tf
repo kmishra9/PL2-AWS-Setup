@@ -1,6 +1,8 @@
+################################################################################
 # Current AWS Account
 data "aws_caller_identity" "current" {}
 
+################################################################################
 # IAM Password Policy
 resource "aws_iam_account_password_policy" "strict" {
   minimum_password_length        = 12
@@ -11,6 +13,7 @@ resource "aws_iam_account_password_policy" "strict" {
   allow_users_to_change_password = true
 }
 
+################################################################################
 # Custom IAM Policy Documents
 data "aws_iam_policy_document" "AllowUsersToManageTheirOwnVirtualMFADevice" {
   statement {
@@ -107,6 +110,21 @@ data "aws_iam_policy_document" "FlowLogsTrustCloudWatch" {
   }
 }
 
+################################################################################
+# AWS Managed IAM Policies
+data "aws_iam_policy" "AdministratorAccess" {
+  arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+}
+
+data "aws_iam_policy" "AmazonSQSFullAccess" {
+  arn = "arn:aws:iam::aws:policy/AmazonSQSFullAccess"
+}
+
+data "aws_iam_policy" "AmazonS3ReadOnlyAccess" {
+  arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+}
+
+################################################################################
 # Custom IAM Policies
 resource "aws_iam_policy" "AllowUsersToManageTheirOwnVirtualMFADevice" {
   name = "AllowUsersToManageTheirOwnVirtualMFADevice"
@@ -123,6 +141,7 @@ resource "aws_iam_policy" "CloudWatchLogsPublish" {
   policy = "${data.aws_iam_policy_document.CloudWatchLogsRole.json}"
 }
 
+################################################################################
 # Custom IAM Roles
 resource "aws_iam_role" "FlowLogsRole" {
   name = "FlowLogsRole"
@@ -134,6 +153,24 @@ resource "aws_iam_role_policy_attachment" "AttachCloudWatchLogsPublish" {
   policy_arn = "${aws_iam_policy.CloudWatchLogsPublish.arn}"
 }
 
+################################################################################
+# IAM Users
+resource "aws_iam_user" "analysts" {
+  count = "${var.num_researchers}"
+  name = "Researcher_${count.index}"
+}
+
+resource "aws_iam_user" "administrators" {
+  count = "${var.num_admins}"
+  name = "Administrator_${count.index}"
+}
+
+resource "aws_iam_user" "log_analysts" {
+  count = "${var.log_export}"
+  name = "Log_Analyst"
+}
+
+################################################################################
 # IAM Groups
 resource "aws_iam_group" "analysts" {
   name = "${var.project_name}_Analysts"
@@ -148,15 +185,53 @@ resource "aws_iam_group" "log_analysts" {
   name = "${var.project_name}_Log_Analysts"
 }
 
-# TODO: Adding policies to groups
-
-# IAM Users
-resource "aws_iam_user" "analysts" {
-  count = "${var.num_researchers}"
-  name = "Researcher_${count.index}"
+################################################################################
+# Adding IAM policies to groups
+resource "aws_iam_group_policy_attachment" "add_analysts_AllowUsersToManageTheirOwnVirtualMFADevice" {
+  group      = "${aws_iam_group.analysts.name}"
+  policy_arn = "${aws_iam_policy.AllowUsersToManageTheirOwnVirtualMFADevice.arn}"
 }
 
-resource "aws_iam_user" "administrators" {
-  count = "${var.num_admins}"
-  name = "Administrator_${count.index}"
+resource "aws_iam_group_policy_attachment" "add_analysts_EC2ResearcherAccess" {
+  group      = "${aws_iam_group.analysts.name}"
+  policy_arn = "${aws_iam_policy.EC2ResearcherAccess.arn}"
+}
+
+resource "aws_iam_group_policy_attachment" "add_administrators_AdministratorAccess" {
+  group      = "${aws_iam_group.administrators.name}"
+  policy_arn = "${aws_iam_policy.AdministratorAccess.arn}"
+}
+
+resource "aws_iam_group_policy_attachment" "add_log_analysts_AmazonSQSFullAccess" {
+  group      = "${aws_iam_group.log_analysts.name}"
+  policy_arn = "${aws_iam_policy.AmazonSQSFullAccess.arn}"
+}
+
+resource "aws_iam_group_policy_attachment" "add_log_analysts_AmazonS3ReadOnlyAccess" {
+  group      = "${aws_iam_group.log_analysts.name}"
+  policy_arn = "${aws_iam_policy.AmazonS3ReadOnlyAccess.arn}"
+}
+
+################################################################################
+# Adding IAM users to groups
+resource "aws_iam_group_membership" "add_analysts" {
+  name = "add_analysts"
+
+  users = "${aws_iam_user.analysts.*.name}"
+  group = "${aws_iam_group.analysts.name}"
+}
+
+resource "aws_iam_group_membership" "add_administrators" {
+  name = "add_administrators"
+
+  users = "${aws_iam_user.administrators.*.name}"
+  group = "${aws_iam_group.administrators.name}"
+}
+
+resource "aws_iam_group_membership" "add_log_analysts" {
+  count = "${var.log_export}"
+  name = "add_log_analysts"
+
+  users = "${aws_iam_user.log_analysts.*.name}"
+  group = "${aws_iam_group.log_analysts.name}"
 }
