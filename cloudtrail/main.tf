@@ -1,3 +1,4 @@
+################################################################################
 # Cloudtrail monitors all events in all regions within the root account and stores them in an S3 bucket
 module "cloudtrail" {
   source                        = "git::https://github.com/cloudposse/terraform-aws-cloudtrail.git?ref=master"
@@ -24,6 +25,7 @@ module "cloudtrail_s3_bucket" {
   region    = "${var.region}"
 }
 
+################################################################################
 # Enables SNS notifications to a topic on every log file delivered to the S3 bucket if log_export is enabled
 resource "aws_sns_topic" "project_logs" {
   count = "${var.log_export}"
@@ -54,4 +56,17 @@ resource "aws_s3_bucket_notification" "log_bucket_notification" {
     events        = ["s3:ObjectCreated:*"]
     filter_suffix = ".log"
   }
+}
+
+################################################################################
+# Subscribes an SQS Queue to the SNS topic
+resource "aws_sqs_queue" "project_logs_queue" {
+  count = "${var.log_export}"
+  name = "${var.project_name}_logs_queue"
+}
+
+resource "aws_sns_topic_subscription" "project_logs_sqs_target" {
+  topic_arn = "${aws_sns_topic.project_logs.arn}"
+  protocol  = "sqs"
+  endpoint  = "${aws_sqs_queue.project_logs_queue.arn}"
 }
