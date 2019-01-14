@@ -52,6 +52,6 @@ module "VPC" {
 ################################################################################
 # Configuring the analysis instance
 
-module "analysis_instance" {
-  source = "./analysis_instance"
+module "EC2" {
+  source = "./EC2"
 }
