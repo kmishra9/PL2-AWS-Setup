@@ -1,0 +1,6 @@
+#!/bin/bash
+
+#sudo mount /dev/nvme1n1 /home/sensitive_data
+sudo mount /dev/xvdg /home/sensitive_data
+sudo chmod og+rwx /home/sensitive_data/*
+sudo swapon /root/myswapfile
