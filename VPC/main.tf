@@ -2,7 +2,7 @@
 # Security Group for VPC Firewall
 resource "aws_security_group" "allow_within_vpc_traffic" {
   name        = "allow_within_vpc_traffic"
-  description = "Allows all inbound traffic from within the VPC + all outbound traffic. Managed by Terraform."
+  description = "Allows all SSH inbound traffic from within the VPC + all outbound traffic. Managed by Terraform."
   vpc_id      = "${aws_default_vpc.default.id}"
 
   ingress {
