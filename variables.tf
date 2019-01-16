@@ -42,10 +42,16 @@ variable "log_export" {
   description = "Only necessary at UC Berkeley, where logs will be exported for automated analysis"
 }
 
+variable "instance_type" {
+  type = "string"
+  default = "t2.micro"
+  description = "The type of instance to create - see the EC2 Instance Pricing guide: https://aws.amazon.com/ec2/pricing/on-demand/ - Defaults to free-tier t2.micro"
+}
+
 ################################################################################
 # Build-defined variables
-# Note: these have already been defined, there is no need to modify them unless
-# you are an advanced user and know what changing these does
+# Note: these have already been defined, there is no need to modify them (in this file)
+# unless you are an advanced user and know what changing these does
 ################################################################################
 
 locals {

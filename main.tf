@@ -41,7 +41,7 @@ module "IAM" {
 }
 
 ################################################################################
-# Configuring network and firewall
+# Configuring network, firewalls, and network logs
 
 module "VPC" {
   source         = "./VPC"
@@ -53,5 +53,10 @@ module "VPC" {
 # Configuring the analysis instance
 
 module "EC2" {
-  source = "./EC2"
+  source            = "./EC2"
+  project_name      = "${var.project_name}"
+  region            = "${local.project_name}"
+  availability_zone = "${var.project_name}"
+  instance_type     = "${var.instance_type}"
+  security_group_ids = ["${module.VPC.vpc_security_group_ids}"]
 }
