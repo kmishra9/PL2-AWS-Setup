@@ -53,10 +53,13 @@ module "VPC" {
 # Configuring the analysis instance
 
 module "EC2" {
-  source            = "./EC2"
-  project_name      = "${var.project_name}"
-  region            = "${local.project_name}"
-  availability_zone = "${var.project_name}"
-  instance_type     = "${var.instance_type}"
+  source             = "./EC2"
+  project_name       = "${var.project_name}"
+  region             = "${local.project_name}"
+  availability_zone  = "${var.project_name}"
+  instance_type      = "${var.instance_type}"
   security_group_ids = ["${module.VPC.vpc_security_group_ids}"]
+  root_volume_size   = "${var.root_volume_size}"
+  EBS_volume_size    = "${var.EBS_volume_size}"
+  CloudWatchLogsRole = "${module.IAM.CloudWatchLogsRole}"
 }
