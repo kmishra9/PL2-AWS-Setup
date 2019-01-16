@@ -110,6 +110,20 @@ data "aws_iam_policy_document" "FlowLogsTrustCloudWatch" {
   }
 }
 
+data "aws_iam_policy_document" "CloudWatchTrustEC2" {
+  statement {
+    sid = "CloudWatchTrustEC2"
+    effect = "Allow"
+    actions = [
+      "sts:AssumeRole"
+    ]
+    principals {
+      type = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+  }
+}
+
 ################################################################################
 # AWS Managed IAM Policies
 data "aws_iam_policy" "AdministratorAccess" {
@@ -148,8 +162,18 @@ resource "aws_iam_role" "FlowLogsRole" {
   assume_role_policy = "${data.aws_iam_policy_document.FlowLogsTrustCloudWatch.json}"
 }
 
-resource "aws_iam_role_policy_attachment" "AttachCloudWatchLogsPublish" {
+resource "aws_iam_role" "CloudWatchLogsRole" {
+  name = "CloudWatchLogsRole"
+  assume_role_policy = "${data.aws_iam_policy_document.CloudWatchTrustEC2.json}"
+}
+
+resource "aws_iam_role_policy_attachment" "AttachCloudWatchLogsPublish_FlowLogsRole" {
   role       = "${aws_iam_role.FlowLogsRole.name}"
+  policy_arn = "${aws_iam_policy.CloudWatchLogsPublish.arn}"
+}
+
+resource "aws_iam_role_policy_attachment" "AttachCloudWatchLogsPublish_CloudWatchLogsRole" {
+  role       = "${aws_iam_role.CloudWatchLogsRole.name}"
   policy_arn = "${aws_iam_policy.CloudWatchLogsPublish.arn}"
 }
 
