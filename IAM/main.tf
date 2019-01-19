@@ -239,14 +239,14 @@ resource "aws_iam_group_policy_attachment" "add_log_analysts_AmazonS3ReadOnlyAcc
 ################################################################################
 # Adding IAM users to groups
 resource "aws_iam_group_membership" "add_analysts" {
-  name = "add_analysts"
+  name  = "add_analysts"
 
   users = "${aws_iam_user.analysts.*.name}"
   group = "${aws_iam_group.analysts.name}"
 }
 
 resource "aws_iam_group_membership" "add_administrators" {
-  name = "add_administrators"
+  name  = "add_administrators"
 
   users = "${aws_iam_user.administrators.*.name}"
   group = "${aws_iam_group.administrators.name}"
@@ -254,7 +254,7 @@ resource "aws_iam_group_membership" "add_administrators" {
 
 resource "aws_iam_group_membership" "add_log_analysts" {
   count = "${var.log_export}"
-  name = "add_log_analysts"
+  name  = "add_log_analysts"
 
   users = "${aws_iam_user.log_analysts.*.name}"
   group = "${aws_iam_group.log_analysts.name}"

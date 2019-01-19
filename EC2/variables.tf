@@ -36,7 +36,7 @@ variable "EBS_volume_size" {
   description = "The volume size (in GB) of the EBS data storage volume attached to the EC2 analysis instance. Should be the only volume containing sensitive data."
 }
 
-variable "CloudWatchLogsRole" {
+variable "cloudwatch_logs_role_name" {
   type        = "string"
-  description = "A role with appropriate permissions to publish CloudWatch Logs from the agent and a trust relationship with EC2."
+  description = "The name of a role with appropriate permissions to publish CloudWatch Logs from the agent and a trust relationship with EC2."
 }

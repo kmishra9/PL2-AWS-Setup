@@ -30,9 +30,13 @@ resource "aws_default_vpc" "default" {
 
 ################################################################################
 # VPC Flow Logs -> Cloudwatch
+data "aws_iam_role" "FlowLogsRole" {
+  name = "${var.flow_logs_role_name}"
+}
+
 resource "aws_flow_log" "VPC_flow_logs" {
   traffic_type         = "ALL"
-  iam_role_arn         = "${var.flow_logs_role.arn}"
+  iam_role_arn         = "${data.aws_iam_role.FlowLogsRole.arn}"
   log_destination_type = "cloud-watch-logs"
   log_destination      = "${aws_cloudwatch_log_group.cloudwatch_VPC_flow_logs.arn}"
   vpc_id               = "${aws_default_vpc.default.id}"

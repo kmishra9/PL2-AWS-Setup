@@ -46,7 +46,7 @@ module "IAM" {
 module "VPC" {
   source         = "./VPC"
   project_name   = "${var.project_name}"
-  flow_logs_role = "${module.IAM.FlowLogsRole}"
+  flow_logs_role_name = "${module.IAM.FlowLogsRole_name}"
 }
 
 ################################################################################
@@ -61,5 +61,7 @@ module "EC2" {
   security_group_ids = ["${module.VPC.vpc_security_group_ids}"]
   root_volume_size   = "${var.root_volume_size}"
   EBS_volume_size    = "${var.EBS_volume_size}"
-  CloudWatchLogsRole = "${module.IAM.CloudWatchLogsRole}"
+  cloudwatch_logs_role_name = "${module.IAM.CloudWatchLogsRole_name}"
 }
+
+# TODO: update EC2 for CLoudWatchLogsRoleName
