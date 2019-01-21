@@ -2,6 +2,7 @@
 # AMI Setup
 locals {
   cis_owner_id = 679593333241
+  cis_level_1_ami_us_west_2 = "ami-c0cf49b8"
 }
 
 # data "aws_ami" "cis_level_1_ami" {
@@ -14,7 +15,8 @@ locals {
 
 
 resource "aws_instance" "EC2_analysis_instance" {
-  ami                                  = "ami-c0cf49b8" #"${data.aws_ami.cis_level_1_ami.id}"
+  ami                                  = "${local.cis_level_1_ami_us_west_2}"
+#  ami                                  = "${data.aws_ami.cis_level_1_ami.id}"
   availability_zone                    = "${var.region}${var.availability_zone}"
   tenancy                              = "default"
   disable_api_termination              = "true"
