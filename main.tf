@@ -24,7 +24,6 @@ module "cloudtrail" {
   source            = "./cloudtrail"
   project_name      = "${var.project_name}"
   organization_name = "${var.organization_name}"
-  log_export        = "${var.log_export}"
   region            = "${local.region}"
   stage             = "${local.stage}"
 }

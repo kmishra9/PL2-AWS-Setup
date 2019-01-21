@@ -8,12 +8,6 @@ variable "organization_name" {
   description = "The name of the smallest-scale organization with ownership of this project (i.e. Colford_Lab or UCB). Be sure there is no whitespace (replace spaces with underscores: _ )"
 }
 
-variable "log_export" {
-  type = "string"
-  default = "true"
-  description = "Only necessary at UC Berkeley, where logs will be exported for automated analysis"
-}
-
 variable "region" {
   type = "string"
   default = "us-west-2"

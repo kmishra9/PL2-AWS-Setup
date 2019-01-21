@@ -26,9 +26,8 @@ module "cloudtrail_s3_bucket" {
 }
 
 ################################################################################
-# Enables SNS notifications to a topic on every log file delivered to the S3 bucket if log_export is enabled
+# Enables SNS notifications to a topic on every log file delivered to the S3 bucket
 resource "aws_sns_topic" "project_logs" {
-  count = "${var.log_export}"
   name = "${var.project_name}_logs"
 
   policy = <<POLICY
@@ -48,7 +47,6 @@ POLICY
 }
 
 resource "aws_s3_bucket_notification" "log_bucket_notification" {
-  count = "${var.log_export}"
   bucket = "${module.cloudtrail_s3_bucket.bucket_id}"
 
   topic {
@@ -61,7 +59,6 @@ resource "aws_s3_bucket_notification" "log_bucket_notification" {
 ################################################################################
 # Subscribes an SQS Queue to the SNS topic
 resource "aws_sqs_queue" "project_logs_queue" {
-  count = "${var.log_export}"
   name = "${var.project_name}_logs_queue"
 }
 

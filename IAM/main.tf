@@ -152,7 +152,7 @@ resource "aws_iam_policy" "EC2ResearcherAccess" {
 
 resource "aws_iam_policy" "CloudWatchLogsPublish" {
   name = "CloudWatchLogsPublish"
-  policy = "${data.aws_iam_policy_document.CloudWatchLogsRole.json}"
+  policy = "${data.aws_iam_policy_document.CloudWatchLogsPublish.json}"
 }
 
 ################################################################################
@@ -223,17 +223,17 @@ resource "aws_iam_group_policy_attachment" "add_analysts_EC2ResearcherAccess" {
 
 resource "aws_iam_group_policy_attachment" "add_administrators_AdministratorAccess" {
   group      = "${aws_iam_group.administrators.name}"
-  policy_arn = "${aws_iam_policy.AdministratorAccess.arn}"
+  policy_arn = "${data.aws_iam_policy.AdministratorAccess.arn}"
 }
 
 resource "aws_iam_group_policy_attachment" "add_log_analysts_AmazonSQSFullAccess" {
   group      = "${aws_iam_group.log_analysts.name}"
-  policy_arn = "${aws_iam_policy.AmazonSQSFullAccess.arn}"
+  policy_arn = "${data.aws_iam_policy.AmazonSQSFullAccess.arn}"
 }
 
 resource "aws_iam_group_policy_attachment" "add_log_analysts_AmazonS3ReadOnlyAccess" {
   group      = "${aws_iam_group.log_analysts.name}"
-  policy_arn = "${aws_iam_policy.AmazonS3ReadOnlyAccess.arn}"
+  policy_arn = "${data.aws_iam_policy.AmazonS3ReadOnlyAccess.arn}"
 }
 
 ################################################################################
