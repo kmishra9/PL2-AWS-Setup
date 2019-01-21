@@ -53,8 +53,8 @@ module "VPC" {
 module "EC2" {
   source             = "./EC2"
   project_name       = "${var.project_name}"
-  region             = "${local.project_name}"
-  availability_zone  = "${var.project_name}"
+  region             = "${local.region}"
+  availability_zone  = "${local.availability_zone}"
   instance_type      = "${var.instance_type}"
   security_group_ids = ["${module.VPC.vpc_security_group_ids}"]
   root_volume_size   = "${var.root_volume_size}"
