@@ -190,7 +190,6 @@ resource "aws_iam_user" "administrators" {
 }
 
 resource "aws_iam_user" "log_analysts" {
-  count = "${var.log_export}"
   name = "Log_Analyst"
 }
 
@@ -205,7 +204,6 @@ resource "aws_iam_group" "administrators" {
 }
 
 resource "aws_iam_group" "log_analysts" {
-  count = "${var.log_export}"
   name = "${var.project_name}_Log_Analysts"
 }
 
@@ -241,21 +239,20 @@ resource "aws_iam_group_policy_attachment" "add_log_analysts_AmazonS3ReadOnlyAcc
 resource "aws_iam_group_membership" "add_analysts" {
   name  = "add_analysts"
 
-  users = "${aws_iam_user.analysts.*.name}"
+  users = ["${aws_iam_user.analysts.*.name}"]
   group = "${aws_iam_group.analysts.name}"
 }
 
 resource "aws_iam_group_membership" "add_administrators" {
   name  = "add_administrators"
 
-  users = "${aws_iam_user.administrators.*.name}"
+  users = ["${aws_iam_user.administrators.*.name}"]
   group = "${aws_iam_group.administrators.name}"
 }
 
 resource "aws_iam_group_membership" "add_log_analysts" {
-  count = "${var.log_export}"
   name  = "add_log_analysts"
 
-  users = "${aws_iam_user.log_analysts.*.name}"
+  users = ["${aws_iam_user.log_analysts.*.name}"]
   group = "${aws_iam_group.log_analysts.name}"
 }

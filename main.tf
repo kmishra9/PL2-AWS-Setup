@@ -36,7 +36,6 @@ module "IAM" {
   project_name    = "${var.project_name}"
   num_researchers = "${var.num_researchers}"
   num_admins      = "${var.num_admins}"
-  log_export      = "${var.log_export}"
 }
 
 ################################################################################
@@ -62,5 +61,3 @@ module "EC2" {
   EBS_volume_size    = "${var.EBS_volume_size}"
   cloudwatch_logs_role_name = "${module.IAM.CloudWatchLogsRole_name}"
 }
-
-# TODO: update EC2 for CLoudWatchLogsRoleName

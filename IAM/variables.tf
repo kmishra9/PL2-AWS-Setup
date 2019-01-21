@@ -14,9 +14,3 @@ variable "num_admins" {
   default = "1"
   description = "The number of administrators who will be participating in this project - creates the given number of Administrator IAM accounts"
 }
-
-variable "log_export" {
-  type = "string"
-  default = "true"
-  description = "Only necessary at UC Berkeley, where logs will be exported for automated analysis"
-}
