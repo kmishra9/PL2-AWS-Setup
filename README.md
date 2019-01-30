@@ -27,11 +27,11 @@ Finally, if at any point you need assistance or would like to consult with our t
     - **Note**: you should name this user "Terraform" rather than "Administrator" for additional clarity. The group it is added should still be named "Administrators".
     - **Note**: at Step 4, rather than enable "Console access" and specify a password, you should check the box to enable "Programmatic access"
     - **Note**: if you don't download the IAM user's credentials immediately after creating them, they won't be available for download later. Instead, you would need to [Create a new Access Key](https://aws.amazon.com/blogs/security/wheres-my-secret-access-key/).
-  - **Use Groups to assign permissions** -- ignore this for now -- we've created our Administrator group and Terraform will help us create a group for researcher IAM accounts and a second optional group for log analysis IAM accounts
+  - **Use Groups to assign permissions** -- ignore this for now -- Terraform will help us create IAM groups for researcher, administrators, and log analysts
   - **Apply an IAM Password Policy** -- ignore this for now -- Terraform will set this up to ensure that the passwords required to access the console by the researchers and admin are appropriately secure against standard brute-force and dictionary attacks.
 
 3. If you haven't already done so, clone this GitHub repository. Then, in a text editor of your choice (such as [Atom](https://atom.io)), open `terraform.tfvars` and `variables.tf`. In `variables.tf`, you will find a set of variable definitions and descriptions for which you will be responsible for assigning values to within the empty `terraform.tfvars` file.
   - **Example**: To assign a project name, you could type `project_name = "Kaiser_Flu"` in `terraform.tfvars`. Then, you would skip a line, and proceed to an assignment of the next variable documented in `variables.tf`.
   - **Documentation**: Feel free to check out the `Variable Files` section of [Terraform's documentation on input variables](https://www.terraform.io/docs/configuration/variables.html#Variable_Files) for more help.
 
-4. Install Terraform, then run some sort of Terraform verify and verify that things are working as they should be.
+4. [Install Terraform](https://learn.hashicorp.com/terraform/getting-started/install.html). Alternatively, using Docker and a `terraform()` bash function (see [this Gist](https://gist.github.com/kmishra9/7a823007a5b14e5c23ac5b7eec5d50f5) for details). Verify your installation is running smoothly and the behaviour mentioned in the installation docs matches what is expected.
