@@ -6,12 +6,12 @@
 
 variable "project_name" {
   type = "string"
-  description = "The name of the project utilizing this setup (i.e. Kaiser_Flu). Be sure there is no whitespace (replace spaces with underscores: _ )"
+  description = "The name of the project utilizing this setup (i.e. Kaiser-Flu). Be sure there is no whitespace (replace spaces with hyphens '-', only alphanumeric characters and hyphens are allowed)"
 }
 
 variable "organization_name" {
   type = "string"
-  description = "The name of the smallest-scale organization with ownership of this project (i.e. Colford_Lab or UCB). Be sure there is no whitespace (replace spaces with underscores: _ )"
+  description = "The name of the smallest-scale organization with ownership of this project (i.e. Colford-Lab or UCB). Be sure there is no whitespace (replace spaces with hyphens '-', only alphanumeric characters and hyphens are allowed)"
 }
 
 variable "access_key" {
@@ -26,22 +26,22 @@ variable "secret_key" {
 
 variable "num_researchers" {
   type = "string"
-  description = "The number of researchers who will be participating in this project - creates the given number of Researcher IAM accounts"
+  description = "The integer number of researchers who will be participating in this project - creates the given number of Researcher IAM accounts"
 }
 
 variable "num_admins" {
   type = "string"
-  description = "The number of administrators who will be participating in this project - creates the given number of Administrator IAM accounts"
+  description = "The integer number of administrators who will be participating in this project - creates the given number of Administrator IAM accounts"
 }
 
 variable "instance_type" {
   type = "string"
-  description = "The type of instance to create - see the EC2 Instance Pricing guide: https://aws.amazon.com/ec2/pricing/on-demand/"
+  description = "The type of instance to create - see the EC2 Instance Pricing guide: https://aws.amazon.com/ec2/pricing/on-demand/. Example: 't2.micro'"
 }
 
 variable "root_volume_size" {
   type = "string"
-  description = "The volume size (in GB) of the root EC2 analysis instance. Should not contain sensitive data. Roughly 50 GB will be consumed by the system."
+  description = "The integer volume size (in GB) of the root EC2 analysis instance. This volume should not contain sensitive data. Roughly 50 GB will be reserved by the system."
 }
 
 variable "EBS_volume_size" {

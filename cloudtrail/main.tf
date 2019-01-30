@@ -3,7 +3,7 @@
 module "cloudtrail" {
   source                        = "git::https://github.com/cloudposse/terraform-aws-cloudtrail.git?ref=master"
 
-  name                          = "${var.project_name}_cloudtrail"
+  name                          = "${var.project_name}-cloudtrail"
   namespace                     = "${var.organization_name}"
   s3_bucket_name                = "${module.cloudtrail_s3_bucket.bucket_id}"
   stage                         = "${var.stage}"
@@ -17,18 +17,18 @@ module "cloudtrail" {
 module "cloudtrail_s3_bucket" {
   source    = "git::https://github.com/cloudposse/terraform-aws-cloudtrail-s3-bucket.git?ref=master"
 
-  name      = "${var.project_name}_logs"
+  name      = "${var.project_name}-logs"
   namespace = "${var.organization_name}"
   stage     = "${var.stage}"
 
-  force_destroy = "false"
+  force_destroy = "False"
   region    = "${var.region}"
 }
 
 ################################################################################
 # Enables SNS notifications to a topic on every log file delivered to the S3 bucket
 resource "aws_sns_topic" "project_logs" {
-  name = "${var.project_name}_logs"
+  name = "${var.project_name}-logs"
 
   policy = <<POLICY
 {
@@ -59,7 +59,7 @@ resource "aws_s3_bucket_notification" "log_bucket_notification" {
 ################################################################################
 # Subscribes an SQS Queue to the SNS topic
 resource "aws_sqs_queue" "project_logs_queue" {
-  name = "${var.project_name}_logs_queue"
+  name = "${var.project_name}-logs-queue"
 }
 
 resource "aws_sns_topic_subscription" "project_logs_sqs_target" {
