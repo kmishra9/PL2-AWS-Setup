@@ -21,7 +21,7 @@ module "cloudtrail_s3_bucket" {
   namespace = "${var.organization_name}"
   stage     = "${var.stage}"
 
-  force_destroy = "False"
+  force_destroy = "true"
   region    = "${var.region}"
 }
 
@@ -46,15 +46,18 @@ resource "aws_sns_topic" "project_logs" {
 POLICY
 }
 
-resource "aws_s3_bucket_notification" "log_bucket_notification" {
-  bucket = "${module.cloudtrail_s3_bucket.bucket_id}"
-
-  topic {
-    topic_arn     = "${aws_sns_topic.project_logs.arn}"
-    events        = ["s3:ObjectCreated:*"]
-    filter_suffix = ".log"
-  }
-}
+# Currently not working - reference https://aws.amazon.com/premiumsupport/knowledge-center/unable-validate-destination-s3/ for a possible fix
+# resource "aws_s3_bucket_notification" "log_bucket_notification" {
+#   bucket = "${module.cloudtrail_s3_bucket.bucket_id}"
+#
+#   topic {
+#     topic_arn     = "${aws_sns_topic.project_logs.arn}"
+#     events        = ["s3:ObjectCreated:*"]
+#     filter_suffix = ".log"
+#   }
+#
+#   depends_on = ["aws_sns_topic.project_logs", "module.cloudtrail_s3_bucket"]
+# }
 
 ################################################################################
 # Subscribes an SQS Queue to the SNS topic
