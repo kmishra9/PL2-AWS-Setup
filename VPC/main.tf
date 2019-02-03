@@ -24,7 +24,7 @@ resource "aws_security_group" "allow_within_vpc_traffic" {
 # Default VPC
 resource "aws_default_vpc" "default" {
   tags = {
-    Name = "${var.project_name}_VPC"
+    Name = "${var.project_name}-VPC"
   }
 }
 
@@ -43,5 +43,5 @@ resource "aws_flow_log" "VPC_flow_logs" {
 }
 
 resource "aws_cloudwatch_log_group" "cloudwatch_VPC_flow_logs" {
-  name = "${var.project_name}_cloudwatch_VPC_flow_logs"
+  name = "${var.project_name}-cloudwatch-VPC-flow-logs"
 }
