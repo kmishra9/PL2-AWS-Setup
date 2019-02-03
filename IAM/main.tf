@@ -178,6 +178,14 @@ resource "aws_iam_role_policy_attachment" "AttachCloudWatchLogsPublish_CloudWatc
 }
 
 ################################################################################
+# Custom Instance Profiles
+
+resource "aws_iam_instance_profile" "CloudWatchLogsRole_instance_profile" {
+  name = "${aws_iam_role.CloudWatchLogsRole.name}"
+  role = "${aws_iam_role.CloudWatchLogsRole.name}"
+}
+
+################################################################################
 # IAM Users
 resource "aws_iam_user" "analysts" {
   count = "${var.num_researchers}"

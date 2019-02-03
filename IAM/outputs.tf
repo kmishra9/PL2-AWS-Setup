@@ -5,5 +5,5 @@ output "FlowLogsRole_name" {
 
 output "CloudWatchLogsRole_name" {
   value       = "${aws_iam_role.CloudWatchLogsRole.name}"
-  description = "The name of a custom-written IAM role to be used by EC2 instances and the CloudWatch Log Agent"
+  description = "The name of a custom-written IAM role to be used by EC2 instances and the CloudWatch Log Agent. It is also the name of an instance profile associated with the CloudWatchLogsRole"
 }
