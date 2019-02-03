@@ -35,7 +35,7 @@ resource "aws_instance" "EC2_analysis_instance" {
   iam_instance_profile                 = "${var.cloudwatch_logs_role_name}"
 
   tags = {
-    Name = "${var.project_name}_EC2_analysis_instance"
+    Name = "${var.project_name}-EC2-analysis-instance"
   }
 
   ##############################################################################
@@ -57,7 +57,10 @@ resource "aws_instance" "EC2_analysis_instance" {
   ##############################################################################
   # Commands to run on creation of the EC2 resource
 
-  # TODO: Need to determine whether it's possible to connect to a cis ami through terraform like this (or how to at all)
+  provisioner "file" {
+    source = "./provisioner_scripts/"
+    destination = "/home/ubuntu"
+  }
 
   # Add Swap
   provisioner "local-exec"{
@@ -66,7 +69,7 @@ resource "aws_instance" "EC2_analysis_instance" {
   }
 
   # Mount Drives
-  provisioner "local-exec" "mount_drives" {
+  provisioner "local-exec" {
     command = ""
     working_dir = "~/"
   }
