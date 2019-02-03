@@ -2,21 +2,29 @@
 # AMI Setup
 locals {
   cis_owner_id = 679593333241
-  cis_level_1_ami_us_west_2 = "ami-c0cf49b8"
 }
 
-# data "aws_ami" "cis_level_1_ami" {
-#   owners       = ["${local.cis_owner_id}"]
-#   name_regex   = "CIS Ubuntu Linux 16.04 LTS Benchmark Level 1"
-# }
+data "aws_ami" "cis_level_1_ami" {
+  most_recent = true
+
+  filter {
+    name = "owner-id"
+    values = ["${local.cis_owner_id}"]
+  }
+
+  filter {
+    name = "name"
+    values = ["CIS Ubuntu Linux 16.04 LTS Benchmark*"]
+  }
+
+  name_regex = "CIS Ubuntu Linux 16.04 LTS Benchmark-*(Level 1)*"
+}
 
 ################################################################################
 # EC2 Instance Setup
 
-
 resource "aws_instance" "EC2_analysis_instance" {
-  ami                                  = "${local.cis_level_1_ami_us_west_2}"
-#  ami                                  = "${data.aws_ami.cis_level_1_ami.id}"
+  ami                                  = "${data.aws_ami.cis_level_1_ami.id}"
   availability_zone                    = "${var.region}${var.availability_zone}"
   tenancy                              = "default"
   disable_api_termination              = "true"
@@ -39,7 +47,7 @@ resource "aws_instance" "EC2_analysis_instance" {
   }
 
   ebs_block_device = {
-    device_name           = "${var.project_name}_data"
+    device_name           = "${var.project_name}-data"
     volume_type           = "standard"
     volume_size           = "${var.EBS_volume_size}"
     delete_on_termination = "false"
