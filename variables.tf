@@ -59,4 +59,6 @@ locals {
   region = "us-west-2"
   availability_zone = "a"
   stage = "prod"
+  EBS_device_name = "/dev/sdf"
+  EBS_attach_volume = "true"
 }

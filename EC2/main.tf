@@ -38,20 +38,11 @@ resource "aws_instance" "EC2_analysis_instance" {
     Name = "${var.project_name}-EC2-analysis-instance"
   }
 
-  ##############################################################################
-  # EBS volumes attached to the EC2 resource
+  # Root Storage
   root_block_device = {
     volume_type           = "standard"
     volume_size           = "${var.root_volume_size}"
     delete_on_termination = "false"
-  }
-
-  ebs_block_device = {
-    device_name           = "${var.project_name}-data"
-    volume_type           = "standard"
-    volume_size           = "${var.EBS_volume_size}"
-    delete_on_termination = "false"
-    encrypted             = "true"
   }
 
   ##############################################################################
@@ -73,7 +64,23 @@ resource "aws_instance" "EC2_analysis_instance" {
     command = ""
     working_dir = "~/"
   }
+}
 
+# EBS Volumes
+resource "aws_ebs_volume" "data_storage" {
+  availability_zone = "${var.region}${var.availability_zone}"
+  encrypted = "true"
+  size = "${var.EBS_volume_size}"
+  tags = {
+    name = "${var.project_name}-data"
+  }
+}
+
+resource "aws_volume_attachment" "data_storage_attachment" {
+  count       = "${var.EBS_attach_volume}"
+  device_name = "${var.EBS_device_name}"
+  volume_id   = "${aws_ebs_volume.data_storage.id}"
+  instance_id = "${aws_instance.EC2_analysis_instance.id}"
 }
 
 

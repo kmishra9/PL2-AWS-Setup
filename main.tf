@@ -1,4 +1,5 @@
 /* TODO:
+/* TODO                                                                              :
 
 - Security Token Service Regions (Deactivate pretty much everything except for US West (Oregon))
 - Adding provisioners for iptable setup, ssh tunnel creation, users being added (docs: https://www.terraform.io/docs/provisioners/index.html)
@@ -42,8 +43,8 @@ module "IAM" {
 # Configuring network, firewalls, and network logs
 
 module "VPC" {
-  source         = "./VPC"
-  project_name   = "${var.project_name}"
+  source              = "./VPC"
+  project_name        = "${var.project_name}"
   flow_logs_role_name = "${module.IAM.FlowLogsRole_name}"
 }
 
@@ -51,13 +52,15 @@ module "VPC" {
 # Configuring the analysis instance
 
 module "EC2" {
-  source             = "./EC2"
-  project_name       = "${var.project_name}"
-  region             = "${local.region}"
-  availability_zone  = "${local.availability_zone}"
-  instance_type      = "${var.instance_type}"
-  security_group_ids = ["${module.VPC.vpc_security_group_ids}"]
-  root_volume_size   = "${var.root_volume_size}"
-  EBS_volume_size    = "${var.EBS_volume_size}"
+  source                    = "./EC2"
+  project_name              = "${var.project_name}"
+  region                    = "${local.region}"
+  availability_zone         = "${local.availability_zone}"
+  instance_type             = "${var.instance_type}"
+  security_group_ids        = ["${module.VPC.vpc_security_group_ids}"]
+  root_volume_size          = "${var.root_volume_size}"
+  EBS_volume_size           = "${var.EBS_volume_size}"
+  EBS_device_name           = "${local.EBS_device_name}"
+  EBS_attach_volume         = "${local.EBS_attach_volume}"
   cloudwatch_logs_role_name = "${module.IAM.CloudWatchLogsRole_name}"
 }
