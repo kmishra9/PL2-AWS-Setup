@@ -2,6 +2,7 @@
 # AMI Setup
 locals {
   cis_owner_id = 679593333241
+  ubuntu_home_dir_path = "/home/ubuntu"
 }
 
 data "aws_ami" "cis_level_1_ami" {
@@ -55,31 +56,30 @@ resource "aws_instance" "EC2_analysis_instance" {
   ##############################################################################
   # Commands to run on creation of the EC2 resource
 
+  # Transfer Provisioner Files
   provisioner "file" {
     source = "${path.module}/provisioner_scripts/"
-    destination = "/home/ubuntu"
+    destination = "${local.ubuntu_home_dir_path}"
 
     connection {
       type     = "ssh"
       user     = "ubuntu"
       host     = "${aws_instance.EC2_analysis_instance.public_dns}"
-      # host     = "${aws_instance.EC2_analysis_instance.private_dns}"
       timeout  = "30s"
       private_key = "${file(var.workspaces_private_key_path)}"
       agent    = "false"
     }
   }
 
-  # Add Permissions
+  # Add Permissions to Provisioned Files
   provisioner "local-exec" {
     command = "chmod 744 add_swap install_updates mount_drives"
-    working_dir = "~/"
+    working_dir = "${local.ubuntu_home_dir_path}"
 
     connection {
       type     = "ssh"
       user     = "ubuntu"
       host     = "${aws_instance.EC2_analysis_instance.public_dns}"
-      # host     = "${aws_instance.EC2_analysis_instance.private_dns}"
       timeout  = "30s"
       private_key = "${file(var.workspaces_private_key_path)}"
       agent    = "false"
@@ -89,13 +89,12 @@ resource "aws_instance" "EC2_analysis_instance" {
   # Add Swap
   provisioner "local-exec" {
     command = "./add_swap"
-    working_dir = "~/"
+    working_dir = "${local.ubuntu_home_dir_path}"
 
     connection {
       type     = "ssh"
       user     = "ubuntu"
       host     = "${aws_instance.EC2_analysis_instance.public_dns}"
-      # host     = "${aws_instance.EC2_analysis_instance.private_dns}"
       timeout  = "30s"
       private_key = "${file(var.workspaces_private_key_path)}"
       agent    = "false"
@@ -105,6 +104,55 @@ resource "aws_instance" "EC2_analysis_instance" {
   # Mount Drives
   provisioner "local-exec" {
     command = "./mount_drives /home/${var.data_folder_name}"
+    working_dir = "${local.ubuntu_home_dir_path}"
+
+    connection {
+      type     = "ssh"
+      user     = "ubuntu"
+      host     = "${aws_instance.EC2_analysis_instance.public_dns}"
+      timeout  = "30s"
+      private_key = "${file(var.workspaces_private_key_path)}"
+      agent    = "false"
+    }
+  }
+
+
+  # Add Users
+  provisioner "local-exec" {
+    command = "./add_users ${var.num_researchers}"
+    working_dir = "${local.ubuntu_home_dir_path}"
+
+    connection {
+      type     = "ssh"
+      user     = "ubuntu"
+      host     = "${aws_instance.EC2_analysis_instance.public_dns}"
+      timeout  = "30s"
+      private_key = "${file(var.workspaces_private_key_path)}"
+      agent    = "false"
+    }
+  }
+
+  # Install CloudWatch Agent
+  # provisioner "local-exec" {
+  #   command = ""
+  #   working_dir = "~/"
+  #
+  #   connection {
+  #     type     = "ssh"
+  #     user     = "ubuntu"
+  #     host     = "${aws_instance.EC2_analysis_instance.public_dns}"
+  #     timeout  = "30s"
+  #     private_key = "${file(var.workspaces_private_key_path)}"
+  #     agent    = "false"
+  #   }
+  # }
+
+
+
+  # TODO: MAKE THIS LAST
+  # Install Updates & Reboot
+  provisioner "local-exec" {
+    command = "./install_updates"
     working_dir = "~/"
   }
 }

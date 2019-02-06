@@ -3,6 +3,11 @@ variable "project_name" {
   description = "The name of the project utilizing this setup (i.e. Kaiser_Flu). Be sure there is no whitespace (replace spaces with underscores: _ )."
 }
 
+variable "num_researchers" {
+  type = "string"
+  description = "The integer number of researchers who will be participating in this project - creates the given number of Researcher Linux accounts"
+}
+
 variable "region" {
   type        = "string"
   default     = "us-west-2"

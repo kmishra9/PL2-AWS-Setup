@@ -52,6 +52,7 @@ module "VPC" {
 module "EC2" {
   source                      = "./EC2"
   project_name                = "${var.project_name}"
+  num_researchers             = "${var.num_researchers}"
   region                      = "${local.region}"
   availability_zone           = "${local.availability_zone}"
   instance_type               = "${var.instance_type}"
