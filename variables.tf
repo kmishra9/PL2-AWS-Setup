@@ -24,6 +24,18 @@ variable "secret_key" {
   description = "The secret key of the Terraform IAM user that was setup with administrator access"
 }
 
+variable "workspaces_public_key_path" {
+  type = "string"
+  default = "~/.ssh/id_rsa.pub"
+  description = "The public key path (relative or absolute) of the AWS Workspace from which this setup is being administered, to be imported as an 'EC2 KeyPair'"
+}
+
+variable "workspaces_private_key_path" {
+  type = "string"
+  default = "~/.ssh/id_rsa"
+  description = "The private key path (relative or absolute) of the AWS Workspace from which this setup is being administered, used to connect via SSH to the instance"
+}
+
 variable "num_researchers" {
   type = "string"
   description = "The integer number of researchers who will be participating in this project - creates the given number of Researcher IAM accounts"
@@ -49,6 +61,12 @@ variable "EBS_volume_size" {
   description = "The volume size (in GB) of the EBS data storage volume attached to the EC2 analysis instance. Should be the only volume containing sensitive data."
 }
 
+variable "data_folder_name" {
+  type = "string"
+  default = "sensitive_data"
+  description = "The name of the folder the data will be stored in (on the EBS volume). Be sure there is no whitespace (replace spaces with underscores '_', only lowercase alphanumeric characters and hyphens are allowed)"
+}
+
 ################################################################################
 # Build-defined variables
 # Note: these have already been defined, there is no need to modify them (in
@@ -60,5 +78,5 @@ locals {
   availability_zone = "a"
   stage = "prod"
   EBS_device_name = "/dev/sdf"
-  EBS_attach_volume = "true"
+  EBS_attach_volume = "1"
 }

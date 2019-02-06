@@ -14,24 +14,31 @@ data "aws_ami" "cis_level_1_ami" {
 
   filter {
     name = "name"
-    values = ["CIS Ubuntu Linux 16.04 LTS Benchmark*"]
+    values = ["CIS Ubuntu Linux 18.04 LTS Benchmark*"]
   }
 
-  name_regex = "CIS Ubuntu Linux 16.04 LTS Benchmark-*(Level 1)*"
+  name_regex = "CIS Ubuntu Linux 18.04 LTS Benchmark-*(Level 1)*"
 }
 
 ################################################################################
 # EC2 Instance Setup
 
+resource "aws_key_pair" "workspaces_keypair" {
+  key_name   = "Workspaces_Key"
+  public_key = "${file(var.workspaces_public_key_path)}"
+}
+
 resource "aws_instance" "EC2_analysis_instance" {
   ami                                  = "${data.aws_ami.cis_level_1_ami.id}"
   availability_zone                    = "${var.region}${var.availability_zone}"
   tenancy                              = "default"
-  disable_api_termination              = "true"
+  # disable_api_termination              = "true"
+  disable_api_termination              = "false"
   instance_initiated_shutdown_behavior = "stop"
   instance_type                        = "${var.instance_type}"
+  key_name                             = "${aws_key_pair.workspaces_keypair.key_name}"
   monitoring                           = "true"
-  vpc_security_group_ids               = ["${var.security_group_ids}"]
+  #vpc_security_group_ids               = ["${var.security_group_ids}"]
   iam_instance_profile                 = "${var.cloudwatch_logs_role_name}"
 
   tags = {
@@ -42,26 +49,62 @@ resource "aws_instance" "EC2_analysis_instance" {
   root_block_device = {
     volume_type           = "standard"
     volume_size           = "${var.root_volume_size}"
-    delete_on_termination = "false"
+    delete_on_termination = "true"
   }
 
   ##############################################################################
   # Commands to run on creation of the EC2 resource
 
   provisioner "file" {
-    source = "./provisioner_scripts/"
+    source = "${path.module}/provisioner_scripts/"
     destination = "/home/ubuntu"
+
+    connection {
+      type     = "ssh"
+      user     = "ubuntu"
+      host     = "${aws_instance.EC2_analysis_instance.public_dns}"
+      # host     = "${aws_instance.EC2_analysis_instance.private_dns}"
+      timeout  = "30s"
+      private_key = "${file(var.workspaces_private_key_path)}"
+      agent    = "false"
+    }
+  }
+
+  # Add Permissions
+  provisioner "local-exec" {
+    command = "chmod 744 add_swap install_updates mount_drives"
+    working_dir = "~/"
+
+    connection {
+      type     = "ssh"
+      user     = "ubuntu"
+      host     = "${aws_instance.EC2_analysis_instance.public_dns}"
+      # host     = "${aws_instance.EC2_analysis_instance.private_dns}"
+      timeout  = "30s"
+      private_key = "${file(var.workspaces_private_key_path)}"
+      agent    = "false"
+    }
   }
 
   # Add Swap
-  provisioner "local-exec"{
-    command = ""
+  provisioner "local-exec" {
+    command = "./add_swap"
     working_dir = "~/"
+
+    connection {
+      type     = "ssh"
+      user     = "ubuntu"
+      host     = "${aws_instance.EC2_analysis_instance.public_dns}"
+      # host     = "${aws_instance.EC2_analysis_instance.private_dns}"
+      timeout  = "30s"
+      private_key = "${file(var.workspaces_private_key_path)}"
+      agent    = "false"
+    }
   }
 
   # Mount Drives
   provisioner "local-exec" {
-    command = ""
+    command = "./mount_drives /home/${var.data_folder_name}"
     working_dir = "~/"
   }
 }

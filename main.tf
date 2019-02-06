@@ -1,5 +1,4 @@
-/* TODO:
-/* TODO                                                                              :
+/* TODO:                                                             :
 
 - Security Token Service Regions (Deactivate pretty much everything except for US West (Oregon))
 - Adding provisioners for iptable setup, ssh tunnel creation, users being added (docs: https://www.terraform.io/docs/provisioners/index.html)
@@ -7,11 +6,10 @@
   - local-exec will be useful once scripts have been deposited in the appropriate -- you can interpolate resource variables (such as VPC ips, which should be useful for iptables setup)
 
 - What is AWS security hub and how should I use it?
-- Do I still need an elastic IP if I'm connecting within the VPC?
 */
 
-################################################################################
-# Initial Account Setup
+# ################################################################################
+# # Initial Account Setup
 provider "aws" {
   access_key = "${var.access_key}"
   secret_key = "${var.secret_key}"
@@ -52,15 +50,18 @@ module "VPC" {
 # Configuring the analysis instance
 
 module "EC2" {
-  source                    = "./EC2"
-  project_name              = "${var.project_name}"
-  region                    = "${local.region}"
-  availability_zone         = "${local.availability_zone}"
-  instance_type             = "${var.instance_type}"
-  security_group_ids        = ["${module.VPC.vpc_security_group_ids}"]
-  root_volume_size          = "${var.root_volume_size}"
-  EBS_volume_size           = "${var.EBS_volume_size}"
-  EBS_device_name           = "${local.EBS_device_name}"
-  EBS_attach_volume         = "${local.EBS_attach_volume}"
-  cloudwatch_logs_role_name = "${module.IAM.CloudWatchLogsRole_name}"
+  source                      = "./EC2"
+  project_name                = "${var.project_name}"
+  region                      = "${local.region}"
+  availability_zone           = "${local.availability_zone}"
+  instance_type               = "${var.instance_type}"
+  security_group_ids          = ["${module.VPC.vpc_security_group_ids}"]
+  root_volume_size            = "${var.root_volume_size}"
+  EBS_volume_size             = "${var.EBS_volume_size}"
+  EBS_device_name             = "${local.EBS_device_name}"
+  EBS_attach_volume           = "${local.EBS_attach_volume}"
+  data_folder_name            = "${var.data_folder_name}"
+  cloudwatch_logs_role_name   = "${module.IAM.CloudWatchLogsRole_name}"
+  workspaces_public_key_path  = "${var.workspaces_public_key_path}"
+  workspaces_private_key_path = "${var.workspaces_private_key_path}"
 }

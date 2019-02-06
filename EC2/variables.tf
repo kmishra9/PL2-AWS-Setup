@@ -44,11 +44,29 @@ variable "EBS_device_name" {
 
 variable "EBS_attach_volume" {
   type = "string"
-  default = "true"
-  description = "Whether or not to have Terraform attach the EBS data volume directly to the EC2 instance. Can be set to 'false' in case the instance type specified does not support EBS devices at the default 'EBS_device_name'"
+  default = "1"
+  description = "Whether or not to have Terraform attach the EBS data volume directly to the EC2 instance. Can be set to '0' in case the instance type specified does not support EBS devices at the default 'EBS_device_name'"
+}
+
+variable "data_folder_name" {
+  type = "string"
+  default = "sensitive_data"
+  description = "The name of the folder the data will be stored in (on the EBS volume)"
 }
 
 variable "cloudwatch_logs_role_name" {
   type        = "string"
   description = "The name of a role with appropriate permissions to publish CloudWatch Logs from the agent and a trust relationship with EC2."
+}
+
+variable "workspaces_public_key_path" {
+  type = "string"
+  default = "~/.ssh/id_rsa.pub"
+  description = "The public key path (relative or absolute) of the AWS Workspace from which this setup is being administered, to be imported as an 'EC2 KeyPair'"
+}
+
+variable "workspaces_private_key_path" {
+  type = "string"
+  default = "~/.ssh/id_rsa"
+  description = "The private key path (relative or absolute) of the AWS Workspace from which this setup is being administered, used to connect via SSH to the instance"
 }
