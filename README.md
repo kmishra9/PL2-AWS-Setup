@@ -9,12 +9,15 @@
   - Add CloudWatch Idle alarms to setup for leaving setup running too long
   - Document instructions on changing the device name and/or manual attachment of EBS devices to the AWS_Instance
   - Changing the size of your EBS data volume
+  - Creating Passwords for IAM Users
 
 ## Overview
 
 This GitHub repository hosts Terraform scripts that automatically set up a Protection Level 2 (PL2) High Performance Computing (HPC) environment in Amazon Web Services (AWS) for researchers working with secure big data. This environment is at use at UC Berkeley and is one of Berkeley Research Computing's Infrastructure-as-a-service (IaaS) solutions for researchers.
 
 Before beginning, it is recommended that you review the [PL2 AWS Setup - Generalized Cost Estimator for HPC](https://docs.google.com/document/d/1VL2TNQnx3wHRkHMnyBUlrT7jW5uFZfDGXvzLvSkOSPw/edit?usp=sharing) which projects expenses for a setup like this. If at any point you need assistance or would like to consult with our team on your project, please feel free to email the [BRC Consulting team](mailto:research-it-consulting@berkeley.edu). This guide is intended for the systems or security administrator of a project to use to build the setup. Finally, if you're interested in looking at and understanding this project's code, start with `main.tf`, `outputs.tf`, and `variables.tf` -- the [recommended minimal module files](https://www.terraform.io/docs/modules/create.html#standard-module-structure) -- and work your way from there.
+
+**If at any point you run into any issues, have a question, a special use case, or need additional clarification and documentation, feel free to [file an issue on GitHub](https://github.com/kmishra9/PL2-AWS-Setup/issues) and we'll do our best to handle it.**
 
 ---
 
@@ -48,18 +51,19 @@ Before beginning, it is recommended that you review the [PL2 AWS Setup - General
 5. In your web browser navigate to the [CIS Ubuntu Linux 18.04 LTS Benchmark Level 1 marketplace page](https://aws.amazon.com/marketplace/pp?sku=b1e35cepur7ecue1bq883thxr) and subscribe your SPA account to the software.
   - **Note**: This step may take a few minutes to complete but the page will notify you when your account has been successfully subscribed.
 
-6. Navigate to the [AWS Workspaces Console](https://us-west-2.console.aws.amazon.com/workspaces/home?region=us-west-2#listworkspaces:) and use it to create an Amazon Linux AWS Workspace called `Administration` in the US-West-2 (Oregon) region.
-  - **Note**: You should create a new `Simple AD` that will have `Size=Small`, an `Organization Name` of your choosing, `Directory DNS Name=corp.example.com` and a password for the `Administration` workspace that you should generate and document using the strong random password generator linked from your copy of the Documentation Template.
+6. Navigate to the [AWS Workspaces Console](https://us-west-2.console.aws.amazon.com/workspaces/home?region=us-west-2#listworkspaces:) and use it to create a "Standard" Amazon Linux AWS Workspace called `Administration` in the US-West-2 (Oregon) region. This Workspace won't be doing any intensive computation nor will it likely need much storage so a basic option is fine.
+  - **Note**: Before you can create a Workspace, you will need to create a new `Simple AD` that will have `Size = Small`, an `Organization Name` of your choosing, `Directory DNS Name = corp.example.com` and a password for the *Directory Administrator* (which is different from the `Administration` workspace you're creating). You should generate a password using the strong random password generator linked from your copy of the Documentation Template and document the password in the *Directory Administrator* section of the AWS Workspaces credentials table. During creation of the `Simple AD` should also select the default VPC and subnets `us-west-2a` and `us-west-2b`. This will take a few minutes to create.
+    - Feel free to examine additional documentation on ["What Gets Created"](https://docs.aws.amazon.com/directoryservice/latest/admin-guide/create_details_simple.html?icmpid=docs_ds_console_help_panel) when you create a directory with `Simple AD`.
   - **Note**: Attempting to create the Terraform setup from outside the Workspace (which is within the same VPC as the EC2 instance) will fail due to a VPC security group (firewall) configured only to allow access to the instance from within the VPC. For advanced users attempting to change or modify this behaviour, see the `VPC` and `EC2` modules for more details.
 
 ## Administration From an AWS Workspace
 
 For the remainder of this section, you should be logged into your `Administration` AWS Workspace, running Amazon Linux. To access your `Administration` workspace, you'll need to [download an AWS Workspaces client](https://clients.amazonworkspaces.com/) for your device.
 1. Installations
-  - Install [Google Chrome](https://www.google.com/chrome/) (main web browser)
-  - Install [Atom](https://atom.io) (main text editor)
-  - Install [Terraform](https://learn.hashicorp.com/terraform/getting-started/install.html) (automated Infrastructure-as-a-service tool)
-    - Verify your installation is running smoothly ensuring the behaviour in the installation documentation matches what happens on your machine
+  - Install [Google Chrome](https://www.google.com/chrome/) (main web browser).
+  - Install [Atom](https://atom.io) (main text editor).
+  - Install [Terraform](https://learn.hashicorp.com/terraform/getting-started/install.html) (automated Infrastructure-as-a-service tool).
+    - Verify your installation is running smoothly ensuring the behaviour in the installation documentation matches what happens on your machine.
 
 2. Setting Up Terraform
   - Clone this GitHub repository to a directory on your Workspace.
@@ -70,7 +74,19 @@ For the remainder of this section, you should be logged into your `Administratio
 
 3. Running terraform
   - In a Terminal, navigate to this cloned GitHub repository.
-  - Initialize Terraform with the Terminal command `terraform init`
-  - Next, run `terraform apply` to start the automated build. This will take several minutes
+  - Initialize Terraform with the Terminal command `terraform init`.
+  - Next, run `terraform apply` to start the automated build. This will take several minutes.
+  -
 
 ## Final Touches
+
+1. AWS Workspaces for Researchers
+  - At this point, an `Administration` workspace has been created but individual researchers will also need their own workspaces in order to access the setup.
+  - Unfortunately, Terraform is unable to provision AWS Workspaces for each individual researcher automatically so every reasearcher needs to have a seperate Workspace created for them
+  - Researcher Workspace Creation
+    - TODO 1
+    - TODO 2
+
+2. Creating Passwords for IAM Users
+  - At this point, Terraform has generated IAM users for administrators, researchers, and log analysts, but hasn't yet assigned any of them passwords.
+  - Each IAM user also follows a standardized format, such as `Administrator_2` or `Researcher_0`, meaning you'll need to assign real people to these IAM users and generate passwords for each of them to be able to access the console. Your copy of the Documentation Template should be invaluable in allowing you to cleanly organize this information.
