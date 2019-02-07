@@ -72,7 +72,8 @@ variable "data_folder_name" {
 ################################################################################
 # Build-defined variables
 # Note: these have already been defined, there is no need to modify them (in
-# this file) unless you are an advanced user and know what changing these does
+# this file - they are local variables and cannot be modified from a .tfvars
+# file) unless you are an advanced user and know what changing these does
 ################################################################################
 
 locals {
