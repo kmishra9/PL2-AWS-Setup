@@ -1,0 +1,17 @@
+project_name                = "tf-test"
+organization_name           = "BRC"
+
+# Fake credentials for a Terraform IAM User
+access_key                  = "XKLABNVD4NI6M7PRDCHC"
+secret_key                  = "KxRX/93WdC5i1b7SRthXxjaCdo64AekfPf/HRWw4"
+
+workspaces_public_key_path  = "~/.ssh/id_rsa.pub"
+workspaces_private_key_path = "~/.ssh/id_rsa"
+
+num_researchers             = "2"
+num_admins                  = "2"
+
+instance_type               = "t2.micro"
+root_volume_size            = "150"
+EBS_volume_size             = "25"
+data_folder_name            = "kaiserData"
