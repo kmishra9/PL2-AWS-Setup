@@ -53,12 +53,14 @@ variable "instance_type" {
 
 variable "root_volume_size" {
   type = "string"
-  description = "The integer volume size (in GB) of the root EC2 analysis instance. This volume should not contain sensitive data. Roughly 50 GB will be reserved by the system."
+  default = "100"
+  description = "The integer volume size (in GB) of the root EC2 analysis instance. This volume should not contain sensitive data. Roughly 50 GB will be reserved by the system, so the recommended minimum specified here should be 100GB."
 }
 
 variable "EBS_volume_size" {
   type = "string"
-  description = "The volume size (in GB) of the EBS data storage volume attached to the EC2 analysis instance. Should be the only volume containing sensitive data."
+  default = "25"
+  description = "The volume size (in GB) of the EBS data storage volume attached to the EC2 analysis instance. Should be the only volume containing sensitive data. Recommended minimum of 25GB"
 }
 
 variable "data_folder_name" {
