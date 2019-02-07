@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Install with ./install_programming_software
+# Based on Ben's original script (https://stackoverflow.com/questions/29667330/automated-installation-of-r-studio-using-shell-script)
+
+# Dependencies
+sudo apt-get -y install libgstreamer0.10-0 libgstreamer-plugins-base0.10-dev libcurl4-openssl-dev libssl-dev libopenblas-base libxml2-dev make gcc git pandoc libjpeg62 unzip curl littler openjdk-7-* gedit jags imagemagick docker-engine libssl-dev gdebi-core
+
+
+bash -c "export PKG_CONFIG_PATH=$(sudo find / -name 'openssl.pc')"
+
+# Install R & RStudio
+sudo bash -c 'sudo echo "deb https://cloud.r-project.org/bin/linux/ubuntu trusty-cran35/" >> /etc/apt/sources.list'
+
+sudo apt-get -y update
+sudo apt-get -y install r-base r-base-dev r-cran-xml r-cran-rjava -y
+sudo R CMD javareconf
+
+# Get the URL of the latest version of RStudio-Server
+Download_URL=$(wget -q -O -  http://www.rstudio.org/download/daily/server/ubuntu64 | grep -o -m 1 "https[^\']*" )
+
+# Download the installer to a temp file, install it, and remove the temp file
+FILE=$(mktemp)
+sudo wget "$Download_URL" -qO $FILE && sudo dpkg -i $FILE
+rm $FILE
+
+# Install JupyterHub (https://github.com/jupyterhub/jupyterhub/wiki/Installation-of-Jupyterhub-on-remote-server)
+
+# curl -o ./Anaconda3.sh https://repo.anaconda.com/archive/Anaconda3-2018.12-Linux-x86_64.sh
+# bash Anaconda3.sh -b
+#
+# sudo apt-get -y install python-pip python3-pip
+# sudo apt-get -y install npm nodejs
+# npm install -g configurable-http-proxy
+# pip3 install jupyterhub
+# pip3 install --upgrade notebook

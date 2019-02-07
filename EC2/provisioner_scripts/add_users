@@ -1,21 +1,27 @@
 #!/bin/bash
 
-# Takes a single argument - num_researchers - and creates user accounts for researchers 0 through num_researchers-1
+# Takes two arguments
+#   $1 : data_folder_path - creates an alias folder to data_folder_path within every new researcher directory
+#   $2 : num_researchers - creates num_users researcher accounts
+
+pathname=a/b/c
+echo $(basename $pathname)
+echo $(basename $(dirname $pathname))
+echo $(basename $(dirname $(dirname $pathname)))
+
 
 sudo apt install pwgen
 
-# Add mount_drives to all new user directories
+# Set default files within all user's home directories (# https://unix.stackexchange.com/questions/146896/default-files-in-home-dir-for-each-user)
 sudo cp ./mount_drives /etc/skel/mount_drives
+sudo ln -s $1 /etc/skel/$(basename $1)
 
-for ((i=0; i<$1; i++)); do
+# Add new user directories
+for ((i=0; i<$2; i++)); do
     user_name=researcher_$i
-    user_password=$(pwgen -s 15 1)
+    user_password=$(pwgen -s 16 1)
 
     sudo adduser $user_name --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
     sudo echo $user_name:$user_password | chpasswd
     echo "$user_name added successfully with password: $user_password" >> add_users.log
 done
-
-# NOTE: The adduser program is extensively configurable via the file /etc/adduser.conf.
-# The initial contents of the user's home directory normally come from /etc/skel (be sure to list it with ls -a, since it's all dot files).
-# https://unix.stackexchange.com/questions/146896/default-files-in-home-dir-for-each-user

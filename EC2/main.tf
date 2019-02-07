@@ -1,9 +1,12 @@
-################################################################################
-# AMI Setup
+# Local Variable Declarations
 locals {
   cis_owner_id = 679593333241
   ubuntu_home_dir_path = "/home/ubuntu"
+  data_folder_path = "/home/${var.data_folder_name}"
 }
+
+################################################################################
+# AMI Setup
 
 data "aws_ami" "cis_level_1_ami" {
   most_recent = true
@@ -73,7 +76,7 @@ resource "aws_instance" "EC2_analysis_instance" {
 
   # Add Permissions to Provisioned Files
   provisioner "local-exec" {
-    command = "chmod 744 add_swap install_updates mount_drives"
+    command = "chmod 744 add_swap add_users install_programming_software install_updates mount_drives"
     working_dir = "${local.ubuntu_home_dir_path}"
 
     connection {
@@ -103,7 +106,7 @@ resource "aws_instance" "EC2_analysis_instance" {
 
   # Mount Drives
   provisioner "local-exec" {
-    command = "./mount_drives /home/${var.data_folder_name}"
+    command = "./mount_drives ${local.data_folder_path}"
     working_dir = "${local.ubuntu_home_dir_path}"
 
     connection {
@@ -117,9 +120,24 @@ resource "aws_instance" "EC2_analysis_instance" {
   }
 
 
-  # Add Users
+  # Add Researcher Accounts
   provisioner "local-exec" {
-    command = "./add_users ${var.num_researchers}"
+    command = "./add_users ${local.data_folder_path} ${var.num_researchers}"
+    working_dir = "${local.ubuntu_home_dir_path}"
+
+    connection {
+      type     = "ssh"
+      user     = "ubuntu"
+      host     = "${aws_instance.EC2_analysis_instance.public_dns}"
+      timeout  = "30s"
+      private_key = "${file(var.workspaces_private_key_path)}"
+      agent    = "false"
+    }
+  }
+
+  # Install R, RStudio, Python3, and JupyterHub
+  provisioner "local-exec" {
+    command = "./add_users ${local.data_folder_path} ${var.num_researchers}"
     working_dir = "${local.ubuntu_home_dir_path}"
 
     connection {
@@ -133,23 +151,21 @@ resource "aws_instance" "EC2_analysis_instance" {
   }
 
   # Install CloudWatch Agent
-  # provisioner "local-exec" {
-  #   command = ""
-  #   working_dir = "~/"
-  #
-  #   connection {
-  #     type     = "ssh"
-  #     user     = "ubuntu"
-  #     host     = "${aws_instance.EC2_analysis_instance.public_dns}"
-  #     timeout  = "30s"
-  #     private_key = "${file(var.workspaces_private_key_path)}"
-  #     agent    = "false"
-  #   }
-  # }
+  provisioner "local-exec" {
+    command = ""
+    working_dir = "~/"
+
+    connection {
+      type     = "ssh"
+      user     = "ubuntu"
+      host     = "${aws_instance.EC2_analysis_instance.public_dns}"
+      timeout  = "30s"
+      private_key = "${file(var.workspaces_private_key_path)}"
+      agent    = "false"
+    }
+  }
 
 
-
-  # TODO: MAKE THIS LAST
   # Install Updates & Reboot
   provisioner "local-exec" {
     command = "./install_updates"
