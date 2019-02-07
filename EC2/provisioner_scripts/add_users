@@ -22,6 +22,6 @@ for ((i=0; i<$2; i++)); do
     user_password=$(pwgen -s 16 1)
 
     sudo adduser $user_name --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
-    sudo echo $user_name:$user_password | chpasswd
+    echo $user_name:$user_password | sudo chpasswd
     echo "$user_name added successfully with password: $user_password" >> add_users.log
 done

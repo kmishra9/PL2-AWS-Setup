@@ -1,6 +1,8 @@
 # PL2-AWS-Setup
 
 ###### TODO
+  - Get all provisioners 100% working
+  - Set proper security group on EC2_analysis_instance
   - Create and link to an example, fake, filled-in PL2 Documentation Template
   - Create a template MSSEI
   - Create and link to documentation
