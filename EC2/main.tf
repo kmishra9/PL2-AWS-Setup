@@ -76,14 +76,17 @@ resource "aws_instance" "EC2_analysis_instance" {
 
   provisioner "remote-exec" {
     inline = [
+      # Fail quickly if a failure occurs
+      "set -e",
       # Add Permissions to Provisioned Files
       "chmod 744 add_swap add_users install_programming_software install_updates mount_drives",
       # Add Swap
       "./add_swap",
-      # Create Mountpoint for data
-      "mkdir ${local.data_folder_path}"
+      # Create Mountpoint for data folder
+      "sudo mkdir ${local.data_folder_path}",
+      "sudo chmod 777 ${local.data_folder_path}",
       # Mount Drives
-      "./mount_drives ${local.data_folder_path}",
+      # "./mount_drives ${local.data_folder_path}",
       # Add Researcher Accounts
       "./add_users ${local.data_folder_path} ${var.num_researchers}",
       # Install R and RStudio
@@ -103,6 +106,11 @@ resource "aws_instance" "EC2_analysis_instance" {
       agent    = "false"
     }
   }
+
+  # Add SSH tunnel
+  # provisioner "local-exec" {
+  #
+  # }
 }
 
 # EBS Volumes

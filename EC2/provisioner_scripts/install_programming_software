@@ -4,7 +4,7 @@
 # Based on Ben's original script (https://stackoverflow.com/questions/29667330/automated-installation-of-r-studio-using-shell-script)
 
 # Dependencies
-sudo apt-get -y install libgstreamer0.10-0 libgstreamer-plugins-base0.10-dev libcurl4-openssl-dev libssl-dev libopenblas-base libxml2-dev make gcc git pandoc libjpeg62 unzip curl littler openjdk-7-* gedit jags imagemagick docker-engine libssl-dev gdebi-core
+sudo apt-get -y install libopenblas-base  make gcc git pandoc unzip curl libssl-dev gdebi-core
 
 
 bash -c "export PKG_CONFIG_PATH=$(sudo find / -name 'openssl.pc')"
@@ -12,12 +12,23 @@ bash -c "export PKG_CONFIG_PATH=$(sudo find / -name 'openssl.pc')"
 # Install R & RStudio
 sudo bash -c 'sudo echo "deb https://cloud.r-project.org/bin/linux/ubuntu trusty-cran35/" >> /etc/apt/sources.list'
 
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
+
 sudo apt-get -y update
-sudo apt-get -y install r-base r-base-dev r-cran-xml r-cran-rjava -y
+sudo apt-get -y install r-base r-base-dev r-cran-xml r-cran-rjava libdbi1 librrd8 rrdtool
 sudo R CMD javareconf
 
 # Get the URL of the latest version of RStudio-Server
-Download_URL=$(wget -q -O -  http://www.rstudio.org/download/daily/server/ubuntu64 | grep -o -m 1 "https[^\']*" )
+# Source
+Download_URL=https://s3.amazonaws.com/rstudio-dailybuilds/rstudio-server-1.1.463-amd64.deb
+
+# Ensure dpkg is unlocked (https://itsfoss.com/could-not-get-lock-error/)
+sudo rm /var/lib/apt/lists/lock
+sudo rm /var/cache/apt/archives/lock
+sudo rm /var/lib/dpkg/lock
+sudo dpkg --configure -a
+sudo apt update
+echo "DPKG Unlocked!"
 
 # Download the installer to a temp file, install it, and remove the temp file
 FILE=$(mktemp)

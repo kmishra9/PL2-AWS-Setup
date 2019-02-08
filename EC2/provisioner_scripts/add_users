@@ -3,14 +3,18 @@
 # Takes two arguments
 #   $1 : data_folder_path - creates an alias folder to data_folder_path within every new researcher directory
 #   $2 : num_researchers - creates num_users researcher accounts
+echo $1
+echo $2
 
-pathname=a/b/c
-echo $(basename $pathname)
-echo $(basename $(dirname $pathname))
-echo $(basename $(dirname $(dirname $pathname)))
+# Ensure dpkg is unlocked (https://itsfoss.com/could-not-get-lock-error/)
+sudo rm /var/lib/apt/lists/lock
+sudo rm /var/cache/apt/archives/lock
+sudo rm /var/lib/dpkg/lock
+sudo dpkg --configure -a
+sudo apt update
+echo "DPKG Unlocked!"
 
-
-sudo apt install pwgen
+sudo apt-get -y install pwgen
 
 # Set default files within all user's home directories (# https://unix.stackexchange.com/questions/146896/default-files-in-home-dir-for-each-user)
 sudo cp ./mount_drives /etc/skel/mount_drives
