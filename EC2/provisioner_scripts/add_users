@@ -12,7 +12,7 @@ sudo rm /var/cache/apt/archives/lock
 sudo rm /var/lib/dpkg/lock
 sudo dpkg --configure -a
 sudo apt update
-echo "DPKG Unlocked!"
+echo "DPKG Unlocked! (add_users)"
 
 sudo apt-get -y install pwgen
 

@@ -61,11 +61,13 @@ Before beginning, it is recommended that you review the [PL2 AWS Setup - General
 ## Administration From an AWS Workspace
 
 For the remainder of this section, you should be logged into your `Administration` AWS Workspace, running Amazon Linux. To access your `Administration` workspace, you'll need to complete your user profile, [download an AWS Workspaces client](https://clients.amazonworkspaces.com/) for your device, and then login with username `Administration` and the password you've set (which you should document in the Documentation Template). See the email sent to your SPA email for exact details.
-1. Installations
+1. Setup
   - Install [Google Chrome](https://www.google.com/chrome/) (main web browser).
   - Install [Atom](https://atom.io) (main text editor).
   - Install [Terraform](https://learn.hashicorp.com/terraform/getting-started/install.html) (automated Infrastructure-as-a-service tool).
     - Verify your installation is running smoothly ensuring the behaviour in the installation documentation matches what happens on your machine.
+  - In a Terminal, type `ssh-keygen` to generate an SSH key pair for your `Administration` workspace
+    - Feel free to reference documentation on [Generating a New Key with ssh-keygen](https://www.ssh.com/ssh/keygen/)
 
 2. Setting Up Terraform
   - Clone this GitHub repository to a directory on your Workspace.
@@ -78,7 +80,6 @@ For the remainder of this section, you should be logged into your `Administratio
   - In a Terminal, navigate to this cloned GitHub repository.
   - Initialize Terraform with the Terminal command `terraform init`.
   - Next, run `terraform apply` to start the automated build. This will take several minutes.
-  -
 
 ## Final Touches
 

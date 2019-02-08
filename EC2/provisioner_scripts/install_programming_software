@@ -3,6 +3,14 @@
 # Install with ./install_programming_software
 # Based on Ben's original script (https://stackoverflow.com/questions/29667330/automated-installation-of-r-studio-using-shell-script)
 
+# Ensure dpkg is unlocked (https://itsfoss.com/could-not-get-lock-error/)
+sudo rm /var/lib/apt/lists/lock
+sudo rm /var/cache/apt/archives/lock
+sudo rm /var/lib/dpkg/lock
+sudo dpkg --configure -a
+sudo apt update
+echo "DPKG Unlocked! (install_programming_software)"
+
 # Dependencies
 sudo apt-get -y install libopenblas-base  make gcc git pandoc unzip curl libssl-dev gdebi-core
 
@@ -28,7 +36,7 @@ sudo rm /var/cache/apt/archives/lock
 sudo rm /var/lib/dpkg/lock
 sudo dpkg --configure -a
 sudo apt update
-echo "DPKG Unlocked!"
+echo "DPKG Unlocked! (install_programming_software)"
 
 # Download the installer to a temp file, install it, and remove the temp file
 FILE=$(mktemp)
