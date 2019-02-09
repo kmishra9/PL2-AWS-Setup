@@ -9,7 +9,7 @@ sudo rm /var/cache/apt/archives/lock
 sudo rm /var/lib/dpkg/lock
 sudo dpkg --configure -a
 sudo apt update
-echo "DPKG Unlocked! (install_programming_software)"
+echo "DPKG Unlocked! (install_programming_software 1)"
 
 # Dependencies
 sudo apt-get -y install libopenblas-base  make gcc git pandoc unzip curl libssl-dev gdebi-core
@@ -36,7 +36,7 @@ sudo rm /var/cache/apt/archives/lock
 sudo rm /var/lib/dpkg/lock
 sudo dpkg --configure -a
 sudo apt update
-echo "DPKG Unlocked! (install_programming_software)"
+echo "DPKG Unlocked! (install_programming_software 2)"
 
 # Download the installer to a temp file, install it, and remove the temp file
 FILE=$(mktemp)

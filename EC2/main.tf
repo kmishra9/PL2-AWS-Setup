@@ -18,10 +18,10 @@ data "aws_ami" "cis_level_1_ami" {
 
   filter {
     name = "name"
-    values = ["CIS Ubuntu Linux 18.04 LTS Benchmark*"]
+    values = ["CIS Ubuntu Linux 16.04 LTS Benchmark*"]
   }
 
-  name_regex = "CIS Ubuntu Linux 18.04 LTS Benchmark-*(Level 1)*"
+  name_regex = "CIS Ubuntu Linux 16.04 LTS Benchmark-*(Level 1)*"
 }
 
 ################################################################################
@@ -76,12 +76,10 @@ resource "aws_instance" "EC2_analysis_instance" {
 
   provisioner "remote-exec" {
     inline = [
-      # Fail quickly if a failure occurs
-      "set -e",
       # Add Permissions to Provisioned Files
       "chmod 744 add_swap add_users install_programming_software install_updates mount_drives",
       # Add Swap
-      "./add_swap",
+      # "./add_swap",
       # Create Mountpoint for data folder
       "sudo mkdir ${local.data_folder_path}",
       "sudo chmod 777 ${local.data_folder_path}",
@@ -106,11 +104,6 @@ resource "aws_instance" "EC2_analysis_instance" {
       agent    = "false"
     }
   }
-
-  # Add SSH tunnel
-  # provisioner "local-exec" {
-  #
-  # }
 }
 
 # EBS Volumes
