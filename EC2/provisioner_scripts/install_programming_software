@@ -3,17 +3,8 @@
 # Install with ./install_programming_software
 # Based on Ben's original script (https://stackoverflow.com/questions/29667330/automated-installation-of-r-studio-using-shell-script)
 
-# Ensure dpkg is unlocked (https://itsfoss.com/could-not-get-lock-error/)
-sudo rm /var/lib/apt/lists/lock
-sudo rm /var/cache/apt/archives/lock
-sudo rm /var/lib/dpkg/lock
-sudo dpkg --configure -a
-sudo apt update
-echo "DPKG Unlocked! (install_programming_software 1)"
-
 # Dependencies
 sudo apt-get -y install libopenblas-base  make gcc git pandoc unzip curl libssl-dev gdebi-core
-
 
 bash -c "export PKG_CONFIG_PATH=$(sudo find / -name 'openssl.pc')"
 
@@ -23,20 +14,11 @@ sudo bash -c 'sudo echo "deb https://cloud.r-project.org/bin/linux/ubuntu trusty
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
 
 sudo apt-get -y update
-sudo apt-get -y install r-base r-base-dev r-cran-xml r-cran-rjava libdbi1 librrd8 rrdtool
-sudo R CMD javareconf
+sudo apt-get -y install r-base r-base-dev libdbi1
 
 # Get the URL of the latest version of RStudio-Server
 # Source
 Download_URL=https://s3.amazonaws.com/rstudio-dailybuilds/rstudio-server-1.1.463-amd64.deb
-
-# Ensure dpkg is unlocked (https://itsfoss.com/could-not-get-lock-error/)
-sudo rm /var/lib/apt/lists/lock
-sudo rm /var/cache/apt/archives/lock
-sudo rm /var/lib/dpkg/lock
-sudo dpkg --configure -a
-sudo apt update
-echo "DPKG Unlocked! (install_programming_software 2)"
 
 # Download the installer to a temp file, install it, and remove the temp file
 FILE=$(mktemp)

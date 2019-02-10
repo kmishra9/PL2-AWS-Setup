@@ -55,6 +55,30 @@ resource "aws_instance" "EC2_analysis_instance" {
     volume_size           = "${var.root_volume_size}"
     delete_on_termination = "true"
   }
+}
+
+# EBS Volumes
+resource "aws_ebs_volume" "data_storage" {
+  availability_zone = "${var.region}${var.availability_zone}"
+  encrypted = "true"
+  size = "${var.EBS_volume_size}"
+  tags = {
+    name = "${var.project_name}-data"
+  }
+}
+
+resource "aws_volume_attachment" "data_storage_attachment" {
+  count       = "${var.EBS_attach_volume}"
+  device_name = "${var.EBS_device_name}"
+  volume_id   = "${aws_ebs_volume.data_storage.id}"
+  instance_id = "${aws_instance.EC2_analysis_instance.id}"
+}
+
+# Trigger to begin installing things once EC2 is fully set up
+resource "null_resource" "EC2_setup" {
+  triggers {
+    successful_volume_attachment = "${aws_volume_attachment.data_storage_attachment.volume_id}"
+  }
 
   ##############################################################################
   # Commands to run on creation of the EC2 resource
@@ -83,16 +107,12 @@ resource "aws_instance" "EC2_analysis_instance" {
       # Create Mountpoint for data folder
       "sudo mkdir ${local.data_folder_path}",
       "sudo chmod 777 ${local.data_folder_path}",
-      # Mount Drives
-      # "./mount_drives ${local.data_folder_path}",
       # Add Researcher Accounts
       "./add_users ${local.data_folder_path} ${var.num_researchers}",
       # Install R and RStudio
-      "./install_programming_software ${local.data_folder_path} ${var.num_researchers}",
-      # TODO: Install CloudWatch Agent
-      "echo 'Install CloudWatch Agent'",
-      # Install Updates & Reboot
-      "./install_updates",
+      # "./install_programming_software ${local.data_folder_path} ${var.num_researchers}",
+      # Install CloudWatch Agent
+      # "echo 'Install CloudWatch Agent'",
     ]
 
     connection {
@@ -105,23 +125,5 @@ resource "aws_instance" "EC2_analysis_instance" {
     }
   }
 }
-
-# EBS Volumes
-resource "aws_ebs_volume" "data_storage" {
-  availability_zone = "${var.region}${var.availability_zone}"
-  encrypted = "true"
-  size = "${var.EBS_volume_size}"
-  tags = {
-    name = "${var.project_name}-data"
-  }
-}
-
-resource "aws_volume_attachment" "data_storage_attachment" {
-  count       = "${var.EBS_attach_volume}"
-  device_name = "${var.EBS_device_name}"
-  volume_id   = "${aws_ebs_volume.data_storage.id}"
-  instance_id = "${aws_instance.EC2_analysis_instance.id}"
-}
-
 
 # Python Script for staying secure: https://www.cisecurity.org/python-script-for-staying-secure-with-the-latest-cis-amis/

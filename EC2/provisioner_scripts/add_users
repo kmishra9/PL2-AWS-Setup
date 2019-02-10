@@ -6,14 +6,6 @@
 echo $1
 echo $2
 
-# Ensure dpkg is unlocked (https://itsfoss.com/could-not-get-lock-error/)
-sudo rm /var/lib/apt/lists/lock
-sudo rm /var/cache/apt/archives/lock
-sudo rm /var/lib/dpkg/lock
-sudo dpkg --configure -a
-sudo apt update
-echo "DPKG Unlocked! (add_users)"
-
 sudo apt-get -y install pwgen
 
 # Set default files within all user's home directories (# https://unix.stackexchange.com/questions/146896/default-files-in-home-dir-for-each-user)
@@ -23,9 +15,11 @@ sudo ln -s $1 /etc/skel/$(basename $1)
 # Add new user directories
 for ((i=0; i<$2; i++)); do
     user_name=researcher_$i
-    user_password=$(pwgen -s 16 1)
+    user_password=$(pwgen -s -y 16 1)
 
     sudo adduser $user_name --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
     echo $user_name:$user_password | sudo chpasswd
     echo "$user_name added successfully with password: $user_password" >> add_users.log
 done
+
+sudo apt -y autoremove
