@@ -4,7 +4,7 @@
 # Based on Ben's original script (https://stackoverflow.com/questions/29667330/automated-installation-of-r-studio-using-shell-script)
 
 # Dependencies
-sudo apt-get -y install libopenblas-base  make gcc git pandoc unzip curl libssl-dev gdebi-core
+sudo apt-get -y install libopenblas-base  make gcc git pandoc unzip curl libssl-dev gdebi-core nfs-common
 
 bash -c "export PKG_CONFIG_PATH=$(sudo find / -name 'openssl.pc')"
 

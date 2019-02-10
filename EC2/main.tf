@@ -77,7 +77,8 @@ resource "aws_volume_attachment" "data_storage_attachment" {
 # Trigger to begin installing things once EC2 is fully set up
 resource "null_resource" "EC2_setup" {
   triggers {
-    successful_volume_attachment = "${aws_volume_attachment.data_storage_attachment.volume_id}"
+    new_volume = "${aws_volume_attachment.data_storage_attachment.volume_id}"
+    new_instance = "${aws_volume_attachment.data_storage_attachment.instance_id}"
   }
 
   ##############################################################################
@@ -100,6 +101,8 @@ resource "null_resource" "EC2_setup" {
 
   provisioner "remote-exec" {
     inline = [
+      # Format attached EBS data volume to have
+      "sudo mkfs -t xfs /dev/xvdf",
       # Add Permissions to Provisioned Files
       "chmod 744 add_swap add_users install_programming_software install_updates mount_drives",
       # Add Swap
@@ -110,7 +113,7 @@ resource "null_resource" "EC2_setup" {
       # Add Researcher Accounts
       "./add_users ${local.data_folder_path} ${var.num_researchers}",
       # Install R and RStudio
-      # "./install_programming_software ${local.data_folder_path} ${var.num_researchers}",
+      "./install_programming_software ${local.data_folder_path} ${var.num_researchers}",
       # Install CloudWatch Agent
       # "echo 'Install CloudWatch Agent'",
     ]
