@@ -2,10 +2,9 @@
 
 ###### TODO
   - Get all provisioners 100% working
-  - Set proper security group on EC2_analysis_instance
+  - Set proper security group on EC2_analysis_instance and connect to private_dns
   - Create and link to an example, fake, filled-in PL2 Documentation Template
-  - Create a template MSSEI
-  - Create and link to documentation
+  - Create a template MSSEI + update(redact(copy(KaiserFlu MSSEI)))
   - Fill in readme for EC2/provisioner_scripts
   - Document how to create a new researcher (for workspaces, linux, and IAM)
   - Add CloudWatch Idle alarms to setup for leaving setup running too long
@@ -61,7 +60,7 @@ Before beginning, it is recommended that you review the [PL2 AWS Setup - General
 ## Administration From an AWS Workspace
 
 For the remainder of this section, you should be logged into your `Administration` AWS Workspace, running Amazon Linux. To access your `Administration` workspace, you'll need to complete your user profile, [download an AWS Workspaces client](https://clients.amazonworkspaces.com/) for your device, and then login with username `Administration` and the password you've set (which you should document in the Documentation Template). See the email sent to your SPA email for exact details.
-1. Setup
+1. **Setup**
   - Install [Google Chrome](https://www.google.com/chrome/) (main web browser).
   - Install [Atom](https://atom.io) (main text editor).
   - Install [Terraform](https://learn.hashicorp.com/terraform/getting-started/install.html) (automated Infrastructure-as-a-service tool).
@@ -69,27 +68,59 @@ For the remainder of this section, you should be logged into your `Administratio
   - In a Terminal, type `ssh-keygen` to generate an SSH key pair for your `Administration` workspace
     - Feel free to reference documentation on [Generating a New Key with ssh-keygen](https://www.ssh.com/ssh/keygen/)
 
-2. Setting Up Terraform
+2. **Setting Up Terraform**
   - Clone this GitHub repository to a directory on your Workspace.
   - Then, in Atom, create `terraform.tfvars` (at the top level of the GitHub repository i.e. `PL2-AWS-Setup/terraform.tfvars`) and open `variables.tf`.
   - In `variables.tf`, you will find a set of variable definitions, descriptions, and defaults for which you will be responsible for assigning values to within the empty `terraform.tfvars` file.
     - **Example**: To assign a project name, you could type `project_name = "Kaiser-Flu"` in `terraform.tfvars`. Then, you would skip a line, and proceed to an assignment of the next variable documented in `variables.tf`. Feel free to make a copy of `example.tfvars.example` and rename it to `terraform.tfvars` to get started.
     - **Documentation**: Feel free to check out the `Variable Files` section of [Terraform's documentation on input variables](https://www.terraform.io/docs/configuration/variables.html#Variable_Files) for more help.
 
-3. Running terraform
+3. **Running Terraform**
   - In a Terminal, navigate to this cloned GitHub repository.
   - Initialize Terraform with the Terminal command `terraform init`.
-  - Next, run `terraform apply` to start the automated build. This will take several minutes.
+  - Next, run `terraform apply` to start the automated build. This will take a few minutes.
+    - **Note**: if you get the error `* module.EC2.aws_instance.EC2_analysis_instance: timeout - last error: dial tcp 12.345.678.901:22: i/o timeout` try rerunning the command.
+    - **Note**: if you get any other types of errors regarding resource creation or provisioning try running `terraform apply` once again, but if the issue doesn't resolve itself, report the issue on GitHub.
+    - **Note**: Any files contained in `EC2/provisioner_scripts` will be copied to the EC2 Analysis instance during Terraform's setup. If you'd like to add any of your own installation scripts or modify them from
+
+4. **Finishing Setup of your `Administration` Workspace**
+  - Document the ssh public key of `Administration` in your copy of the Documentation Template. It can generally be found at the path `~/.ssh/id_rsa.pub` and can be printed to the console with the `cat` command.
+  -
+
+
+5. **Finishing Setup of your EC2 Analysis Instance**
+  - **Configuring SSH Tunnels**
+    - adfasd
+  - You can read documentation for each of the following necessary functions in the EC2/provisioner_scripts/README.md. All of them are necessary components to a completed setup and should be run once you've SSH'd into the EC2 Analysis Instance from the `Administration` Workspace.
+    - Adding Researcher Accounts
+    - Installing Programming Software
+    - Install Updates
+    - Installing the Cloudwatch Logs Agent
+    - Mounting Drives
+  - **Other**
+    - If you have anything else you'd like to install, follow external instructions for installing things on `Ubuntu 16.04 LTS`, the OS the EC2 Analysis Instance is running
 
 ## Final Touches
 
-1. AWS Workspaces for Researchers
+1. **AWS Workspaces for Researchers**
   - At this point, an `Administration` workspace has been created but individual researchers will also need their own workspaces in order to access the setup.
   - Unfortunately, Terraform is unable to provision AWS Workspaces for each individual researcher automatically so every reasearcher needs to have a seperate Workspace created for them
-  - Researcher Workspace Creation
-    - TODO 1
-    - TODO 2
+  - **Researcher Workspace Creation**
+    - [UNDER CONSTRUCTION]
 
-2. Creating Passwords for IAM Users
+2. **Credentials for IAM User**
   - At this point, Terraform has generated IAM users for administrators, researchers, and log analysts, but hasn't yet assigned any of them passwords.
-  - Each IAM user also follows a standardized format, such as `Administrator_2` or `Researcher_0`, meaning you'll need to assign real people to these IAM users and generate passwords for each of them to be able to access the console. Your copy of the Documentation Template should be invaluable in allowing you to cleanly organize this information.
+  - You will need to enable password access for each researcher from the IAM Management Console
+  - You will need to enable programmatic access for the `Log_Analyst` IAM user, download the `secret_key` and `access_key`, and send them to
+  - **Note**: Each IAM user also follows a standardized format, such as `Administrator_2` or `Researcher_0`, meaning you'll need to assign real people to these IAM users and generate passwords for each of them to be able to access the console. Your copy of the Documentation Template should be invaluable in allowing you to cleanly organize this information.
+
+3. **Importing Data Into your AWS setup**
+  - The recommended workflow for importing data involves transferring the data to a new `Data_Acquisition` AWS Workspace that you create especially for this purpose There are a variety of ways to do this such as Box, Google Drive, AWS WorkdDocs scp, sftp, etc. Then, from `Data_Acquisition` you could transfer the data to your EC2 instance via [SCP (a terminal command)](http://www.hypexr.org/linux_scp_help.php) or something like [Cyberduck (a GUI)](https://cyberduck.io/).
+    - **Note**: It is important to remember is that this "hop" through the workspace is necessary because everything within the VPC (besides the Workspace itself) is isolated from the outside. A security group is applied to the EC2 Analysis Instance preventing any connections made from IPs outside of the VPC. Thus, directly connecting to the instance isn't an option.
+  - **Note**: I highly recommend you make a snapshot of both your root AWS EBS volume and the EBS volume containing sensitive data _prior_ to making large changes as well as a snapshot _after_ you successfully make the change. This will help keep things running smoothly in the event that accidents happen (which they do). Bricking an instance by accident, consequently, is only really bad if you don't have a straightforward path to recovery
+  - **Note**: A reminder to run `./mount_drives` pretty much any time you start the EC2 instance up. You don't want to acidentally store the data on the root volume of the EC2 instance at the path /home/[data-folder-name] (which is unencrypted) instead of its correct place on an encrypted, attached, mounted EBS volume at the same path.
+
+4. **MSSEI**
+  - For PL2 projects only, you will also need to complete a document outlining your project and declaring that it fulfills the [Minimum Security Standards for Electronic Information (MSSEI)](https://security.berkeley.edu/minimum-security-standards-electronic-information) that your data must abide by.
+  - You can find a Template MSSEI to begin filling out here.
+  - An example of a similar, completed MSSEI can be found [here](https://docs.google.com/document/d/1YqaoR8Z0DrhGTk2_UBGsBcFsrapPVFUzkLbekPCxrOU/edit?usp=sharing).
