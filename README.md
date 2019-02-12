@@ -10,7 +10,7 @@
   - Add CloudWatch Idle alarms to setup for leaving setup running too long
   - Document instructions on changing the device name and/or manual attachment of EBS devices to the AWS_Instance
   - Changing the size of your EBS data volume
-  - Creating Passwords for IAM Users
+  - Adapt [AWS User Setup Instructions](https://docs.google.com/document/d/1TjbceyJ2eE-uaxqfX-cccXCw3MgeO2wU54v6jOz1qj4/edit?usp=sharing) and [Flu AWS User Creation Guide](https://docs.google.com/document/d/1GA8IlGA6cBbR13UBnCRFe8TYaEjSZ3w9tMv6hGDVAj0/edit?usp=sharing)
 
 ## Overview
 
@@ -84,43 +84,70 @@ For the remainder of this section, you should be logged into your `Administratio
     - **Note**: Any files contained in `EC2/provisioner_scripts` will be copied to the EC2 Analysis instance during Terraform's setup. If you'd like to add any of your own installation scripts or modify them from
 
 4. **Finishing Setup of your `Administration` Workspace**
-  - Document the ssh public key of `Administration` in your copy of the Documentation Template. It can generally be found at the path `~/.ssh/id_rsa.pub` and can be printed to the console with the `cat` command.
-  -
-
+  - **SSH Public Keys**
+    - Document the ssh public key of `Administration` in your copy of the Documentation Template. It can generally be found at the path `~/.ssh/id_rsa.pub` and can be printed to the console with the `cat` command.
+  - **Configuring SSH Tunnels**
+    - An SSH tunnel is similar to an HTTPS connection in that a port on your local machine mirrors a port on the server. This is useful, for example, in encrypting a connection to RStudio-Server or JupyterHub (running on the EC2 analysis instance) from a Workspace via SSH. It also quickly allows you to SSH into the analyis instance from Terminal.
+      - You can read additional documentation that is a [Basic Introduction motivating the use of SSH tunnels](https://help.ubuntu.com/community/SSH/OpenSSH/PortForwarding)
+    - Edit `~/.ssh/config ` (or create the file if one does not yet exist) and add an entry based on the following configuration:
+    ```
+    Host [name]
+          Hostname [ip-address]
+          User [username]
+          LocalForward [from_remote_port] [to_local_port]
+    ```
+    - When you call ssh [name], an ssh connection from the current machine is initialized to [username@ip-address] and the [127.0.0.1:to_local_port] on the current machine mirrors [username@ip-address:from_remote_port]. This is an encrypted connection (and can substitute for HTTPS)
+    - **Note**: I recommend using `name=tunnel` -- it makes it simple to call `ssh tunnel` to initiate an ssh tunnel.
+    - **Note**: The `[ip-address]` should be the _private ip_ address of the EC2 Analysis Instance. You can find out what this is from the EC2 management console.
+    - **Note**: The `[from-remote-port]` needs to be running something that can be forwarded. RStudio-Server, for example, can be installed and will run on port 8000. Until something is running, however, tunnelling the port will be futile (see next section to install stuff that _can_ be tunelled) 
+    - **Example**:
+    ```
+    Host tunnel
+          Hostname 172.31.16.129
+          User ubuntu
+          LocalForward 8000 127.0.0.1:80
+    ```
+    - Restart your Terminal when complete (you can do so by exiting and opening a new one) and try typing `ssh [name]`, substituting `[name]` for the actual name you chose. You should have a successful SSH tunnel.
+    - To SSH normally, try typing `ssh [username]@[ip-address]` replacing with the actual values. You should have a successful SSH connection
+    - **Note**: You can't have an SSH tunnel to Ubuntu and a regular ssh connection to Ubuntu going at the same time.
 
 5. **Finishing Setup of your EC2 Analysis Instance**
-  - **Configuring SSH Tunnels**
-    - adfasd
+
   - You can read documentation for each of the following necessary functions in the EC2/provisioner_scripts/README.md. All of them are necessary components to a completed setup and should be run once you've SSH'd into the EC2 Analysis Instance from the `Administration` Workspace.
     - Adding Researcher Accounts
     - Installing Programming Software
-    - Install Updates
+    - Installing Updates
     - Installing the Cloudwatch Logs Agent
     - Mounting Drives
-  - **Other**
+  - **Other Instllations**
     - If you have anything else you'd like to install, follow external instructions for installing things on `Ubuntu 16.04 LTS`, the OS the EC2 Analysis Instance is running
+  - Once you've SSH'd into the EC2 Analysis Instance, you should also document the SSH public keys of each user, including Ubuntu, the "sudo" user. These will be at `/home/username/.ssh/id_rsa.pub`. If that path doesn't exist yet, you will need to switch users (example: `sudo su researcher_0`) and run `ssh-keygen`, at which point a key pair should be generated for you to access and document. To become `ubuntu` again, simply type `exit` or `logout`.
+    - **Note**: if you forget to switch users and run ssh-keygen as `ubuntu`, even fro m within the home directory of another user, you'll just be resetting `ubuntu`'s ssh keys.
 
 ## Final Touches
 
 1. **AWS Workspaces for Researchers**
   - At this point, an `Administration` workspace has been created but individual researchers will also need their own workspaces in order to access the setup.
-  - Unfortunately, Terraform is unable to provision AWS Workspaces for each individual researcher automatically so every reasearcher needs to have a seperate Workspace created for them
-  - **Researcher Workspace Creation**
-    - [UNDER CONSTRUCTION]
+  - Unfortunately, Terraform is unable to provision AWS Workspaces for each individual researcher automatically so you will need to create a separate Workspace for each researcher
+  - Follow the same steps you used to create the `Administration` Workspace to create Workspaces for each researcher. Researchers will receive an email asking them to set a password, just as the SPA email received one for the `Administration` Workspace. Ensure the researchers know to set passwords using the Strong Random Password Generator linked from your copy of the Documentation Template and to document the Workspaces passwords they generate there as well (there is a table associating a real name, workspaces username, and password where they should place their password). Researchers should also generate ssh keys and document their Workspaces ssh public key in the provided table as well.
+    - **Note**: Each Workspaces username also follows a standardized format, such as `Researcher_0` or `Researcher_11`, meaning you'll need to assign real people to these usernames in your copy of the Documentation Template as you create Workspaces for them.
+  -
 
 2. **Credentials for IAM User**
   - At this point, Terraform has generated IAM users for administrators, researchers, and log analysts, but hasn't yet assigned any of them passwords.
-  - You will need to enable password access for each researcher from the IAM Management Console
-  - You will need to enable programmatic access for the `Log_Analyst` IAM user, download the `secret_key` and `access_key`, and send them to
-  - **Note**: Each IAM user also follows a standardized format, such as `Administrator_2` or `Researcher_0`, meaning you'll need to assign real people to these IAM users and generate passwords for each of them to be able to access the console. Your copy of the Documentation Template should be invaluable in allowing you to cleanly organize this information.
+  - You will need to enable password access for each researcher from the IAM Management Console. Set passwords using the Strong Random Password Generator linked from your copy of the Documentation Template
+  - You will need to enable programmatic access for the `Log_Analyst` IAM user, download the `secret_key` and `access_key`, and send them to UC Berkeley's Log Analysis Team
+  - **Note**: Each IAM username also follows a standardized format, such as `Administrator_2` or `Researcher_0`, meaning you'll need to assign real people to these IAM users and generate passwords for each of them to be able to access the console. Your copy of the Documentation Template should be invaluable in allowing you to cleanly organize this information.
 
-3. **Importing Data Into your AWS setup**
+3. **Adding New Researchers after Terraform has been built**
+
+4. **Importing Data Into your AWS setup**
   - The recommended workflow for importing data involves transferring the data to a new `Data_Acquisition` AWS Workspace that you create especially for this purpose There are a variety of ways to do this such as Box, Google Drive, AWS WorkdDocs scp, sftp, etc. Then, from `Data_Acquisition` you could transfer the data to your EC2 instance via [SCP (a terminal command)](http://www.hypexr.org/linux_scp_help.php) or something like [Cyberduck (a GUI)](https://cyberduck.io/).
     - **Note**: It is important to remember is that this "hop" through the workspace is necessary because everything within the VPC (besides the Workspace itself) is isolated from the outside. A security group is applied to the EC2 Analysis Instance preventing any connections made from IPs outside of the VPC. Thus, directly connecting to the instance isn't an option.
   - **Note**: I highly recommend you make a snapshot of both your root AWS EBS volume and the EBS volume containing sensitive data _prior_ to making large changes as well as a snapshot _after_ you successfully make the change. This will help keep things running smoothly in the event that accidents happen (which they do). Bricking an instance by accident, consequently, is only really bad if you don't have a straightforward path to recovery
   - **Note**: A reminder to run `./mount_drives` pretty much any time you start the EC2 instance up. You don't want to acidentally store the data on the root volume of the EC2 instance at the path /home/[data-folder-name] (which is unencrypted) instead of its correct place on an encrypted, attached, mounted EBS volume at the same path.
 
-4. **MSSEI**
+5. **MSSEI**
   - For PL2 projects only, you will also need to complete a document outlining your project and declaring that it fulfills the [Minimum Security Standards for Electronic Information (MSSEI)](https://security.berkeley.edu/minimum-security-standards-electronic-information) that your data must abide by.
   - You can find a Template MSSEI to begin filling out here.
   - An example of a similar, completed MSSEI can be found [here](https://docs.google.com/document/d/1YqaoR8Z0DrhGTk2_UBGsBcFsrapPVFUzkLbekPCxrOU/edit?usp=sharing).
