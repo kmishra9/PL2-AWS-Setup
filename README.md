@@ -45,7 +45,7 @@ Before beginning, it is recommended that you review the [PL2 AWS Setup - General
   - **Use Groups to assign permissions** -- ignore this for now -- Terraform will help us create IAM groups for researcher, administrators, and log analysts
   - **Apply an IAM Password Policy** -- ignore this for now -- Terraform will set this up to ensure that the passwords required to access the console by the researchers and admin are appropriately secure against standard brute-force and dictionary attacks.
 
-4. Once you've done this, open your copy of the `PL2 AWS Setup - Documentation Template` and fill in the yellow-highlighted items in the document.
+4. Once you've done this, open your copy of the `PL2 AWS Setup - Documentation Template` and fill in the yellow-highlighted items in the document (some can be filled in now, others you should fill in as you work through the rest of the setup).
   - **Note**: You should hyperlink [Account ID: <123456789012>]() so it looks like what appears here, where you replace the Account ID with your own and link to your organization's IAM login page. This will be how members of the project log access the [AWS Management Console](https://console.aws.amazon.com/). Feel free to reference the [IAM Console and Sign-in Page documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/console.html).
   - **Note**: You should also rename the template document to follow the naming convention `Organization_Name PL2 AWS Setup - Documentation`.
 
