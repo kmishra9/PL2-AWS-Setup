@@ -4,3 +4,5 @@
 sudo apt-get -y update
 curl https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O
 sudo python ./awslogs-agent-setup.py --region us-west-2
+
+# Continue here: https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/QuickStartEC2Instance.html

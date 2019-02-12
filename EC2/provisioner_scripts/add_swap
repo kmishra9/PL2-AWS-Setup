@@ -10,7 +10,8 @@ sudo dd if=/dev/zero of=/root/myswapfile bs=1M count=30720
 sudo chmod 600 /root/myswapfile
 sudo mkswap /root/myswapfile
 free -m
-sudo swapon /root/myswapfile
 
 # At the conclusion of running this file, a swap file 30GB large has been
-# created and mounted to /root/myswapfile
+# created but the OS does not yet know it is a place to swap files to. It is
+# expected that the command ./mount_drives is given following this to conclude
+# swap setup where the sudo swapon /root/myswapfile command will be given
