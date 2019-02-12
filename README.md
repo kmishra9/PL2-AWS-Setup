@@ -1,7 +1,6 @@
 # PL2-AWS-Setup
 
 ###### TODO
-  - Get all provisioners 100% working
   - Create and link to an example, fake, filled-in PL2 Documentation Template
   - Create a template MSSEI + update(redact(copy(KaiserFlu MSSEI)))
   - Fill in readme for EC2/provisioner_scripts
@@ -150,5 +149,5 @@ For the remainder of this section, you should be logged into your `Administratio
 
 5. **MSSEI**
   - For PL2 projects only, you will also need to complete a document outlining your project and declaring that it fulfills the [Minimum Security Standards for Electronic Information (MSSEI)](https://security.berkeley.edu/minimum-security-standards-electronic-information) that your data must abide by.
-  - You can find a Template MSSEI to begin filling out here.
+  - You can find a Template MSSEI to begin filling out [here]().
   - An example of a similar, completed MSSEI can be found [here](https://docs.google.com/document/d/1YqaoR8Z0DrhGTk2_UBGsBcFsrapPVFUzkLbekPCxrOU/edit?usp=sharing).
