@@ -2,7 +2,6 @@
 
 ###### TODO
   - Get all provisioners 100% working
-  - Set proper security group on EC2_analysis_instance and connect to private_dns
   - Create and link to an example, fake, filled-in PL2 Documentation Template
   - Create a template MSSEI + update(redact(copy(KaiserFlu MSSEI)))
   - Fill in readme for EC2/provisioner_scripts
@@ -11,6 +10,8 @@
   - Document instructions on changing the device name and/or manual attachment of EBS devices to the AWS_Instance
   - Changing the size of your EBS data volume
   - Adapt [AWS User Setup Instructions](https://docs.google.com/document/d/1TjbceyJ2eE-uaxqfX-cccXCw3MgeO2wU54v6jOz1qj4/edit?usp=sharing) and [Flu AWS User Creation Guide](https://docs.google.com/document/d/1GA8IlGA6cBbR13UBnCRFe8TYaEjSZ3w9tMv6hGDVAj0/edit?usp=sharing)
+  - Destroying your Setup + Resetting Up your Setup
+  -
 
 ## Overview
 
@@ -99,7 +100,7 @@ For the remainder of this section, you should be logged into your `Administratio
     - When you call ssh [name], an ssh connection from the current machine is initialized to [username@ip-address] and the [127.0.0.1:to_local_port] on the current machine mirrors [username@ip-address:from_remote_port]. This is an encrypted connection (and can substitute for HTTPS)
     - **Note**: I recommend using `name=tunnel` -- it makes it simple to call `ssh tunnel` to initiate an ssh tunnel.
     - **Note**: The `[ip-address]` should be the _private ip_ address of the EC2 Analysis Instance. You can find out what this is from the EC2 management console.
-    - **Note**: The `[from-remote-port]` needs to be running something that can be forwarded. RStudio-Server, for example, can be installed and will run on port 8000. Until something is running, however, tunnelling the port will be futile (see next section to install stuff that _can_ be tunelled) 
+    - **Note**: The `[from-remote-port]` needs to be running something that can be forwarded. RStudio-Server, for example, can be installed and will run on port 8000. Until something is running, however, tunnelling the port will be futile (see next section to install stuff that _can_ be tunelled)
     - **Example**:
     ```
     Host tunnel

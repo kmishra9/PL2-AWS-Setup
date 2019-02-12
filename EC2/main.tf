@@ -42,7 +42,7 @@ resource "aws_instance" "EC2_analysis_instance" {
   instance_type                        = "${var.instance_type}"
   key_name                             = "${aws_key_pair.workspaces_keypair.key_name}"
   monitoring                           = "true"
-  #vpc_security_group_ids               = ["${var.security_group_ids}"]
+  vpc_security_group_ids               = ["${var.security_group_ids}"]
   iam_instance_profile                 = "${var.cloudwatch_logs_role_name}"
 
   tags = {
@@ -92,7 +92,7 @@ resource "null_resource" "EC2_setup" {
     connection {
       type     = "ssh"
       user     = "ubuntu"
-      host     = "${aws_instance.EC2_analysis_instance.public_dns}"
+      host     = "${aws_instance.EC2_analysis_instance.private_dns}"
       timeout  = "30s"
       private_key = "${file(var.workspaces_private_key_path)}"
       agent    = "false"
@@ -119,7 +119,7 @@ resource "null_resource" "EC2_setup" {
     connection {
       type     = "ssh"
       user     = "ubuntu"
-      host     = "${aws_instance.EC2_analysis_instance.public_dns}"
+      host     = "${aws_instance.EC2_analysis_instance.private_dns}"
       timeout  = "30s"
       private_key = "${file(var.workspaces_private_key_path)}"
       agent    = "false"
