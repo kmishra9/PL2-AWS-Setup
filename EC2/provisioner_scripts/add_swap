@@ -1,5 +1,10 @@
 #!/bin/bash
 
+echo "Adding Swap"
+echo ""
+echo ""
+echo ""
+
 # Adds 30GB of swap (virtual ram) via a swap file
 sudo dd if=/dev/zero of=/root/myswapfile bs=1M count=30720
 sudo chmod 600 /root/myswapfile

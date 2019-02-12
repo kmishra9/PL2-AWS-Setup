@@ -101,21 +101,19 @@ resource "null_resource" "EC2_setup" {
 
   provisioner "remote-exec" {
     inline = [
-      # Format attached EBS data volume to have
+      # Format attached EBS data volume so it can be mounted (if an existing filesystem does not already exist)
       "sudo mkfs -t xfs /dev/xvdf",
+      # Configure Dpkg to ensure locking does not occur
+      "sudo dpkg --configure -a",
       # Add Permissions to Provisioned Files
-      "chmod 744 add_swap add_users install_programming_software install_updates mount_drives",
+      "chmod 744 add_swap add_users install_cloudwatch_logs_agent install_programming_software install_updates mount_drives",
       # Add Swap
-      # "./add_swap",
+      "./add_swap",
       # Create Mountpoint for data folder
       "sudo mkdir ${local.data_folder_path}",
       "sudo chmod 777 ${local.data_folder_path}",
-      # Add Researcher Accounts
-      "./add_users ${local.data_folder_path} ${var.num_researchers}",
-      # Install R and RStudio
-      "./install_programming_software ${local.data_folder_path} ${var.num_researchers}",
-      # Install CloudWatch Agent
-      # "echo 'Install CloudWatch Agent'",
+      # Mount the attached EBS drives
+      "./mount_drives",
     ]
 
     connection {

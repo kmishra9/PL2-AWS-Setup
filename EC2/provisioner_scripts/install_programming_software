@@ -3,7 +3,18 @@
 # Install with ./install_programming_software
 # Based on Ben's original script (https://stackoverflow.com/questions/29667330/automated-installation-of-r-studio-using-shell-script)
 
+echo "Installing Programming Software"
+echo ""
+echo ""
+echo ""
+
+
 # Dependencies
+while sudo fuser /var/lib/dpkg/lock /var/lib/apt/lists/lock /var/cache/apt/archives/lock >/dev/null 2>&1;
+do
+  echo "Waiting for lock"
+  sleep 1
+done
 sudo apt-get -y install libopenblas-base  make gcc git pandoc unzip curl libssl-dev gdebi-core nfs-common
 
 bash -c "export PKG_CONFIG_PATH=$(sudo find / -name 'openssl.pc')"
@@ -13,17 +24,30 @@ sudo bash -c 'sudo echo "deb https://cloud.r-project.org/bin/linux/ubuntu trusty
 
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
 
+while sudo fuser /var/lib/dpkg/lock /var/lib/apt/lists/lock /var/cache/apt/archives/lock >/dev/null 2>&1;
+do
+  echo "Waiting for lock"
+  sleep 1
+done
 sudo apt-get -y update
+
+while sudo fuser /var/lib/dpkg/lock /var/lib/apt/lists/lock /var/cache/apt/archives/lock >/dev/null 2>&1;
+do
+  echo "Waiting for lock"
+  sleep 1
+done
 sudo apt-get -y install r-base r-base-dev libdbi1
 
-# Get the URL of the latest version of RStudio-Server
-# Source
-Download_URL=https://s3.amazonaws.com/rstudio-dailybuilds/rstudio-server-1.1.463-amd64.deb
-
 # Download the installer to a temp file, install it, and remove the temp file
+while sudo fuser /var/lib/dpkg/lock /var/lib/apt/lists/lock /var/cache/apt/archives/lock >/dev/null 2>&1;
+do
+  echo "Waiting for lock"
+  sleep 1
+done
+Download_URL=https://s3.amazonaws.com/rstudio-dailybuilds/rstudio-server-1.1.463-amd64.deb
 FILE=$(mktemp)
 sudo wget "$Download_URL" -qO $FILE && sudo dpkg -i $FILE
-rm $FILE
+sudo rm $FILE
 
 # Install JupyterHub (https://github.com/jupyterhub/jupyterhub/wiki/Installation-of-Jupyterhub-on-remote-server)
 

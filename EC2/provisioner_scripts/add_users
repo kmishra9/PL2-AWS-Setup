@@ -3,9 +3,19 @@
 # Takes two arguments
 #   $1 : data_folder_path - creates an alias folder to data_folder_path within every new researcher directory
 #   $2 : num_researchers - creates num_users researcher accounts
-echo $1
-echo $2
 
+echo "Adding Users"
+echo "data_folder_path: $1"
+echo "num_researchers: $2"
+echo ""
+echo ""
+echo ""
+
+while sudo fuser /var/lib/dpkg/lock /var/lib/apt/lists/lock /var/cache/apt/archives/lock >/dev/null 2>&1;
+do
+  echo "Waiting for lock"
+  sleep 1
+done
 sudo apt-get -y install pwgen
 
 # Set default files within all user's home directories (# https://unix.stackexchange.com/questions/146896/default-files-in-home-dir-for-each-user)
@@ -22,4 +32,9 @@ for ((i=0; i<$2; i++)); do
     echo "$user_name added successfully with password: $user_password" >> add_users.log
 done
 
+while sudo fuser /var/lib/dpkg/lock /var/lib/apt/lists/lock /var/cache/apt/archives/lock >/dev/null 2>&1;
+do
+  echo "Waiting for lock"
+  sleep 1
+done
 sudo apt -y autoremove
