@@ -26,13 +26,13 @@ Before beginning, it is recommended that you review the [PL2 AWS Setup - General
 
 1. The first thing you'll need to do is [Set up AWS Invoicing at UC Berkeley](https://docs.google.com/document/d/1cDSv0EzEkl09FVYivsTtvel1vyenoFJCDQTiECbGqT4/edit?usp=sharing).
   - **Note**: For researchers at other institutions, this involves simply setting up an AWS account with billing -- if your instituion has a particular method of AWS invoicing, it is recommended that you get that set up.
-  - **Note**: At this point, ensure that the root AWS account is attached to a Special Purpose Account (SPA), or for non-Berkeley folks, a project-specific email. This is to ensure there is a a central point of administration, helps with the separation of permissions, and ensures project's longevity is not tied to any one individual's account.
-
+  - **Note**: At this point, ensure that the root AWS account is attached to a [Special Purpose Account (SPA)](https://calnetweb.berkeley.edu/calnet-departments/special-purpose-accounts-spa), or for non-Berkeley folks, a project-specific email. This is to ensure there is a a central point of administration, helps with the separation of permissions, and ensures project's longevity is not tied to any one individual's account.
+    - **Example**: `bcht-aws@berkeley.edu` or `brc-aws-dev@berkeley.edu`
 
 2. Once you have created a SPA account, ensure you are able to [log into it](https://calnetweb.berkeley.edu/calnet-departments/special-purpose-accounts-spa/log-spa) in an Incognito window.
   - From within your SPA, check out [bmail.berkeley.edu](bmail.berkeley.edu) and your SPA's [Google Drive](https://drive.google.com).
   - From within your SPA, make a copy of this [PL2 AWS Setup - Documentation Template](https://docs.google.com/document/d/1JzAM7vR4AbKNYL_YJ6qL6J2hG3W9ePVI67BPIZvl8RU/edit?usp=sharing), which is part of the recommended workflow for this project.
-    - **Note**: As you proceed through the setup, this is a one-stop-shop for documenting pieces of the project that you have control over (such as usernames, passwords, public keys, etc.) that will be readily accessible and shareable among project members. This is useful from a systems administrator perspective and from a security audit perspective as well.
+    - **Note**: As you proceed through the setup, this is a "one-stop-shop" for documenting pieces of the project that you have control over (such as usernames, passwords, public keys, etc.) that will be readily accessible and shareable among project members. This is useful from a systems administrator perspective and from a security audit perspective as well.
     - **Note**: You should share this document with anybody involved with the project but be careful with who has access because this document will contain sensitive information. Any researcher or administrator should definitely have read+write access but you should share with individual emails only (including your own, as you'll be responsible for filling it out), rather than sharing it as a link.
 
 3. Next, log into using the services tab from your root account's AWS console, go to the Identity and Access Management (IAM) console. You will need to complete a set of 5 security tasks that are good practices for securing your root account, visible on the bottom of the dashboard. The 5 tasks are:
@@ -46,37 +46,41 @@ Before beginning, it is recommended that you review the [PL2 AWS Setup - General
   - **Apply an IAM Password Policy** -- ignore this for now -- Terraform will set this up to ensure that the passwords required to access the console by the researchers and admin are appropriately secure against standard brute-force and dictionary attacks.
 
 4. Once you've done this, open your copy of the `PL2 AWS Setup - Documentation Template` and fill in the yellow-highlighted items in the document (some can be filled in now, others you should fill in as you work through the rest of the setup).
-  - **Note**: You should hyperlink [Account ID: <123456789012>]() so it looks like what appears here, where you replace the Account ID with your own and link to your organization's IAM login page. This will be how members of the project log access the [AWS Management Console](https://console.aws.amazon.com/). Feel free to reference the [IAM Console and Sign-in Page documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/console.html).
+  - **Note**: You should hyperlink [Account ID: <123456789012>]() so it looks like what appears here, where you replace the <Account ID> with your own and link to your organization's IAM login page. This will be how members of the project log in to access the [AWS Management Console](https://console.aws.amazon.com/).
+    - **Documentation**: Feel free to reference the [IAM Console and Sign-in Page documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/console.html).
   - **Note**: You should also rename the template document to follow the naming convention `Organization_Name PL2 AWS Setup - Documentation`.
+    - **Example**: `Colford_Group PL2 AWS Setup - Documentation` or `BCHT PL2 AWS Setup - Documentation`
 
 5. In your web browser navigate to the [CIS Ubuntu Linux 16.04 LTS Benchmark Level 1 marketplace page](https://aws.amazon.com/marketplace/pp/B078TPPXV2?qid=1549956548098&sr=0-5&ref_=srh_res_product_title) and subscribe your SPA account to the software.
   - **Note**: This step may take a few minutes to complete but the page will notify you when your account has been successfully subscribed.
 
 6. Navigate to the [AWS Workspaces Console](https://us-west-2.console.aws.amazon.com/workspaces/home?region=us-west-2#listworkspaces:) and use it to create a "Standard" Windows 10 AWS Workspace called `Administration` in the US-West-2 (Oregon) region. Do not enable "Self Service Permissions" or "Amazon WorkDocs" and set the email to be your SPA email. The workspace should have a root volume capacity of 80GB and a user volume capacity of 0GB, both of which should be encrypted, and the "AutoStop (1 hour)" running mode is recommended. This can take up to 40 minutes to full create.
-  - **Note**: Before you can create a Workspace, you will need to create a new `Simple AD` that will have `Size = Small`, an `Organization Name` of your choosing, `Directory DNS Name = corp.example.com` and a password for the *Directory Administrator* (which is different from the `Administration` workspace you're creating). You should generate a password using the strong random password generator linked from your copy of the Documentation Template and document the password in the *Directory Administrator* section of the AWS Workspaces credentials table. During creation of the `Simple AD` should also select the default VPC and subnets `us-west-2a` and `us-west-2b`. This will take a few minutes to create.
+  - **Note**: Before you can create a Workspace, you will need to create a new `Simple AD` that will have `Size = Small`, an `Organization Name` of your choosing, `Directory DNS Name = corp.example.com` and a password for the *Directory Administrator* (which is different from the `Administration` workspace you're creating). You should generate a password using the strong random password generator linked from your copy of the Documentation Template and document the password in the *Directory Administrator* section of the AWS Workspaces credentials table. During creation of the `Simple AD`, you should also select the default VPC and subnets `us-west-2a` and `us-west-2b`. This will take a few minutes to create.
     - **Documentation**: Feel free to examine additional documentation on ["What Gets Created"](https://docs.aws.amazon.com/directoryservice/latest/admin-guide/create_details_simple.html?icmpid=docs_ds_console_help_panel) when you create a directory with `Simple AD`.
-  - **Note**: Attempting to create the Terraform setup from outside the Workspace (which is within the same VPC as the EC2 instance) will fail due to a VPC security group (firewall) configured only to allow access to the instance from within the VPC. For advanced users attempting to change or modify this behaviour, see the `VPC` and `EC2` modules for more details.
+  - **Note**: Attempting to create the Terraform setup from outside the Workspace (which is within the same VPC as the EC2 instance) will fail due to a VPC security group (firewall) configured only to allow access to the instance from within the VPC. Similarly, this ensures _your instance cannot be accessed from anywhere except one of the AWS workspaces that you set up_, and this is in an intentional design decision to ensure the data and instance stay secure. For advanced users attempting to change or modify this behaviour, see the `VPC` and `EC2` modules for more details.
 
 ## Administration From an AWS Workspace
 
-For the remainder of this section, you should be logged into your `Administration` AWS Workspace, which will be running Windows 10. To access your `Administration` workspace, you'll need to complete your user profile, [download an AWS Workspaces client](https://clients.amazonworkspaces.com/) for your device, and then login with username `Administration` and the password you've set (which you should document in the Documentation Template). See the email sent to your SPA email for exact details.
-1. **Setup**
+For the remainder of this section, you should be logged into your `Administration` AWS Workspace, which will be running Windows 10. To access your `Administration` workspace, you'll need to complete your user profile, [download an AWS Workspaces client](https://clients.amazonworkspaces.com/) for _your own device_ (i.e. a MacBook), and then login with username `Administration` and the password you've set (which you should record in the Documentation Template). See the email sent to your SPA email for more details and exact instructions.
+
+1. **Workspace Setup**
   - Install [Google Chrome](https://www.google.com/chrome/) (main web browser).
   - Install [Atom](https://atom.io) (main text editor).
   - Install [GitBash](https://gitforwindows.org/) (version control & Terminal emulation).
   - Install [Terraform](https://learn.hashicorp.com/terraform/getting-started/install.html) (automated Infrastructure-as-a-service tool).
-    - **Note**: Verify your installation is running smoothly ensuring the behaviour in the installation documentation matches what happens on your machine.
+    - **Note**: Verify your installation is running smoothly by ensuring the behaviour in the installation documentation matches what happens on your machine.
   - In a GitBash Terminal, type `ssh-keygen` to generate an SSH key pair for your `Administration` workspace
     - **Documentation**:Feel free to reference documentation on [Generating a New Key with ssh-keygen](https://www.ssh.com/ssh/keygen/)
     - **Note**: The ssh key will be generated by default at the path `~/.ssh/id_rsa` and the public key at `~/.ssh/id_rsa.pub`
 
 2. **Setting Up Terraform**
-  - From a GitBash Terminal, clone this GitHub repository on your Workspace (example: `git clone https://github.com/kmishra9/PL2-AWS-Setup.git`).
-    - **Note**: This will create a folder called `PL2-AWS-Setup` in the same directory where you are when you run the clone command. To get back to the top level of your home directory (that's generally the best place to clone the GitHub repo), just type `cd`.
-  - Then, in Atom, create `terraform.tfvars` (at the top level of the GitHub repository i.e. `PL2-AWS-Setup/terraform.tfvars`) and open `variables.tf`.
+  - From a GitBash Terminal, clone this GitHub repository on your Workspace (command: `git clone https://github.com/kmishra9/PL2-AWS-Setup.git`).
+    - **Note**: This will create a folder called `PL2-AWS-Setup` in the same directory where you are when you run the clone command. To get back to the top level of your home directory (that's generally the best place to clone this GitHub repo), just type `cd`.
+  - Then, in Atom, create a file and save it as `terraform.tfvars` at the top level of the GitHub repository (i.e. `PL2-AWS-Setup/terraform.tfvars`) and open the existing file, `variables.tf`.
   - In `variables.tf`, you will find a set of variable definitions, descriptions, and defaults. You will be responsible for assigning values to these variables, within the empty `terraform.tfvars` file.
+    - **Note**: The specific values you are responsible for assigning can have somewhat rigid requirements -- _read the documentation for each variable to prevent errors from occurring later_
     - **Example**: To assign a project name, you could type `project_name = "Kaiser-Flu"` in `terraform.tfvars`. Then, you would skip a line, and proceed to an assignment of the next variable documented in `variables.tf`. Feel free to make a copy of `example.tfvars.example` and rename it to `terraform.tfvars` to get started.
-    - **Documentation**: Feel free to check out the `Variable Files` section of [Terraform's documentation on input variables](https://www.terraform.io/docs/configuration/variables.html#Variable_Files) for more help.
+    - **Documentation**: Feel free to check out the "Variable Files" section of [Terraform's documentation on input variables](https://www.terraform.io/docs/configuration/variables.html#Variable_Files) for more help.
 
 3. **Running Terraform**
   - In a Terminal, navigate to this cloned GitHub repository.
