@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Install with ./install_programming_software
 # Based on Ben's original script (https://stackoverflow.com/questions/29667330/automated-installation-of-r-studio-using-shell-script)
 
 echo "Installing Programming Software"
