@@ -83,12 +83,13 @@ For the remainder of this section, you should be logged into your `Administratio
     - **Documentation**: Feel free to check out the "Variable Files" section of [Terraform's documentation on input variables](https://www.terraform.io/docs/configuration/variables.html#Variable_Files) for more help.
 
 3. **Running Terraform**
-  - In a Terminal, navigate to this cloned GitHub repository.
-  - Initialize Terraform with the Terminal command `terraform init`.
-  - Next, run `terraform apply` to start the automated build. This will take a few minutes.
+  - In a GitBash Terminal, navigate to this cloned GitHub repository.
+  - Initialize Terraform (command: `terraform init`).
+  - Next, start the automated build (command: `terraform apply`). This will take several minutes.
     - **Note**: if you get the error `* module.EC2.aws_instance.EC2_analysis_instance: timeout - last error: dial tcp 12.345.678.901:22: i/o timeout` try rerunning the command.
     - **Note**: if you get any other types of errors regarding resource creation or provisioning try running `terraform apply` once again, but if the issue doesn't resolve itself, report the issue on GitHub.
-    - **Note**: Any files contained in `EC2/provisioner_scripts` will be copied to the EC2 Analysis instance during Terraform's setup. If you'd like to add any of your own installation scripts or modify them from
+    - **Note**: Any files contained in `EC2/provisioner_scripts` will be copied to the EC2 Analysis instance at the path `/home/ubuntu/` (the home directory of the first user, "Ubuntu") during Terraform's setup. _A future version of this software will also begin setup by running these scripts_. However, you will need to manually install them when you log in for the first time.
+    - **Note**: If you'd like to add any of your own installation scripts or modify the existing ones in any way, you should
 
 4. **Finishing Setup of your `Administration` Workspace**
   - **SSH Public Keys**
@@ -103,30 +104,30 @@ For the remainder of this section, you should be logged into your `Administratio
           User [username]
           LocalForward [from_remote_port] [to_local_port]
     ```
-    - When you call ssh [name], an ssh connection from the current machine is initialized to [username@ip-address] and the [127.0.0.1:to_local_port] on the current machine mirrors [username@ip-address:from_remote_port]. This is an encrypted connection (and can substitute for HTTPS)
-    - **Note**: I recommend using `name=tunnel` -- it makes it simple to call `ssh tunnel` to initiate an ssh tunnel.
-    - **Note**: The `[ip-address]` should be the _private ip_ address of the EC2 Analysis Instance. You can find out what this is from the EC2 management console.
-    - **Note**: The `[from-remote-port]` needs to be running something that can be forwarded. RStudio-Server, for example, can be installed and will run on port 8000. Until something is running, however, tunnelling the port will be futile (see next section to install stuff that _can_ be tunelled)
-    - **Example**:
-    ```
-    Host tunnel
-          Hostname 172.31.16.129
-          User ubuntu
-          LocalForward 8000 127.0.0.1:80
-    ```
-    - Restart your Terminal when complete (you can do so by exiting and opening a new one) and try typing `ssh [name]`, substituting `[name]` for the actual name you chose. You should have a successful SSH tunnel.
+      - **Note**: When you use the terminal command `ssh [name]`, an ssh connection from the current machine is initialized to [username@ip-address] and the [127.0.0.1:to_local_port] on the current machine mirrors [username@ip-address:from_remote_port]. This is an encrypted connection (substituting for HTTPS)
+      - **Note**: I recommend using `name = tunnel` -- it makes it simple to call `ssh tunnel` to initiate an ssh tunnel.
+      - **Note**: The `[ip-address]` should be the _private ip_ address of the EC2 Analysis Instance. You can find out what this is from the EC2 management console.
+      - **Note**: The `[from-remote-port]` needs to be running something that can be forwarded. RStudio-Server, for example, can be installed and configured to run on port 8000. Until something is running, however, tunnelling the port will be futile (_see next section to install stuff that can be tunelled_)
+      - **Example**:
+      ```
+      Host tunnel
+            Hostname 172.31.16.129
+            User ubuntu
+            LocalForward 8000 127.0.0.1:80
+      ```
+    - Restart your Terminal when complete (you can do so by exiting and opening a new one) and try initializing an ssh tunnel (command: `ssh [name]`, substituting `[name]` for the actual name you chose). The expected behaviour is for
     - To SSH normally, try typing `ssh [username]@[ip-address]` replacing with the actual values. You should have a successful SSH connection
-    - **Note**: You can't have an SSH tunnel to Ubuntu and a regular ssh connection to Ubuntu going at the same time.
+      -  **Note**: You can't have an SSH tunnel to Ubuntu and a regular ssh connection to Ubuntu going at the same time.
 
 5. **Finishing Setup of your EC2 Analysis Instance**
 
-  - You can read documentation for each of the following necessary functions in the EC2/provisioner_scripts/README.md. All of them are necessary components to a completed setup and should be run once you've SSH'd into the EC2 Analysis Instance from the `Administration` Workspace.
+  - You can read documentation for each of the following functions in the `EC2/provisioner_scripts/README.md`. All of them are necessary components to a completed setup and should be run _on the EC2 Analysis Instance_ after SSH'ing in from the `Administration` Workspace (command: `ssh tunnel`).
     - Adding Researcher Accounts
     - Installing Programming Software
     - Installing Updates
     - Installing the Cloudwatch Logs Agent
     - Mounting Drives
-  - **Other Instllations**
+  - **Other Installations**
     - If you have anything else you'd like to install, follow external instructions for installing things on `Ubuntu 16.04 LTS`, the OS the EC2 Analysis Instance is running
   - Once you've SSH'd into the EC2 Analysis Instance, you should also document the SSH public keys of each user, including Ubuntu, the "sudo" user. These will be at `/home/username/.ssh/id_rsa.pub`. If that path doesn't exist yet, you will need to switch users (example: `sudo su researcher_0`) and run `ssh-keygen`, at which point a key pair should be generated for you to access and document. To become `ubuntu` again, simply type `exit` or `logout`.
     - **Note**: if you forget to switch users and run ssh-keygen as `ubuntu`, even fro m within the home directory of another user, you'll just be resetting `ubuntu`'s ssh keys.
