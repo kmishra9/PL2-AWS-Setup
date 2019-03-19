@@ -50,7 +50,7 @@ Before beginning, it is recommended that you review the [PL2 AWS Setup - General
 
 4. Once you've done this, open your copy of the `PL2 AWS Setup - Documentation Template` and fill in the yellow-highlighted items in the document (some can be filled in now, others you should fill in as you work through the rest of the setup). As you fill these pieces in, unhighlight the sections.
   - **Note**: You should hyperlink [Account ID: <123456789012>]() so it looks like what appears here, where you replace the <Account ID> with your own and link to your organization's IAM login page. This will be how members of the project log in to access the [AWS Management Console](https://console.aws.amazon.com/).
-    - **Documentation**: Feel free to reference the [IAM Console and Sign-in Page documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/console.html).
+    - **Documentation**: Feel free to reference the [IAM Console and Sign-in Page documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/console.html) for more help.
   - **Note**: You should also rename the template document to follow the naming convention `Organization_Name PL2 AWS Setup - Documentation`.
     - **Example**: `Colford_Group PL2 AWS Setup - Documentation` or `BCHT PL2 AWS Setup - Documentation`
 
@@ -58,14 +58,14 @@ Before beginning, it is recommended that you review the [PL2 AWS Setup - General
   - **Note**: This step may take a few minutes to complete but the page will notify you when your account has been successfully subscribed.
 
 6. Navigate to the [AWS Directory Service Console](https://us-west-2.console.aws.amazon.com/directoryservicev2/home?fromOldConsole=true&region=us-west-2#!/directories) and use it to create a new `Simple AD` that will have `Size = Small`, an `Organization Name` of your choosing, `Directory DNS Name = corp.example.com` and a password for the *Directory Administrator*. You should generate a password using the strong random password generator linked from your copy of the Documentation Template and document the password in the *Directory Administrator* section of the AWS Workspaces credentials table. During creation of the `Simple AD`, you should also select the default VPC and subnets `us-west-2a` and `us-west-2b`. This will take a few minutes to create.
-  - **Documentation**: Feel free to examine additional documentation on ["What Gets Created"](https://docs.aws.amazon.com/directoryservice/latest/admin-guide/create_details_simple.html?icmpid=docs_ds_console_help_panel) when you create a directory with `Simple AD`.
+  - **Documentation**: Feel free to reference additional documentation on ["What Gets Created"](https://docs.aws.amazon.com/directoryservice/latest/admin-guide/create_details_simple.html?icmpid=docs_ds_console_help_panel) when you create a directory with `Simple AD`.
 
 7. Navigate to the [AWS Workspaces Console](https://us-west-2.console.aws.amazon.com/workspaces/home?region=us-west-2#listworkspaces:) and use it to create a "Standard" Windows 10 AWS Workspace called `Administration` in the US-West-2 (Oregon) region. Enable "Self Service Permissions" and "Amazon WorkDocs" and set the email to be your SPA email. The workspace should have a root volume capacity of 80GB and a user volume capacity of 0GB, both of which should be encrypted, and the "AutoStop (1 hour)" running mode is recommended. This can take up to 40 minutes to full create.
   - **Note**: Attempting to create the Terraform setup from outside the Workspace (which is within the same VPC as the EC2 instance) will fail due to a VPC security group (firewall) configured only to allow access to the instance from within the VPC. Similarly, this ensures _your instance cannot be accessed from anywhere except one of the AWS workspaces that you set up_, and this is in an intentional design decision to ensure the data and instance stay secure. For advanced users attempting to change or modify this behaviour, see the `VPC` and `EC2` modules for more details.
 
 8. As you wait for the Workspaces to initialize, navigate to the [`Directories` tab](https://us-west-2.console.aws.amazon.com/workspaces/home?region=us-west-2#directories:directories). You should see the directory you created earlier. Select the directory and `Update Details`. Select `Access to Internet` and enable internet access, if it is currently disabled.
   - **Note**: if you get the error `Internet Gateway not attached to your Amazon VPC`, navigate to the [AWS VPC Console](https://us-west-2.console.aws.amazon.com/vpc/home?region=us-west-2#igws:sort=internetGatewayId) and create a new internet gateway. Leave the `Name tag` field blank. Then, select the newly created internet gateway and attach it to the default VPC to which your directory is also attached to. Finally, ensure the [VPC's route table](https://us-west-2.console.aws.amazon.com/vpc/home?region=us-west-2#RouteTables:sort=routeTableId) to `Destination=0.0.0.0/0` targets the internet gateway you just spun up and its status is "Active".
-    - **Documentation**: Feel free to examine additional documentation on [Creating a VPC, Internet Gateway and Subnet](https://campus.barracuda.com/product/emailsecuritygateway/doc/41099104/creating-a-vpc-internet-gateway-and-subnet/) and [AWS Routing 101](https://medium.com/@mda590/aws-routing-101-67879d23014d).
+    - **Documentation**: Feel free to reference additional documentation on [Creating a VPC, Internet Gateway and Subnet](https://campus.barracuda.com/product/emailsecuritygateway/doc/41099104/creating-a-vpc-internet-gateway-and-subnet/) and [AWS Routing 101](https://medium.com/@mda590/aws-routing-101-67879d23014d) for more help.
 
 
 ## Administration From an AWS Workspace
@@ -78,9 +78,10 @@ For the remainder of this section, you should be logged into your `Administratio
   - Install [GitBash](https://gitforwindows.org/) (version control & Terminal emulation).
   - Install [Terraform](https://learn.hashicorp.com/terraform/getting-started/install.html) (automated Infrastructure-as-a-service tool).
     - **Note**: Verify your installation is running smoothly by ensuring the behaviour in the installation documentation matches what happens on your machine.
+      - **Documentation** Feel free to reference a step-by-step tutorial on [Installing Terraform on Windows 10](https://www.vasos-koupparis.com/terraform-getting-started-install/) for more help.
   - In a GitBash Terminal, type `ssh-keygen` to generate an SSH key pair for your `Administration` workspace
     - **Note**: The ssh key will be generated by default at the path `~/.ssh/id_rsa` and the public key at `~/.ssh/id_rsa.pub`
-    - **Documentation**:Feel free to reference documentation on [Generating a New Key with ssh-keygen](https://www.ssh.com/ssh/keygen/)
+    - **Documentation**:Feel free to reference documentation on [Generating a New Key with ssh-keygen](https://www.ssh.com/ssh/keygen/) for more help.
 
 2. **Setting Up Terraform**
   - From a GitBash Terminal, clone this GitHub repository on your Workspace (command: `git clone https://github.com/kmishra9/PL2-AWS-Setup.git`).
@@ -89,7 +90,7 @@ For the remainder of this section, you should be logged into your `Administratio
   - In `variables.tf`, you will find a set of variable definitions, descriptions, and defaults. You will be responsible for assigning values to these variables, within the empty `terraform.tfvars` file.
     - **Note**: The specific values you are responsible for assigning can have somewhat rigid requirements -- _read the documentation for each variable to prevent errors from occurring later_
     - **Example**: To assign a project name, you could type `project_name = "Kaiser-Flu"` in `terraform.tfvars`. Then, you would skip a line, and proceed to an assignment of the next variable documented in `variables.tf`. Feel free to make a copy of `example.tfvars.example` and rename it to `terraform.tfvars` to get started.
-    - **Documentation**: Feel free to check out the "Variable Files" section of [Terraform's documentation on input variables](https://www.terraform.io/docs/configuration/variables.html#Variable_Files) for more help.
+    - **Documentation**: Feel free to reference the "Variable Files" section of [Terraform's documentation on input variables](https://www.terraform.io/docs/configuration/variables.html#Variable_Files) for more help.
 
 3. **Running Terraform**
   - In a GitBash Terminal, navigate to this cloned GitHub repository.
@@ -102,7 +103,7 @@ For the remainder of this section, you should be logged into your `Administratio
 
 4. **Finishing Setup of your `Administration` Workspace**
   - **SSH Public Keys**
-    - Document the ssh public key of `Administration` in your copy of the Documentation Template. It can generally be found at the path `~/.ssh/id_rsa.pub` and can be printed to the console with the `cat` command (example: `cat ~/.ssh/id_rsa.pub`).
+    - Document the ssh public key of `Administration` in your copy of the Documentation Template. It can generally be found at the path `~/.ssh/id_rsa.pub` and can be printed to the console with the `cat` command (example: `cat ~/.ssh/id_rsa.pub`). Because the key is long, you should shrink the public key down to a size 4 font once it has been pasted into the table.
   - **Configuring SSH Tunnels**
     - An SSH tunnel is similar to an HTTPS connection in that a port on your local machine mirrors a port on the server. This is useful, for example, in encrypting a connection to RStudio-Server or JupyterHub (running on the EC2 analysis instance) from a Workspace via SSH. It also quickly allows you to SSH into the analyis instance from Terminal.
       - You can read additional documentation that is a [Basic Introduction motivating the use of SSH tunnels](https://help.ubuntu.com/community/SSH/OpenSSH/PortForwarding)
