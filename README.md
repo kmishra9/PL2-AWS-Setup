@@ -1,6 +1,7 @@
 # PL2-AWS-Setup
 
 ###### TODO
+  - Develop standardized email from admin => researchers in documentation
   - Stata installation instructions on Linux and how to use it
   - Create and link to an example, fake, filled-in PL2 Documentation Template
   - Create a template MSSEI + update(redact(copy(KaiserFlu MSSEI)))
@@ -11,6 +12,8 @@
   - Changing the size of your EBS data volume
   - Adapt [AWS User Setup Instructions](https://docs.google.com/document/d/1TjbceyJ2eE-uaxqfX-cccXCw3MgeO2wU54v6jOz1qj4/edit?usp=sharing) and [Flu AWS User Creation Guide](https://docs.google.com/document/d/1GA8IlGA6cBbR13UBnCRFe8TYaEjSZ3w9tMv6hGDVAj0/edit?usp=sharing)
   - Destroying your Setup + Resetting Up your Setup
+  - Implement CloudWatch Alarms, GuardDuty, etc.
+  - Look into whether password SSH is forbidden -- if not, maybe use a tool like this to copy the key to their username (https://docs.google.com/document/d/1JzAM7vR4AbKNYL_YJ6qL6J2hG3W9ePVI67BPIZvl8RU/edit#)
 
 ## Overview
 
@@ -45,7 +48,7 @@ Before beginning, it is recommended that you review the [PL2 AWS Setup - General
   - **Use Groups to assign permissions** -- ignore this for now -- Terraform will help us create IAM groups for researcher, administrators, and log analysts
   - **Apply an IAM Password Policy** -- ignore this for now -- Terraform will set this up to ensure that the passwords required to access the console by the researchers and admin are appropriately secure against standard brute-force and dictionary attacks.
 
-4. Once you've done this, open your copy of the `PL2 AWS Setup - Documentation Template` and fill in the yellow-highlighted items in the document (some can be filled in now, others you should fill in as you work through the rest of the setup).
+4. Once you've done this, open your copy of the `PL2 AWS Setup - Documentation Template` and fill in the yellow-highlighted items in the document (some can be filled in now, others you should fill in as you work through the rest of the setup). As you fill these pieces in, unhighlight the sections.
   - **Note**: You should hyperlink [Account ID: <123456789012>]() so it looks like what appears here, where you replace the <Account ID> with your own and link to your organization's IAM login page. This will be how members of the project log in to access the [AWS Management Console](https://console.aws.amazon.com/).
     - **Documentation**: Feel free to reference the [IAM Console and Sign-in Page documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/console.html).
   - **Note**: You should also rename the template document to follow the naming convention `Organization_Name PL2 AWS Setup - Documentation`.
@@ -54,10 +57,16 @@ Before beginning, it is recommended that you review the [PL2 AWS Setup - General
 5. In your web browser navigate to the [CIS Ubuntu Linux 16.04 LTS Benchmark Level 1 marketplace page](https://aws.amazon.com/marketplace/pp/B078TPPXV2?qid=1549956548098&sr=0-5&ref_=srh_res_product_title) and subscribe your SPA account to the software.
   - **Note**: This step may take a few minutes to complete but the page will notify you when your account has been successfully subscribed.
 
-6. Navigate to the [AWS Workspaces Console](https://us-west-2.console.aws.amazon.com/workspaces/home?region=us-west-2#listworkspaces:) and use it to create a "Standard" Windows 10 AWS Workspace called `Administration` in the US-West-2 (Oregon) region. Do not enable "Self Service Permissions" or "Amazon WorkDocs" and set the email to be your SPA email. The workspace should have a root volume capacity of 80GB and a user volume capacity of 0GB, both of which should be encrypted, and the "AutoStop (1 hour)" running mode is recommended. This can take up to 40 minutes to full create.
-  - **Note**: Before you can create a Workspace, you will need to create a new `Simple AD` that will have `Size = Small`, an `Organization Name` of your choosing, `Directory DNS Name = corp.example.com` and a password for the *Directory Administrator* (which is different from the `Administration` workspace you're creating). You should generate a password using the strong random password generator linked from your copy of the Documentation Template and document the password in the *Directory Administrator* section of the AWS Workspaces credentials table. During creation of the `Simple AD`, you should also select the default VPC and subnets `us-west-2a` and `us-west-2b`. This will take a few minutes to create.
-    - **Documentation**: Feel free to examine additional documentation on ["What Gets Created"](https://docs.aws.amazon.com/directoryservice/latest/admin-guide/create_details_simple.html?icmpid=docs_ds_console_help_panel) when you create a directory with `Simple AD`.
+6. Navigate to the [AWS Directory Service Console](https://us-west-2.console.aws.amazon.com/directoryservicev2/home?fromOldConsole=true&region=us-west-2#!/directories) and use it to create a new `Simple AD` that will have `Size = Small`, an `Organization Name` of your choosing, `Directory DNS Name = corp.example.com` and a password for the *Directory Administrator*. You should generate a password using the strong random password generator linked from your copy of the Documentation Template and document the password in the *Directory Administrator* section of the AWS Workspaces credentials table. During creation of the `Simple AD`, you should also select the default VPC and subnets `us-west-2a` and `us-west-2b`. This will take a few minutes to create.
+  - **Documentation**: Feel free to examine additional documentation on ["What Gets Created"](https://docs.aws.amazon.com/directoryservice/latest/admin-guide/create_details_simple.html?icmpid=docs_ds_console_help_panel) when you create a directory with `Simple AD`.
+
+7. Navigate to the [AWS Workspaces Console](https://us-west-2.console.aws.amazon.com/workspaces/home?region=us-west-2#listworkspaces:) and use it to create a "Standard" Windows 10 AWS Workspace called `Administration` in the US-West-2 (Oregon) region. Enable "Self Service Permissions" and "Amazon WorkDocs" and set the email to be your SPA email. The workspace should have a root volume capacity of 80GB and a user volume capacity of 0GB, both of which should be encrypted, and the "AutoStop (1 hour)" running mode is recommended. This can take up to 40 minutes to full create.
   - **Note**: Attempting to create the Terraform setup from outside the Workspace (which is within the same VPC as the EC2 instance) will fail due to a VPC security group (firewall) configured only to allow access to the instance from within the VPC. Similarly, this ensures _your instance cannot be accessed from anywhere except one of the AWS workspaces that you set up_, and this is in an intentional design decision to ensure the data and instance stay secure. For advanced users attempting to change or modify this behaviour, see the `VPC` and `EC2` modules for more details.
+
+8. As you wait for the Workspaces to initialize, navigate to the [`Directories` tab](https://us-west-2.console.aws.amazon.com/workspaces/home?region=us-west-2#directories:directories). You should see the directory you created earlier. Select the directory and `Update Details`. Select `Access to Internet` and enable internet access, if it is currently disabled.
+  - **Note**: if you get the error `Internet Gateway not attached to your Amazon VPC`, navigate to the [AWS VPC Console](https://us-west-2.console.aws.amazon.com/vpc/home?region=us-west-2#igws:sort=internetGatewayId) and create a new internet gateway. Leave the `Name tag` field blank. Then, select the newly created internet gateway and attach it to the default VPC to which your directory is also attached to. Finally, ensure the [VPC's route table](https://us-west-2.console.aws.amazon.com/vpc/home?region=us-west-2#RouteTables:sort=routeTableId) to `Destination=0.0.0.0/0` targets the internet gateway you just spun up and its status is "Active".
+    - **Documentation**: Feel free to examine additional documentation on [Creating a VPC, Internet Gateway and Subnet](https://campus.barracuda.com/product/emailsecuritygateway/doc/41099104/creating-a-vpc-internet-gateway-and-subnet/) and [AWS Routing 101](https://medium.com/@mda590/aws-routing-101-67879d23014d).
+
 
 ## Administration From an AWS Workspace
 
@@ -70,8 +79,8 @@ For the remainder of this section, you should be logged into your `Administratio
   - Install [Terraform](https://learn.hashicorp.com/terraform/getting-started/install.html) (automated Infrastructure-as-a-service tool).
     - **Note**: Verify your installation is running smoothly by ensuring the behaviour in the installation documentation matches what happens on your machine.
   - In a GitBash Terminal, type `ssh-keygen` to generate an SSH key pair for your `Administration` workspace
-    - **Documentation**:Feel free to reference documentation on [Generating a New Key with ssh-keygen](https://www.ssh.com/ssh/keygen/)
     - **Note**: The ssh key will be generated by default at the path `~/.ssh/id_rsa` and the public key at `~/.ssh/id_rsa.pub`
+    - **Documentation**:Feel free to reference documentation on [Generating a New Key with ssh-keygen](https://www.ssh.com/ssh/keygen/)
 
 2. **Setting Up Terraform**
   - From a GitBash Terminal, clone this GitHub repository on your Workspace (command: `git clone https://github.com/kmishra9/PL2-AWS-Setup.git`).
