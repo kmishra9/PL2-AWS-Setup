@@ -121,7 +121,7 @@ resource "null_resource" "EC2_setup" {
       "sudo dpkg --configure -a",
       # Add Permissions to Provisioned Files
       "chmod 744 add_swap add_users install_cloudwatch_logs_agent install_programming_software install_updates mount_drives",
-      # Reformat all provisioned scripts to be compatible with Unix
+      # Reformat all provisioned scripts to be compatible with Unix instead of Windows
       "sed -i -e 's/\r$//' add_swap add_users install_cloudwatch_logs_agent install_programming_software install_updates mount_drives",
       # Add Swap
       "./add_swap",
