@@ -11,7 +11,7 @@ Feel free to reference additional documentation on [Motivating the use of SSH tu
 Host [name]
       Hostname [ip-address]
       User [username]
-      LocalForward [from_remote_port] [to_local_port]
+      LocalForward [to_local_port] [from_remote_port]
 ```
   - **Note**: When you use the terminal command `ssh [name]`, an ssh connection from the current machine is initialized to `username@ip-address` and the `127.0.0.1:to_local_port` on the current machine mirrors `username@ip-address:from_remote_port`. This is an encrypted connection (substituting for HTTPS).
   - **Note**: I recommend using `name = tunnel` -- it makes it simple to call `ssh tunnel` to initiate an ssh tunnel.
@@ -22,7 +22,7 @@ Host [name]
   Host tunnel
         Hostname 172.31.16.129
         User ubuntu
-        LocalForward 8787 127.0.0.1:80
+        LocalForward 80 127.0.0.1:8787
   ```
 - Save your entry (command: `Ctrl-X` while in the Nano text editor)
 - Restart your Terminal when complete (you can do so by exiting and opening a new one) and try initializing an ssh tunnel (command: `ssh [name]`, substituting `[name]` for the actual name you chose).
