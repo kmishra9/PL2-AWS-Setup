@@ -48,7 +48,7 @@ variable "num_admins" {
 
 variable "instance_type" {
   type = "string"
-  description = "The type of instance to create - see the EC2 Instance Pricing guide: https://aws.amazon.com/ec2/pricing/on-demand/. Example: 't2.micro'"
+  description = "The type of instance to create - see the EC2 Instance Pricing guide: https://aws.amazon.com/ec2/pricing/on-demand/ and/or consult with BRC to determine the best instance for your use case. Example: 't3.micro'"
 }
 
 variable "root_volume_size" {

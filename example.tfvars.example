@@ -11,7 +11,7 @@ workspaces_private_key_path = "~/.ssh/id_rsa"
 num_researchers             = "2"
 num_admins                  = "2"
 
-instance_type               = "t2.micro"
+instance_type               = "t3.micro"
 root_volume_size            = "150"
 EBS_volume_size             = "25"
 data_folder_name            = "kaiserData"
