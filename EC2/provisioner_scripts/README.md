@@ -1,7 +1,7 @@
 # Provisioner Scripts Documentation
 
 ## Overview
-Each of the bash scripts included as part of this folder are used to set up the EC2 analyis instance during the initial setup. As part of the terraform build, they are moved to the home directory of the "ubuntu" user (`/home/ubuntu`).
+Each of the bash scripts included as part of this folder are used to set up the EC2 analyis instance during the initial setup. As part of the terraform build, they are moved to the home directory of the "ubuntu" user on the EC2 Analysis Instance (path: `/home/ubuntu`). _They are intended to be run on the instance, not the workspace_.
 
 ## Getting Started
 1. Start by SSH'ing into your analysis instance from the `Administration` Workspace.
@@ -31,24 +31,25 @@ Each of the bash scripts included as part of this folder are used to set up the 
   - **Interactive Input**:
     - **AWS access key ID**: Leave blank and press `Enter`
     - **AWS secret access key**: Leave blank and press `Enter`
-    - **Default region name**: Set to `us-west-2`
+    - **Default region name**: Ensure `us-west-2` is the default (or input `us-west-2` if it is not)
     - **Default output format**: Leave blank and press `Enter`
     - **Path of log file to upload**: Accept recommended path
     - **Destination Log Group name**: Accept recommended name
     - **Destination Log Stream name**: Accept recommended name
-    - **Timestamp format**: Specify the format of the time stamp within the specified log file. Choose custom to specify your own format.
-    - **Initial Position**: Set to `start_of_file`
+    - **Timestamp format**: Accept recommended timestamp format
+    - **Initial Position**: Accept recommended initial position
+    - **More log files to configure?** Type `N` and press `Enter` to finish
     - **Documentation**: Feel free to reference [additional documentation](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/QuickStartEC2Instance.html) on installing and configuring the CloudWatch Logs Agent
   - **Verifying Installation**: In the [CloudWatch Management Console](CloudWatch - AWS Console - Amazon.com
 https://console.aws.amazon.com/cloudwatch/home), you should be able to see a new log group and stream after the agent has been running for a few moments
 
 4. `install_programming_software`
   - **Usage**: `sudo ./install_programming_software`
-  - **Description**: Installs several important linux development utilities, R, and RStudio Server. Python 2 and 3 already come preinstalled with the Amazon Machine Image (AMI) we're using. _A future version of this script will also install Anaconda and JupyterHub Server, for using Jupyter Notebooks and Python_.
+  - **Description**: Installs several important linux development utilities, R, and RStudio Server (running on port `8787`). Python 2 and 3 already come preinstalled with the Amazon Machine Image (AMI) we're using. _A future version of this script will also install Anaconda and JupyterHub Server, for using Jupyter Notebooks and Python_.
 
 5. `install_updates`
   - **Usage**: `sudo ./install_updates`
-  - **Description**: Installs Linux and package updates and restarts the server. Useful for general maintenance and cleanup.
+  - **Description**: Installs Linux and package updates and restarts the server. Useful for general maintenance and cleanup. The script requires interactive input in some cases but you should generally accept the default options.
 
 6. `mount_drives`
   - **Usage**: `sudo ./mount_drives [data_folder_path]`
