@@ -6,7 +6,7 @@
 Feel free to reference additional documentation on [Motivating the use of SSH tunnels](https://help.ubuntu.com/community/SSH/OpenSSH/PortForwarding)
 
 ## Getting Started
-- Edit `~/.ssh/config` on your Workspace (or create the file if one does not yet exist with command: `touch ~/.ssh/config`) and add an entry based on the following configuration:
+- Edit `~/.ssh/config` on your Workspace (command: `nano ~/.ssh/config`) and add an entry based on the following configuration:
 ```
 Host [name]
       Hostname [ip-address]
