@@ -28,3 +28,6 @@ Host [name]
 - Restart your Terminal when complete (you can do so by exiting and opening a new one) and try initializing an ssh tunnel (command: `ssh [name]`, substituting `[name]` for the actual name you chose).
 - To SSH normally, try typing `ssh [username]@[ip-address]` replacing with the actual values. You should have a successful SSH connection
   -  **Note**: You can't have an SSH tunnel to and a regular ssh connection to Ubuntu going at the same time.
+
+## Using Your SSH Tunnel to connect to RStudio Server
+Once you've gone through the set of steps above and initialized an SSH tunnel, using the tunnel is simple. By default, the tunnel you've set up is connected to RStudio Server (if you've followed the example, changing only the `Hostname` and `User`, according to the setup and your Linux username). Simply open your Chrome browser and type `localhost` to start using RStudio Server, which is running on the analysis instance.
