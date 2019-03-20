@@ -49,6 +49,7 @@ Before beginning, it is recommended that you review the [PL2 AWS Setup - General
   - **Apply an IAM Password Policy** -- ignore this for now -- Terraform will set this up to ensure that the passwords required to access the console by the researchers and admin are appropriately secure against standard brute-force and dictionary attacks.
 
 4. Once you've done this, open your copy of the `PL2 AWS Setup - Documentation Template` and fill in the yellow-highlighted items in the document (some can be filled in now, others you should fill in as you work through the rest of the setup). As you fill these pieces in, unhighlight the sections.
+  - **Note**: Make sure to document the Terraform IAM credentials you downloaded earlier!
   - **Note**: You should hyperlink [Account ID: <123456789012>]() so it looks like what appears here, where you replace the <Account ID> with your own and link to your organization's IAM login page. This will be how members of the project log in to access the [AWS Management Console](https://console.aws.amazon.com/).
     - **Documentation**: Feel free to reference the [IAM Console and Sign-in Page documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/console.html) for more help.
   - **Note**: You should also rename the template document to follow the naming convention `Organization_Name PL2 AWS Setup - Documentation`.
@@ -84,17 +85,22 @@ For the remainder of this section, you should be logged into your `Administratio
     - **Documentation**:Feel free to reference documentation on [Generating a New Key with ssh-keygen](https://www.ssh.com/ssh/keygen/) for more help.
 
 2. **Setting Up Terraform**
-  - From a GitBash Terminal, clone this GitHub repository on your Workspace (command: `git clone https://github.com/kmishra9/PL2-AWS-Setup.git`).
-    - **Note**: This will create a folder called `PL2-AWS-Setup` in the same directory where you are when you run the clone command. To get back to the top level of your home directory (that's generally the best place to clone this GitHub repo), just type `cd`.
-  - Then, in Atom, create a file and save it as `terraform.tfvars` at the top level of the GitHub repository (i.e. `PL2-AWS-Setup/terraform.tfvars`) and open the existing file, `variables.tf`.
-  - In `variables.tf`, you will find a set of variable definitions, descriptions, and defaults. You will be responsible for assigning values to these variables, within the empty `terraform.tfvars` file.
+  - From a GitBash Terminal, clone this GitHub repository onto your Workspace (command: `git clone https://github.com/kmishra9/PL2-AWS-Setup.git ~/Downloads/PL2-AWS-Setup`).
+    - **Note**: This will create a folder called `PL2-AWS-Setup` in your Downloads folder
+  - Then, open the GitHub repository in Atom (command: `atom ~/Downloads/PL2-AWS-Setup`)
+  - In Atom, select `View > Toggle Soft Wrap` for better readability.
+  - Next, open two existing files by double clicking them from the `Project` pane on the left: `variables.tf` and `example.tfvars.example`.
+    - `variables.tf` includes a set of variable definitions, descriptions, and defaults.
+    - `example.tfvars.example` is a skeleton which you will modify for your setup. On each line, a variable is defined to have some value (i.e. `project_name` has the value `"tf-test"` in the example file)
+  - Rename `example.tfvars.example`. You can do so by right clicking the file in the `Project` pane on the left, selecting `Rename`, and specifying `terraform.tfvars` as the new name.
+  - Finally, edit variable values in your new `terraform.tfvars` file to fit your requirements and save the result when you are done.
     - **Note**: The specific values you are responsible for assigning can have somewhat rigid requirements -- _read the documentation for each variable to prevent errors from occurring later_
-    - **Example**: To assign a project name, you could type `project_name = "Kaiser-Flu"` in `terraform.tfvars`. Then, you would skip a line, and proceed to an assignment of the next variable documented in `variables.tf`. Feel free to make a copy of `example.tfvars.example` and rename it to `terraform.tfvars` to get started.
+    - **Note**: Remember to replace the fake Terraform IAM credentials with the ones you downloaded and documented earlier in the "Getting Started" section
     - **Documentation**: Feel free to reference the "Variable Files" section of [Terraform's documentation on input variables](https://www.terraform.io/docs/configuration/variables.html#Variable_Files) for more help.
 
 3. **Running Terraform**
-  - In a GitBash Terminal, navigate to this cloned GitHub repository.
-  - Initialize Terraform (command: `terraform init`).
+  - In a GitBash Terminal, navigate to this cloned GitHub repository (command: `cd ~/Downloads/PL2-AWS-Setup`).
+  - Initialize Terraform (command: `terraform init`). This will take about a minute and Terraform will state it has been successfully initiated in bright green.
   - Next, start the automated build (command: `terraform apply`). This will take several minutes.
     - **Note**: if you get the error `* module.EC2.aws_instance.EC2_analysis_instance: timeout - last error: dial tcp 12.345.678.901:22: i/o timeout` try rerunning the command.
     - **Note**: if you get any other types of errors regarding resource creation or provisioning try running `terraform apply` once again, but if the issue doesn't resolve itself, report the issue on GitHub.
