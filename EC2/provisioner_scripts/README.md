@@ -37,4 +37,4 @@ https://console.aws.amazon.com/cloudwatch/home), you should be able to see a new
 
 6. `mount_drives`
   - **Usage**: `sudo ./mount_drives [data_folder_path]`
-  - **Description**: Mounts swap, as well as a single EBS volume at `/dev/xvdf`. For some large instances, the EBS volume may be at `/dev/nvme1n1`, and running the script may result in an error. In this case, commenting out `sudo mount /dev/xvdf $1` and replacing it with `sudo mount /dev/nvme1n1 $1`.
+  - **Description**: Mounts swap, as well as a single EBS volume at `/dev/nvme1n1`. For some smaller or older instances, the EBS volume may be at `/dev/xvdf`, and running the script may result in an error. In this case, commenting out `sudo mount /dev/nvme1n1 $1` and replacing it with `sudo mount /dev/xvdf $1`.

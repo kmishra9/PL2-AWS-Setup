@@ -103,11 +103,13 @@ resource "null_resource" "EC2_setup" {
   provisioner "remote-exec" {
     inline = [
       # Format attached EBS data volume so it can be mounted (if an existing filesystem does not already exist)
-      "sudo mkfs -t xfs /dev/xvdf",
+      "sudo mkfs -t xfs /dev/nvme1n1",
       # Configure Dpkg to ensure locking does not occur
       "sudo dpkg --configure -a",
       # Add Permissions to Provisioned Files
       "chmod 744 add_swap add_users install_cloudwatch_logs_agent install_programming_software install_updates mount_drives",
+      # Reformat all provisioned scripts to be compatible with Unix
+      "sed -i -e 's/\r$//' add_swap add_users install_cloudwatch_logs_agent install_programming_software install_updates mount_drives",
       # Add Swap
       "./add_swap",
       # Create Mountpoint for data folder

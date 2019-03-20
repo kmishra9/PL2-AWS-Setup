@@ -7,7 +7,7 @@ echo ""
 
 # Takes a single argument - data_folder_path - and mounts the EBS volume at /dev/xvdf at the data_folder_path
 
-#sudo mount /dev/nvme1n1 $1
-sudo mount /dev/xvdf $1
+#sudo mount /dev/xvdf $1
+sudo mount /dev/nvme1n1 $1
 sudo chmod og+rwx $1/*
 sudo swapon /root/myswapfile
