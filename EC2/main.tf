@@ -75,12 +75,25 @@ resource "aws_volume_attachment" "data_storage_attachment" {
   instance_id = "${aws_instance.EC2_analysis_instance.id}"
 }
 
-# Trigger to begin installing things once EC2 is fully set up
+resource "null_resource" "delay" {
+  triggers {
+    new_volume = "${aws_volume_attachment.data_storage_attachment.volume_id}"
+    new_instance = "${aws_volume_attachment.data_storage_attachment.instance_id}"
+  }
+
+  provisioner "local-exec" {
+    command = "sleep 30"
+  }
+}
+
+# Trigger to begin installing things once EC2 is fully set up but wait for delay to complete
 resource "null_resource" "EC2_setup" {
   triggers {
     new_volume = "${aws_volume_attachment.data_storage_attachment.volume_id}"
     new_instance = "${aws_volume_attachment.data_storage_attachment.instance_id}"
   }
+
+  depends_on = ["null_resource.delay"]
 
   ##############################################################################
   # Commands to run on creation of the EC2 resource
