@@ -114,7 +114,7 @@ resource "null_resource" "EC2_setup" {
       "sudo mkdir ${local.data_folder_path}",
       "sudo chmod 777 ${local.data_folder_path}",
       # Mount the attached EBS drives
-      "./mount_drives",
+      "./mount_drives ${local.data_folder_path}",
     ]
 
     connection {
