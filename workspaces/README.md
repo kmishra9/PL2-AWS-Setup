@@ -24,6 +24,7 @@ Host [name]
         User ubuntu
         LocalForward 8787 127.0.0.1:80
   ```
+- Save your entry (command: `Ctrl-X` while in the Nano text editor)
 - Restart your Terminal when complete (you can do so by exiting and opening a new one) and try initializing an ssh tunnel (command: `ssh [name]`, substituting `[name]` for the actual name you chose).
 - To SSH normally, try typing `ssh [username]@[ip-address]` replacing with the actual values. You should have a successful SSH connection
   -  **Note**: You can't have an SSH tunnel to and a regular ssh connection to Ubuntu going at the same time.
