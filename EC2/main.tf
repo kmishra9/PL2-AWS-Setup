@@ -9,6 +9,7 @@ locals {
 # AMI Setup
 
 data "aws_ami" "cis_level_1_ami" {
+  owners = ["${local.cis_owner_id}"]
   most_recent = true
 
   filter {
