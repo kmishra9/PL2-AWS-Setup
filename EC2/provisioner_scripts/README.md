@@ -1,7 +1,22 @@
 # Provisioner Scripts Documentation
 
-Each of the bash scripts included as part of this folder are used to set up the EC2 analyis instance during the initial setup. As part of the terraform build, they are moved to the home directory of the "ubuntu" user (`/home/ubuntu`). The `Administration` Workspace has direct SSH access as the "ubuntu" user.
+## Overview
+Each of the bash scripts included as part of this folder are used to set up the EC2 analyis instance during the initial setup. As part of the terraform build, they are moved to the home directory of the "ubuntu" user (`/home/ubuntu`).
 
+## Getting Started
+1. Start by SSH'ing into your analysis instance from the `Administration` Workspace.
+  - **Note**: The `Administration` Workspace has direct SSH access as the "ubuntu" user (command: `ssh ubuntu@[EC2_Private_IP]`, where you can find the EC2_Private_IP for an instance from the [EC2 Management Console](https://us-west-2.console.aws.amazon.com/ec2/v2/home?region=us-west-2#Instances:sort=desc:tag:Name)). Alternatively, if you've already set up SSH tunnels, you can use them to SSH in (command: `ssh tunnel`)
+2. Scripts should be run in the following order:
+  - `add_swap` (already run as part of Terraform provisioning)
+  - `mount_drives` (already run as part of Terraform provisioning)
+  - `add_users`
+  - `install_cloudwatch_logs_agent`
+  - `install_programming_software`
+  - `install_updates`
+  - **Note**: reference the documentation below for details on _how to run_ each script (i.e. the arguments they take, additional instructions, what they do, etc.)
+  - **Note**: running `install_updates` last will kick you out of your SSH session as the instance restarts. This is expected behaviour and you should be able to SSH back into it within ~1 minute.
+
+## Script Usage & Descriptions
 1. `add_swap`
   - **Usage**: `sudo ./add_swap`
   - **Description**: Adds a 30GB of swap file to the disk as an overflow location for Virtual RAM. The OS requires `mount_drives` to be run to mount the swap file appropriately
