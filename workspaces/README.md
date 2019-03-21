@@ -27,7 +27,16 @@ Host [name]
 - Save your entry (command: `Ctrl-X` while in the Nano text editor)
 - Restart your Terminal when complete (you can do so by exiting and opening a new one) and try initializing an ssh tunnel (command: `ssh [name]`, substituting `[name]` for the actual name you chose).
 - To SSH normally, try typing `ssh [username]@[ip-address]` replacing with the actual values. You should have a successful SSH connection
-  -  **Note**: You can't have an SSH tunnel to and a regular ssh connection to Ubuntu going at the same time.
+  - **Example**: `ssh ubuntu@172.31.16.129`
+  - **Note**: You can't have an SSH tunnel to and a regular ssh connection to Ubuntu going at the same time.
 
 ## Using Your SSH Tunnel to connect to RStudio Server
 Once you've gone through the set of steps above and initialized an SSH tunnel, using the tunnel is simple. By default, the tunnel you've set up is connected to RStudio Server (if you've followed the example, changing only the `Hostname` and `User`, according to the setup and your Linux username). Simply open your Chrome browser and type `localhost` to start using RStudio Server, which is running on the analysis instance.
+
+## Debugging Problems with SSH
+If SSH'ing normally or creating a tunnel doesn't work, there are a couple of things to check:
+1. Is the EC2 Analysis Instance running? You can check this from the EC2 Management Console (see your documentation template for more details on how to access the console)
+2. You can't initiate an SSH connection to a user if you already have an SSH tunnel going to that user (and vice versa). Make sure all the
+3. After creating an entry in `~/.ssh/config` for your ssh tunnel, you need to restart your terminal (close and open again). If
+
+# Transferring Data to Workspaces
