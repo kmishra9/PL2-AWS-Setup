@@ -31,15 +31,13 @@ Host [name]
   - **Note**: You can't have an SSH tunnel to and a regular ssh connection to Ubuntu going at the same time.
 
 ## What Happens Next
-If you've documented your SSH public key in your project's AWS documentation for your administrator, they will need to copy the key in the `/home/[username]/.ssh/authorized_keys` file of your researcher account on the server to "enable" SSH and tunneling. They should get back to you with an email when they're done doing so.
+If you've documented your SSH public key in your project's AWS documentation for your administrator, they will need to copy the key in the `/home/[researcher_account_username]/.ssh/authorized_keys` file of your researcher account on the server to "enable" SSH and tunneling. They should get back to you with an email when they're done doing so.
 
 ## Using Your SSH Tunnel to connect to RStudio Server
-Once you've gone through the set of steps above and initialized an SSH tunnel, using the tunnel is simple. By default, the tunnel you've set up is connected to RStudio Server (if you've followed the example, changing only the `Hostname` and `User`, according to the setup and your Linux username). Simply open your Chrome browser and type `localhost` to start using RStudio Server, which is running on the analysis instance.
+Once you've gone through the set of steps above, your administrator has enabled SSH and tunnelling, and you've initialized an SSH tunnel from your Workspace (command: `ssh tunnel`), using the tunnel is simple. By default, the tunnel you've set up is connected to RStudio Server (if you've followed the example, changing only the `Hostname` and `User`, according to the setup and your Linux username). Simply open your Chrome browser and type `localhost` to start using RStudio Server, which is running on the analysis instance.
 
 ## Debugging Problems with SSH
 If SSH'ing normally or creating a tunnel doesn't work, there are a couple of things to check:
 1. Is the EC2 Analysis Instance running? You can check this from the EC2 Management Console (see your documentation template for more details on how to access the console)
 2. You can't initiate an SSH connection to a user if you already have an SSH tunnel going to that user (and vice versa). Make sure all the
 3. After creating an entry in `~/.ssh/config` for your ssh tunnel, you need to restart your terminal (close and open again). If
-
-# Transferring Data to Workspaces
