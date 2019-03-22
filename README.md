@@ -124,25 +124,20 @@ For the remainder of this section, you should be logged into your `Administratio
   - **SSH Public Keys**
     - Document the ssh public key of `Administration` in your copy of the Documentation Template. It can generally be found at the path `~/.ssh/id_rsa.pub` and can be printed to the console with the `cat` command (example: `cat ~/.ssh/id_rsa.pub`). Copy the public key and `Cmd-Shift-V` it into your documentation template in the appropriate highlighted field and remove the highlight. Because the key is long, you should shrink the public key down to a size 4 font as well.
   - **Configuring SSH Tunnels**
-    - Follow the steps in the [README](https://github.com/kmishra9/PL2-AWS-Setup/tree/master/workspaces) contained within the `workspaces/` directory to set up SSH tunnelling and continue.
-
-6. **Finishing Setup of your EC2 Analysis Instance**
-
-  - You will need to manually run each of the provided scripts when you log in for the first time for now. See [the README](https://github.com/kmishra9/PL2-AWS-Setup/tree/master/EC2/provisioner_scripts) contained within the `EC2/provisioner_scripts` directory to continue.
-  - You should also document the Linux passwords of every newly created user. These are contained in a file in the Ubuntu home directory after you run the `add_users` script. You can display usernames and their passwords (command: `cat /home/ubuntu/add_users.log`).
-  - **Other Installations**
-    - If you have anything else you'd like to install, follow external instructions for installing things on `Ubuntu 16.04 LTS`, the OS the EC2 Analysis Instance is running
-  - **MOVE ME TO A PORTION FOR AWS WORKSPACES FOR RESEARCHERS SSH Keys for Server Users**
-    - - While you are SSH'd into the EC2 Analysis Instance, you should also document the SSH public keys of each user, including Ubuntu, the "sudo" user. These will be at `/home/username/.ssh/id_rsa.pub`.
-      - **Note**: If that path doesn't exist yet, you will need to switch users (example: `sudo su researcher_0`) and run `ssh-keygen` for them, at which point a key pair should be generated for you to access and document. To become `ubuntu` again, simply type `exit` or `logout`. If you forget to switch users and run ssh-keygen as `ubuntu`, even from within the home directory of another user, you'll just be resetting `ubuntu`'s ssh keys. Make sure to update the documented key with the newly generated one if you do this accidentally.
+    - Follow the steps in the `README` contained within the [`workspaces/` directory](https://github.com/kmishra9/PL2-AWS-Setup/tree/master/workspaces) to set up SSH tunnelling to the EC2 Analysis Instance from the `Administration` Workspace.
+      - **Note**: tunnelling works "out of the box", in that you don't need to do any additional setup on the server side. Terraform has already placed your Workspace's SSH Public Key in the `/home/ubuntu/.ssh/authorized_keys` file on the server. For other users, _you_ will need to follow additional instructions (documented in a later step to "enable" SSH access for them.
 
 ## Final Touches
 
 1. **AWS Workspaces for Researchers**
-  - At this point, an `Administration` workspace has been created but individual researchers will also need their own workspaces in order to access the setup.
-  - Unfortunately, Terraform is unable to provision AWS Workspaces for each individual researcher automatically so you will need to create a separate Workspace for each researcher
-  - Follow the same steps you used to create the `Administration` Workspace to create Workspaces for each researcher. Researchers will receive an email asking them to set a password, just as the SPA email received one for the `Administration` Workspace. Ensure the researchers know to set passwords using the Strong Random Password Generator linked from your copy of the Documentation Template and to document the Workspaces passwords they generate there as well (there is a table associating a real name, workspaces username, and password where they should place their password). Researchers should also generate ssh keys and document their Workspaces ssh public key in the provided table as well.
-    - **Note**: Each Workspaces username also follows a standardized format, such as `Researcher_0` or `Researcher_11`, meaning you'll need to assign real people to these usernames in your copy of the Documentation Template as you create Workspaces for them.
+  - **Note**: At this point, an `Administration` workspace has been created but individual researchers will also need _their own workspaces_ in order to access the setup. Unfortunately, Terraform is unable to provision AWS Workspaces for each individual researcher automatically so you will need to create a separate Workspace for each researcher.
+  - Follow the same steps you used to create the `Administration` Workspace to create Workspaces for each researcher.
+    - **Note**: Each Workspaces username follows a standardized format, such as `Researcher_0` or `Researcher_11`, meaning you'll need to assign real people to these usernames in your copy of the Documentation Template as you create Workspaces for them.
+  - Send an email to all researchers receiving a workspace explaining what to do. Here is a [template email](https://docs.google.com/document/d/18D-Rmr3Y5EkalVA8p9kLkrrsRvl12I-7RhPFeMy7fgc/edit?usp=sharing).
+
+You should have already been given access to this document, and you will be sent an email like this:
+  - Researchers will receive an email asking them to set a password, just as the SPA email received one for the `Administration` Workspace. Ensure the researchers know to set passwords using the Strong Random Password Generator linked from your copy of the Documentation Template and to document the Workspaces passwords they generate there as well (there is a table associating a real name, workspaces username, and password where they should place their password). Researchers should also generate ssh keys and document their Workspaces ssh public key in the provided table as well.
+
   -
 
 2. **Adding New Researchers after Terraform has been built**
