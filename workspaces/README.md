@@ -30,6 +30,9 @@ Host [name]
   - **Example**: `ssh ubuntu@172.31.16.129`
   - **Note**: You can't have an SSH tunnel to and a regular ssh connection to Ubuntu going at the same time.
 
+## What Happens Next
+If you've documented your SSH public key in your project's AWS documentation for your administrator, they will need to copy the key in the `/home/[username]/.ssh/authorized_keys` file of your researcher account on the server to "enable" SSH and tunneling. They should get back to you with an email when they're done doing so.
+
 ## Using Your SSH Tunnel to connect to RStudio Server
 Once you've gone through the set of steps above and initialized an SSH tunnel, using the tunnel is simple. By default, the tunnel you've set up is connected to RStudio Server (if you've followed the example, changing only the `Hostname` and `User`, according to the setup and your Linux username). Simply open your Chrome browser and type `localhost` to start using RStudio Server, which is running on the analysis instance.
 
