@@ -24,12 +24,7 @@
             "Resource": [
                 "arn:aws:iam::342733391267:mfa/${aws:username}",
                 "arn:aws:iam::342733391267:user/${aws:username}"
-            ],
-            "Condition": {
-                "Bool": {
-                    "aws:MultiFactorAuthPresent": true
-                }
-            }
+            ]
         },
         {
             "Sid": "AllowUsersToListMFADevicesandUsersForConsole",
@@ -38,6 +33,18 @@
                 "iam:ListMFADevices",
                 "iam:ListVirtualMFADevices",
                 "iam:ListUsers"
+                "iam:GetAccountSummary"
+                "iam:GetUser "
+                "iam:ListAccountAliases"
+                "iam:ListUserPolicies"
+                "iam:ListGroupsForUser"
+                "iam:ListUserTags"
+                "iam:ListAccessKeys"
+                "iam:ListSSHPublicKeys"
+                "iam:ListServiceSpecificCredentials"
+                "iam:GetLoginProfile"
+                "iam:ListSigningCertificates"
+                "iam:ListPolicies"
             ],
             "Resource": "*"
         }
