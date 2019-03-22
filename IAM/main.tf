@@ -47,20 +47,20 @@ data "aws_iam_policy_document" "AllowUsersToManageTheirOwnVirtualMFADevice" {
     sid = "AllowUsersToListMFADevicesandUsersForConsole"
     effect = "Allow"
     actions = [
-      "iam:GetAccountSummary"
-      "iam:GetUser"
+      "iam:GetAccountSummary",
+      "iam:GetUser",
+      "iam:GetLoginProfile",
       "iam:ListMFADevices",
       "iam:ListVirtualMFADevices",
-      "iam:ListUsers"
-      "iam:ListAccountAliases"
-      "iam:ListUserPolicies"
-      "iam:ListGroupsForUser"
-      "iam:ListUserTags"
-      "iam:ListAccessKeys"
-      "iam:ListSSHPublicKeys"
-      "iam:ListServiceSpecificCredentials"
-      "iam:GetLoginProfile"
-      "iam:ListSigningCertificates"
+      "iam:ListUsers",
+      "iam:ListAccountAliases",
+      "iam:ListUserPolicies",
+      "iam:ListGroupsForUser",
+      "iam:ListUserTags",
+      "iam:ListAccessKeys",
+      "iam:ListSSHPublicKeys",
+      "iam:ListServiceSpecificCredentials",
+      "iam:ListSigningCertificates",
       "iam:ListPolicies"
     ]
     resources = [
