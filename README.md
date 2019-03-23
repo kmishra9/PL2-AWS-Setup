@@ -138,17 +138,36 @@ For the remainder of this section, you should be logged into your `Administratio
 You should have already been given access to this document, and you will be sent an email like this:
   - Researchers will receive an email asking them to set a password, just as the SPA email received one for the `Administration` Workspace. Ensure the researchers know to set passwords using the Strong Random Password Generator linked from your copy of the Documentation Template and to document the Workspaces passwords they generate there as well (there is a table associating a real name, workspaces username, and password where they should place their password). Researchers should also generate ssh keys and document their Workspaces ssh public key in the provided table as well.
 
-  -
-
-2. **Adding New Researchers after Terraform has been built**
-
-3. **Importing Data Into your AWS setup**
-  - The recommended workflow for importing data involves transferring the data to a new `Data_Acquisition` AWS Workspace that you create especially for this purpose There are a variety of ways to do this such as Box, Google Drive, AWS WorkDocs scp, sftp, etc. Then, from `Data_Acquisition` you could transfer the data to your EC2 Analysis Instance via [SCP (a terminal command)](http://www.hypexr.org/linux_scp_help.php) or something like [Cyberduck (a GUI)](https://cyberduck.io/).
+2. **Importing Data Into your AWS setup**
+  - At a high level, secure data follows the same path that researchers do; it must hop from your computer (or an external source) to a `Workspace`, then to the EC2 Analysis Instance.
     - **Note**: It is important to remember is that this "hop" through the workspace is necessary because everything within the VPC (besides the Workspace itself) is isolated from the outside. A security group is applied to the EC2 Analysis Instance preventing any connections made from IPs outside of the VPC. Thus, directly connecting to the instance isn't an option.
-  - **Note**: I highly recommend you make a snapshot of both your root AWS EBS volume and the EBS volume containing sensitive data _prior_ to making large changes as well as a snapshot _after_ you successfully make the change. This will help keep things running smoothly in the event that accidents happen (which they do). Bricking an instance by accident, consequently, is only really bad if you don't have a straightforward path to recovery
-  - **Note**: A reminder to run `./mount_drives` any time you start the EC2 Analysis Instance up. You don't want to acidentally store sensitive data on the root volume of the instance at the path /home/[data-folder-name] (which is unencrypted) instead of its correct place on an encrypted, attached, mounted EBS volume at that path.
+  - **From Data Source to `Administration` Workspace**
+    - The best ways to move data from the source to a workspace involve commercial cloud storage, such as [Google Drive](https://www.google.com/drive/) or [Box](https://www.box.com/home), or the use of Amazon's custom solution, [AWS WorkDocs](https://aws.amazon.com/workdocs/). For data _already stored in the cloud_, it is easy to simply navigate to the data online and download it to the workspace.
+    - For sensitive data _not already stored in the cloud_ (i.e. an encrypted hard drive in the office), the Amazon solution is particularly compelling, allowing the data to be synced from your own computer/hard drive to the Workspace. As part of creating the `Simple AD` directory in an earlier step, you should've enabled AWS WorkDocs and should see an existing WorkDocs site when you navigate to the [AWS WorkDocs Management Console](https://us-west-2.console.aws.amazon.com/zocalo/home?region=us-west-2#/manage_organizations). Click on the link to start setting things up. Following setup, you can upload data to WorkDocs and [use Amazon WorkDocs Drive, in conjunction with your AWS Workspace](https://aws.amazon.com/about-aws/whats-new/2017/09/amazon-workspaces-users-can-now-use-amazon-workdocs-drive/).
+      - [AWS WorkDocs Drive - User Guide](https://docs.aws.amazon.com/workdocs/latest/userguide/workdocs_drive_help.html).
+  - **From `Administration` Workspace to EC2 Analysis Instance**
+    - Once your data is accessible to you on the `Administration` Workspace, there are several ways to transfer it to the EC2 Analysis Instance. I'll outline two here:
+      - **Method 1**: [`scp`](http://www.hypexr.org/linux_scp_help.php)
+        - First, review this [`scp` documentation]. Your Workspace will be the local host (where you will use your Terminal from, and where the data is stored), and the EC2 Analysis Instance will be the remote host, where
+      - **Method 2**: [Cyberduck](https://cyberduck.io/)
+        -
+      - **Method 3**: [RStudio Server Upload](https://support.rstudio.com/hc/en-us/articles/200713893-Uploading-and-Downloading-Files)
+        - 
+    - **Note**: A reminder to run `./mount_drives` any time you start the EC2 Analysis Instance up. You don't want to acidentally store sensitive data on the root volume of the instance at the path /home/[data-folder-name] (which is unencrypted) instead of its correct place on an encrypted, attached, mounted EBS volume at that path.
+  - **Big Data**
+    - The approaches outlined above are likely to fit the vast majority of individual labs' use cases, and huge secure data, on the order of tens of terabytes and greater, is likely not the best fit for a setup like this. In these cases, we would recommend consulting with BRC (or your university's Research IT group) before proceeding.
+  - **Backups**
+    - I highly recommend you make a snapshot of both your root AWS EBS volume and the EBS volume containing sensitive data _prior_ to making large changes as well as a snapshot _after_ you successfully make the change.
+    - This will help keep things running smoothly in the event that accidents happen (which they do).
+    - Bricking an instance by accident, consequently, is only really bad if you don't have a straightforward path to recovery
+    - For more information on how to make a backup
 
-4. **MSSEI**
+
+3. **MSSEI**
   - For PL2 projects only, you will also need to complete a document outlining your project and declaring that it fulfills the [Minimum Security Standards for Electronic Information (MSSEI)](https://security.berkeley.edu/minimum-security-standards-electronic-information) that your data must abide by.
   - You can find a Template MSSEI to begin filling out [here]().
   - An example of a similar, completed MSSEI can be found [here](https://docs.google.com/document/d/1YqaoR8Z0DrhGTk2_UBGsBcFsrapPVFUzkLbekPCxrOU/edit?usp=sharing).
+
+## Administration in the Post-Terraform Era
+
+1. **Adding a New Researchers to the Project**
