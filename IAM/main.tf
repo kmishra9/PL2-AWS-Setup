@@ -53,6 +53,7 @@ data "aws_iam_policy_document" "AllowUsersToManageTheirOwnVirtualMFADevice" {
       "iam:ListMFADevices",
       "iam:ListVirtualMFADevices",
       "iam:ListUsers",
+      "iam:ListGroups",
       "iam:ListAccountAliases",
       "iam:ListUserPolicies",
       "iam:ListGroupsForUser",
@@ -61,7 +62,8 @@ data "aws_iam_policy_document" "AllowUsersToManageTheirOwnVirtualMFADevice" {
       "iam:ListSSHPublicKeys",
       "iam:ListServiceSpecificCredentials",
       "iam:ListSigningCertificates",
-      "iam:ListPolicies"
+      "iam:ListPolicies",
+      "iam:ListAttachedUserPolicies"
     ]
     resources = [
       "*"

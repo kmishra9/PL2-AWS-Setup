@@ -30,21 +30,23 @@
             "Sid": "AllowUsersToListMFADevicesandUsersForConsole",
             "Effect": "Allow",
             "Action": [
-                "iam:ListMFADevices",
-                "iam:ListVirtualMFADevices",
-                "iam:ListUsers"
                 "iam:GetAccountSummary"
-                "iam:GetUser "
+                "iam:GetUser"
+                "iam:GetLoginProfile"
+                "iam:ListMFADevices"
+                "iam:ListVirtualMFADevices"
+                "iam:ListUsers"
                 "iam:ListAccountAliases"
                 "iam:ListUserPolicies"
+                "iam:ListGroups"
                 "iam:ListGroupsForUser"
                 "iam:ListUserTags"
                 "iam:ListAccessKeys"
                 "iam:ListSSHPublicKeys"
                 "iam:ListServiceSpecificCredentials"
-                "iam:GetLoginProfile"
                 "iam:ListSigningCertificates"
                 "iam:ListPolicies"
+                "iam:ListAttachedUserPolicies"
             ],
             "Resource": "*"
         }
