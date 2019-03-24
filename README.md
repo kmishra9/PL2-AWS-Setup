@@ -133,10 +133,9 @@ For the remainder of this section, you should be logged into your `Administratio
   - **Note**: At this point, an `Administration` workspace has been created but individual researchers will also need _their own workspaces_ in order to access the setup. Unfortunately, Terraform is unable to provision AWS Workspaces for each individual researcher automatically so you will need to create a separate Workspace for each researcher.
   - Follow the same steps you used to create the `Administration` Workspace to create Workspaces for each researcher.
     - **Note**: Each Workspaces username follows a standardized format, such as `Researcher_0` or `Researcher_11`, meaning you'll need to assign real people to these usernames in your copy of the Documentation Template as you create Workspaces for them.
-  - Send an email to all researchers receiving a workspace explaining what to do. Here is a [template email](https://docs.google.com/document/d/18D-Rmr3Y5EkalVA8p9kLkrrsRvl12I-7RhPFeMy7fgc/edit?usp=sharing).
-
-You should have already been given access to this document, and you will be sent an email like this:
-  - Researchers will receive an email asking them to set a password, just as the SPA email received one for the `Administration` Workspace. Ensure the researchers know to set passwords using the Strong Random Password Generator linked from your copy of the Documentation Template and to document the Workspaces passwords they generate there as well (there is a table associating a real name, workspaces username, and password where they should place their password). Researchers should also generate ssh keys and document their Workspaces ssh public key in the provided table as well.
+    - **Note**: creating a workspace for each researcher will email them asking them to set up a password, just as the SPA email received one for the `Administration` Workspace.
+  - Immediately after creating the Workspaces, send an email to all researchers receiving a workspace explaining what to do. Here is a [template email](https://docs.google.com/document/d/18D-Rmr3Y5EkalVA8p9kLkrrsRvl12I-7RhPFeMy7fgc/edit?usp=sharing).
+    - **Note**: in order to follow all instructions they are instructed to, they need to have several pieces of information in your project's copy of the documentation template, the most important of which is the highlighted `EC2_PRIVATE_IP` field
 
 2. **Importing Data Into your AWS setup**
   - At a high level, secure data follows the same path that researchers do; it must hop from your computer (or an external source) to a `Workspace`, then to the EC2 Analysis Instance.
@@ -146,14 +145,29 @@ You should have already been given access to this document, and you will be sent
     - For sensitive data _not already stored in the cloud_ (i.e. an encrypted hard drive in the office), the Amazon solution is particularly compelling, allowing the data to be synced from your own computer/hard drive to the Workspace. As part of creating the `Simple AD` directory in an earlier step, you should've enabled AWS WorkDocs and should see an existing WorkDocs site when you navigate to the [AWS WorkDocs Management Console](https://us-west-2.console.aws.amazon.com/zocalo/home?region=us-west-2#/manage_organizations). Click on the link to start setting things up. Following setup, you can upload data to WorkDocs and [use Amazon WorkDocs Drive, in conjunction with your AWS Workspace](https://aws.amazon.com/about-aws/whats-new/2017/09/amazon-workspaces-users-can-now-use-amazon-workdocs-drive/).
       - [AWS WorkDocs Drive - User Guide](https://docs.aws.amazon.com/workdocs/latest/userguide/workdocs_drive_help.html).
   - **From `Administration` Workspace to EC2 Analysis Instance**
-    - Once your data is accessible to you on the `Administration` Workspace, there are several ways to transfer it to the EC2 Analysis Instance. I'll outline two here:
-      - **Method 1**: [`scp`](http://www.hypexr.org/linux_scp_help.php)
-        - First, review this [`scp` documentation]. Your Workspace will be the local host (where you will use your Terminal from, and where the data is stored), and the EC2 Analysis Instance will be the remote host, where
-      - **Method 2**: [Cyberduck](https://cyberduck.io/)
-        -
-      - **Method 3**: [RStudio Server Upload](https://support.rstudio.com/hc/en-us/articles/200713893-Uploading-and-Downloading-Files)
-        - 
-    - **Note**: A reminder to run `./mount_drives` any time you start the EC2 Analysis Instance up. You don't want to acidentally store sensitive data on the root volume of the instance at the path /home/[data-folder-name] (which is unencrypted) instead of its correct place on an encrypted, attached, mounted EBS volume at that path.
+    - Once your data is accessible to you on the `Administration` Workspace, there are several ways to transfer it to the EC2 Analysis Instance. I'll outline three below.
+      - **Note**: A reminder to run `./mount_drives` any time you start the EC2 Analysis Instance up (especially before you transfer the data). If you don't do this, the you'll be acidentally storing sensitive data on the (unencrypted) root volume of the instance at the path `/home/[data-folder-name]` instead of its correct place on an encrypted, attached, mounted EBS volume at that path.
+      - **Method 1**: [Cyberduck](https://cyberduck.io/) (Recommended)
+        - Start by downloading and installing Cyberduck for Windows 10 on your Workspace using the link above. This is a free application and will allow you to transfer things relatively simply and easily.
+        - Start by opening the Cyberduck application
+        - Then, in the bottom left, click on the `+` button to add a bookmark and fill in the following fields:
+          - Connection Type = `SFTP`
+          - Nickname = `EC2 Analysis Instance`
+          - Server = `[EC2_PRIVATE_IP]`
+          - Port = `22`
+          - Username = `ubuntu`
+          - SSH Private Key = `~/.ssh/id_rsa`
+        - Double-click the newly created bookmark and select `Allow` if necessary to continue with login. You should now be able to see files on the EC2 Analysis Instance and can upload and download to destinations by navigating around and using the `Action` button or by right-clicking.
+        - **Documentation**: Feel free to reference an [additional tutorial on using Cyberduck](https://www.youtube.com/watch?v=UYDWOvyzoAQ) for more help.
+      - **Method 2**: [RStudio Server Upload](https://support.rstudio.com/hc/en-us/articles/200713893-Uploading-and-Downloading-Files)
+        - Read the documentation linked above. The RStudio Server upload function is limited to 1 file at a time, up to files 2GB or smaller. Thus, it is not the best solution for every data transfer, but is a good way to transfer some types of data easily and quickly.
+        - Simply initiate an ssh tunnel from your Workspace, log into RStudio Server, and follow the directions in the documentation to upload data.
+      - **Method 3**: [`scp`](http://www.hypexr.org/linux_scp_help.php)
+        - First, review the documentation linked above. Your Workspace will be the "local host" (where you will use your Terminal from, and where the data is stored), and the EC2 Analysis Instance will be the "remote host" (where you are connecting to and hope to deposit the data).
+        - **Note**: It is possible to `scp` entire directories at once from the Workspace to the EC2 Analysis Instance.
+        - **Example**: Let's say I have a `Data` folder full of many small files containing my data in the "Downloads" folder of my `Administration` Workspace. To transfer this data, I would start by opening my GitBash Terminal, navigating to my Downloads folder (command: `cd ~/Downloads`), and transferring it with `scp` (command `scp -r ~/Downloads/Data/ ubuntu@[EC2_PRIVATE_IP]:[DATA_FOLDER_PATH]`). Recall that the data folder path is `/home/[data-folder-name]`, where you specified the name of the data folder as part of Terraform setup.
+      - When data has been transferred from the `Administration` Workspace to the EC2 Analysis Instance, _it needs to be deleted off the Workspace_.
+
   - **Big Data**
     - The approaches outlined above are likely to fit the vast majority of individual labs' use cases, and huge secure data, on the order of tens of terabytes and greater, is likely not the best fit for a setup like this. In these cases, we would recommend consulting with BRC (or your university's Research IT group) before proceeding.
   - **Backups**
