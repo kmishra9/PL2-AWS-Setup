@@ -72,7 +72,7 @@ Before beginning, it is recommended that you review the [PL2 AWS Setup - General
 
 ## Administration From an AWS Workspace
 
-For the remainder of this section, you should be logged into your `Administration` AWS Workspace, which will be running Windows 10. To access your `Administration` workspace, you'll need to complete your user profile, [download an AWS Workspaces client](https://clients.amazonworkspaces.com/) for _your own device_ (i.e. a MacBook), and then login with username `Administration` and the password you've set (which you should record in the Documentation Template). See the email sent to your SPA email for more details and exact instructions.
+For the remainder of this section, you should be logged into your `Administration` AWS Workspace, which will be running Windows 10. To access your `Administration` workspace, you'll need to complete your user profile, [download an AWS Workspaces client](https://clients.amazonworkspaces.com/) for _your own device_ (i.e. a MacBook), and then login with username `Administration` and the password you've set. As always, you should record it in the Documentation Template. See the email sent to your SPA email for more details and exact instructions.
 
 1. **Workspace Setup**
   - Install [Google Chrome](https://www.google.com/chrome/) (main web browser).
@@ -87,7 +87,7 @@ For the remainder of this section, you should be logged into your `Administratio
 
 2. **Setting Up Terraform**
   - From a GitBash Terminal, clone this GitHub repository onto your Workspace (command: `git clone https://github.com/kmishra9/PL2-AWS-Setup.git ~/Downloads/PL2-AWS-Setup`).
-    - **Note**: This will create a folder called `PL2-AWS-Setup` in your Downloads folder
+    - **Note**: This will create a folder called `PL2-AWS-Setup` in the Downloads folder of the Workspace
   - Then, open the GitHub repository in Atom (command: `atom ~/Downloads/PL2-AWS-Setup`)
   - In Atom, select `View > Toggle Soft Wrap` for better readability.
   - Next, open two existing files by double clicking them from the `Project` pane on the left: `variables.tf` and `example.tfvars.example`.
