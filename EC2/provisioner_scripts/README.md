@@ -23,7 +23,7 @@ Each of the bash scripts included as part of this folder are used to set up the 
 
 2. `add_users`
   - **Usage**: `sudo ./add_users [data_folder_path] [num_researchers]`
-  - **Description**: Creates the number of accounts specified. Each account also has a symlink (alias) to the data folder path specified, with rwx permissions. The new users are named consistently as `researcher_x`, where `x` is an integer between [0, num_researchers).
+  - **Description**: Creates the number of accounts specified. Each account also has a symlink (alias) to the data folder path specified, with rwx permissions. The new users are named consistently as `researcher_x`, where `x` is an integer between [0, num_researchers). The accounts are also added to the `sudo` group and have SSH access enabled for them.
 
 3. `install_cloudwatch_logs_agent`
   - **Usage**: `sudo ./install_cloudwatch_logs_agent`
