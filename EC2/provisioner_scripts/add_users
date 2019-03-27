@@ -27,10 +27,14 @@ for ((i=0; i<$2; i++)); do
     user_name=researcher_$i
     user_password=$(pwgen -s -y 16 1)
 
-    sudo adduser $user_name --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
+    sudo adduser $user_name --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password --ingroup sudo
     echo $user_name:$user_password | sudo chpasswd
-    echo "$user_name added successfully with password: $user_password" >> add_users.log
+    echo "$user_name added successfully with password: $user_password to the '$group_name' " >> add_users.log
 done
+
+# Allow all new sudo users (and thus all newly created user accounts) to have SSH access
+echo "AllowGroups sudo" >> /etc/ssh/sshd_config
+systemctl restart sshd
 
 while sudo fuser /var/lib/dpkg/lock /var/lib/apt/lists/lock /var/cache/apt/archives/lock >/dev/null 2>&1;
 do
