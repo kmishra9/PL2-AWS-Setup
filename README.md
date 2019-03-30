@@ -2,6 +2,7 @@
 
 ###### TODO
   - Develop standardized email from admin => researchers in documentation
+  - Review architecture decision -- `mount_drives` requires a file path (documentation template is up to date with current Infrastructure until further notice)
   - Explore automatically generating SSH keys for users in the `add_users` provisioner script
   - Stata installation instructions on Linux and how to use it
   - Create and link to an example, fake, filled-in PL2 Documentation Template
@@ -119,6 +120,8 @@ For the remainder of this section, you should be logged into your `Administratio
     - Select your EC2 Analysis Instance
     - Copy the `Private IP` and `Cmd-Shift-V` (retain formatting) it into your documentation template in the appropriate highlighted field and remove the highlight.
       - **Note**: You must use the Private IP -- if you accidentally copy the Public IP, you won't be able to connect
+  - **Data Folder Path**
+    -
 
 5. **Finishing Setup of your `Administration` Workspace**
   - **SSH Public Keys**
