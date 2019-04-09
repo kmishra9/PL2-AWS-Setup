@@ -3,7 +3,8 @@
 ###### TODO
   - Develop standardized email from admin => researchers in documentation
   - Review architecture decision -- `mount_drives` requires a file path (documentation template is up to date with current Infrastructure until further notice)
-  - Explore automatically generating SSH keys for users in the `add_users` provisioner script
+  - Explore automatically generating SSH keys for users in the `add_users` provisioner script. [Copying to server](https://www.ssh.com/ssh/copy-id)
+    - Look into whether password SSH is forbidden -- if not, maybe use a tool like this to copy the key to their username (https://docs.google.com/document/d/1JzAM7vR4AbKNYL_YJ6qL6J2hG3W9ePVI67BPIZvl8RU/edit#)
   - Stata installation instructions on Linux and how to use it
   - Create and link to an example, fake, filled-in PL2 Documentation Template
   - Create a template MSSEI + update(redact(copy(KaiserFlu MSSEI)))
@@ -14,7 +15,7 @@
   - Adapt [AWS User Setup Instructions](https://docs.google.com/document/d/1TjbceyJ2eE-uaxqfX-cccXCw3MgeO2wU54v6jOz1qj4/edit?usp=sharing) and [Flu AWS User Creation Guide](https://docs.google.com/document/d/1GA8IlGA6cBbR13UBnCRFe8TYaEjSZ3w9tMv6hGDVAj0/edit?usp=sharing)
   - Destroying your Setup + Resetting Up your Setup
   - Implement CloudWatch Alarms, GuardDuty, etc.
-  - Look into whether password SSH is forbidden -- if not, maybe use a tool like this to copy the key to their username (https://docs.google.com/document/d/1JzAM7vR4AbKNYL_YJ6qL6J2hG3W9ePVI67BPIZvl8RU/edit#)
+
   - More details needed for sending programmatic credentials to UCB security team
 
 ## Overview
@@ -169,7 +170,11 @@ For the remainder of this section, you should be logged into your `Administratio
         - First, review the documentation linked above. Your Workspace will be the "local host" (where you will use your Terminal from, and where the data is stored), and the EC2 Analysis Instance will be the "remote host" (where you are connecting to and hope to deposit the data).
         - **Note**: It is possible to `scp` entire directories at once from the Workspace to the EC2 Analysis Instance.
         - **Example**: Let's say I have a `Data` folder full of many small files containing my data in the "Downloads" folder of my `Administration` Workspace. To transfer this data, I would start by opening my GitBash Terminal, navigating to my Downloads folder (command: `cd ~/Downloads`), and transferring it with `scp` (command `scp -r ~/Downloads/Data/ ubuntu@[EC2_PRIVATE_IP]:[DATA_FOLDER_PATH]`). Recall that the data folder path is `/home/[data-folder-name]`, where you specified the name of the data folder as part of Terraform setup.
-      - When data has been transferred from the `Administration` Workspace to the EC2 Analysis Instance, _it needs to be deleted off the Workspace_.
+    - When data has been transferred from the `Administration` Workspace to the EC2 Analysis Instance, _it needs to be deleted off the Workspace_.
+    - In addition, it's likely that the data you've transferred will need permissions to be accessible to the rest of your researchers. To change the file permissions for a single file `chmod 777 <file_path>`. To change the file permissions for an entire directory, `chmod -R 777 <dir_path>`.
+      - **Documentation**: Feel free to reference [an overview](https://www.engr.colostate.edu/ens/how/changepermissions/) of what `777` permissions actually mean. `755` permissions are also generally a good fit if you want to prevent the raw data from being overwritten.
+      - **Note**: You can list permissions of all files within a directory (command: `ls -al <dir_path>`), and even including the directory itself (permissions at the top of the ls command for `.`).
+      - **Note**: The data directory itself needs to have the same `777` permissions of the files within, in order for your researchers to access it. This should have already been set up, but if any problems occur or persist, refer to the documentation above and ensure the directory permissions are `777` (command: `chmod 777 <data_dir_path>`)
 
   - **Big Data**
     - The approaches outlined above are likely to fit the vast majority of individual labs' use cases, and huge secure data, on the order of tens of terabytes and greater, is likely not the best fit for a setup like this. In these cases, we would recommend consulting with BRC (or your university's Research IT group) before proceeding.
