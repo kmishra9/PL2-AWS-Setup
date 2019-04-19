@@ -1,28 +1,28 @@
 # Local Variable Declarations
 locals {
-  cis_owner_id = 679593333241
+  cis_owner_id         = 679593333241
   ubuntu_home_dir_path = "/home/ubuntu"
-  data_folder_path = "/home/${var.data_folder_name}"
+  data_folder_path     = "/home/${var.data_folder_name}"
 }
 
 ################################################################################
 # AMI Setup
 
 data "aws_ami" "cis_level_1_ami" {
-  owners = ["${local.cis_owner_id}"]
+  owners      = ["${local.cis_owner_id}"]
   most_recent = true
 
   filter {
-    name = "owner-id"
-    values = ["${local.cis_owner_id}"]
+    name      = "owner-id"
+    values    = ["${local.cis_owner_id}"]
   }
 
   filter {
-    name = "name"
-    values = ["CIS Ubuntu Linux 16.04 LTS Benchmark*"]
+    name      = "name"
+    values    = ["CIS Ubuntu Linux 16.04 LTS Benchmark*"]
   }
 
-  name_regex = "CIS Ubuntu Linux 16.04 LTS Benchmark-*(Level 1)*"
+  name_regex  = "CIS Ubuntu Linux 16.04 LTS Benchmark-*(Level 1)*"
 }
 
 ################################################################################
@@ -61,9 +61,9 @@ resource "aws_instance" "EC2_analysis_instance" {
 # EBS Volumes
 resource "aws_ebs_volume" "data_storage" {
   availability_zone = "${var.region}${var.availability_zone}"
-  encrypted = "true"
-  size = "${var.EBS_volume_size}"
-  tags = {
+  encrypted         = "true"
+  size              = "${var.EBS_volume_size}"
+  tags              = {
     name = "${var.project_name}-data"
   }
 }
@@ -77,7 +77,7 @@ resource "aws_volume_attachment" "data_storage_attachment" {
 
 resource "null_resource" "delay" {
   triggers {
-    new_volume = "${aws_volume_attachment.data_storage_attachment.volume_id}"
+    new_volume   = "${aws_volume_attachment.data_storage_attachment.volume_id}"
     new_instance = "${aws_volume_attachment.data_storage_attachment.instance_id}"
   }
 
@@ -89,7 +89,7 @@ resource "null_resource" "delay" {
 # Trigger to begin installing things once EC2 is fully set up but wait for delay to complete
 resource "null_resource" "EC2_setup" {
   triggers {
-    new_volume = "${aws_volume_attachment.data_storage_attachment.volume_id}"
+    new_volume   = "${aws_volume_attachment.data_storage_attachment.volume_id}"
     new_instance = "${aws_volume_attachment.data_storage_attachment.instance_id}"
   }
 
@@ -104,12 +104,12 @@ resource "null_resource" "EC2_setup" {
     destination = "${local.ubuntu_home_dir_path}"
 
     connection {
-      type     = "ssh"
-      user     = "ubuntu"
-      host     = "${aws_instance.EC2_analysis_instance.private_dns}"
-      timeout  = "30s"
+      type        = "ssh"
+      user        = "ubuntu"
+      host        = "${aws_instance.EC2_analysis_instance.private_dns}"
+      timeout     = "30s"
       private_key = "${file(var.workspaces_private_key_path)}"
-      agent    = "false"
+      agent       = "false"
     }
   }
 
@@ -133,14 +133,43 @@ resource "null_resource" "EC2_setup" {
     ]
 
     connection {
-      type     = "ssh"
-      user     = "ubuntu"
-      host     = "${aws_instance.EC2_analysis_instance.private_dns}"
-      timeout  = "30s"
+      type        = "ssh"
+      user        = "ubuntu"
+      host        = "${aws_instance.EC2_analysis_instance.private_dns}"
+      timeout     = "30s"
       private_key = "${file(var.workspaces_private_key_path)}"
-      agent    = "false"
+      agent       = "false"
     }
   }
 }
 
 # Python Script for staying secure: https://www.cisecurity.org/python-script-for-staying-secure-with-the-latest-cis-amis/
+
+################################################################################
+# Cloudwatch Idle Alarms
+
+resource "aws_sns_topic" "idle_5_hours" {
+  name = "idle_5_hours"
+}
+
+resource "aws_cloudwatch_metric_alarm" "idle_5_hours" {
+  alarm_name          = "Idle-5-Hours"
+  alarm_description   = "Alarm is triggered if max CPU usage does not exceed 10% in 5 hours"
+  comparison_operator = "LessThanThreshold"
+  threshold           = "10"
+  evaluation_periods  = "60"
+  datapoints_to_alarm = "60"
+  period              = "300"
+  statistic           = "Maximum"
+  metric_name         = "CPUUtilization"
+  treat_missing_data  = "notBreaching"
+
+  namespace           = "AWS/EC2"
+  dimensions          = {
+    InstanceId = "${aws_instance.EC2_analysis_instance.id}"
+  }
+
+  alarm_actions = [
+    "$aws_sns_topic.idle_5_hours.arn}"
+  ]
+}
