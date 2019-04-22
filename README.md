@@ -2,20 +2,16 @@
 
 ###### TODO
   - Develop standardized email from admin => researchers in documentation
-  - Review architecture decision -- `mount_drives` requires a file path (documentation template is up to date with current Infrastructure until further notice)
-  - Explore automatically generating SSH keys for users in the `add_users` provisioner script. [Copying to server](https://www.ssh.com/ssh/copy-id)
-    - Look into whether password SSH is forbidden -- if not, maybe use a tool like this to copy the key to their username (https://docs.google.com/document/d/1JzAM7vR4AbKNYL_YJ6qL6J2hG3W9ePVI67BPIZvl8RU/edit#)
   - Stata installation instructions on Linux and how to use it
   - Create and link to an example, fake, filled-in PL2 Documentation Template
   - Create a template MSSEI + update(redact(copy(KaiserFlu MSSEI)))
   - Document how to create a new researcher (for workspaces, linux, and IAM)
-  - Add CloudWatch Idle alarms to setup for leaving setup running too long
+  - Document subscribing to CloudWatch Idle Alarm
   - Document instructions on changing the device name and/or manual attachment of EBS devices to the AWS_Instance
   - Changing the size of your EBS data volume
   - Adapt [AWS User Setup Instructions](https://docs.google.com/document/d/1TjbceyJ2eE-uaxqfX-cccXCw3MgeO2wU54v6jOz1qj4/edit?usp=sharing) and [Flu AWS User Creation Guide](https://docs.google.com/document/d/1GA8IlGA6cBbR13UBnCRFe8TYaEjSZ3w9tMv6hGDVAj0/edit?usp=sharing)
   - Destroying your Setup + Resetting Up your Setup
   - Implement CloudWatch Alarms, GuardDuty, etc.
-
   - More details needed for sending programmatic credentials to UCB security team
 
 ## Overview
@@ -98,7 +94,7 @@ For the remainder of this section, you should be logged into your `Administratio
   - Rename `example.tfvars.example`. You can do so by right clicking the file in the `Project` pane on the left, selecting `Rename`, and specifying `terraform.tfvars` as the new name.
   - Finally, edit variable values in your new `terraform.tfvars` file to fit your requirements and save the result when you are done.
     - **Note**: The specific values you are responsible for assigning can have somewhat rigid requirements -- _read the documentation for each variable to prevent errors from occurring later_
-    - **Note**: Remember to replace the fake Terraform IAM credentials with the ones you downloaded and documented earlier in the "Getting Started" section
+    - **Note**: Remember to replace the fake Terraform IAM credentials included in the example file with the ones you downloaded and documented earlier in the "Getting Started" section
     - **Documentation**: Feel free to reference the "Variable Files" section of [Terraform's documentation on input variables](https://www.terraform.io/docs/configuration/variables.html#Variable_Files) for more help.
 
 3. **Running Terraform**
@@ -179,13 +175,20 @@ For the remainder of this section, you should be logged into your `Administratio
   - **Big Data**
     - The approaches outlined above are likely to fit the vast majority of individual labs' use cases, and huge secure data, on the order of tens of terabytes and greater, is likely not the best fit for a setup like this. In these cases, we would recommend consulting with BRC (or your university's Research IT group) before proceeding.
   - **Backups**
-    - I highly recommend you make a snapshot of both your root AWS EBS volume and the EBS volume containing sensitive data _prior_ to making large changes as well as a snapshot _after_ you successfully make the change.
+    - I highly recommend you [create a snapshot](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-creating-snapshot.html) of both your root AWS EBS volume and the EBS volume containing sensitive data _prior_ to making large changes as well as a snapshot _after_ you successfully make the change.
     - This will help keep things running smoothly in the event that accidents happen (which they do).
     - Bricking an instance by accident, consequently, is only really bad if you don't have a straightforward path to recovery
     - For more information on how to make a backup
 
 
-3. **MSSEI**
+3. **Subscribing to Idle Alarms**
+  - In your web browser navigate to the [Amazon Simple Notification Service (SNS) Console](https://us-west-2.console.aws.amazon.com/sns/v3/home?region=us-west-2#/dashboard).
+  - Click on `Topics`, then `idle_5_hours`, then `Create subscription`.
+  - The Protocol endpoint should be "Email" and you should create subscriptions for the SPA email and any administrators to monitor for accidentally leaving the server running (incurring unnecessary charges).
+    - **Note**: As is stated, after a subscription is created, you must confirm it -- do so from each subscribed administrator email, including the SPA's email.
+
+
+4. **MSSEI**
   - For PL2 projects only, you will also need to complete a document outlining your project and declaring that it fulfills the [Minimum Security Standards for Electronic Information (MSSEI)](https://security.berkeley.edu/minimum-security-standards-electronic-information) that your data must abide by.
   - You can find a Template MSSEI to begin filling out [here]().
   - An example of a similar, completed MSSEI can be found [here](https://docs.google.com/document/d/1YqaoR8Z0DrhGTk2_UBGsBcFsrapPVFUzkLbekPCxrOU/edit?usp=sharing).
