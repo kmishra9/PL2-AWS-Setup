@@ -170,6 +170,6 @@ resource "aws_cloudwatch_metric_alarm" "idle_5_hours" {
   }
 
   alarm_actions = [
-    "$aws_sns_topic.idle_5_hours.arn}"
+    "${aws_sns_topic.idle_5_hours.arn}"
   ]
 }
