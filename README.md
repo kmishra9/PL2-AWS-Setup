@@ -2,6 +2,7 @@
 
 ###### TODO
   - Develop standardized email from admin => researchers in documentation
+  - Requesting more Workspaces for your region
   - Stata installation instructions on Linux and how to use it
   - Create and link to an example, fake, filled-in PL2 Documentation Template
   - Create a template MSSEI + update(redact(copy(KaiserFlu MSSEI)))
@@ -173,12 +174,11 @@ For the remainder of this section, you should be logged into your `Administratio
       - **Note**: The data directory itself needs to have the same `777` permissions of the files within, in order for your researchers to access it. This should have already been set up, but if any problems occur or persist, refer to the documentation above and ensure the directory permissions are `777` (command: `chmod 777 <data_dir_path>`)
 
   - **Big Data**
-    - The approaches outlined above are likely to fit the vast majority of individual labs' use cases, and huge secure data, on the order of tens of terabytes and greater, is likely not the best fit for a setup like this. In these cases, we would recommend consulting with BRC (or your university's Research IT group) before proceeding.
+    - The approaches outlined above are likely to fit the vast majority of individual labs' use cases, and huge secure data, on the order of terabytes and greater, is likely not the best fit for a setup like this. In these cases, we would recommend consulting with BRC (or your university's Research IT group) before proceeding.
   - **Backups**
     - I highly recommend you [create a snapshot](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-creating-snapshot.html) of both your root AWS EBS volume and the EBS volume containing sensitive data _prior_ to making large changes as well as a snapshot _after_ you successfully make the change.
     - This will help keep things running smoothly in the event that accidents happen (which they do).
     - Bricking an instance by accident, consequently, is only really bad if you don't have a straightforward path to recovery
-    - For more information on how to make a backup
 
 
 3. **Subscribing to Idle Alarms**
