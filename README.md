@@ -1,10 +1,9 @@
 # PL2-AWS-Setup
 
 ###### TODO
-  - Update "Terraform" user instructions -- remove group creation in instructions
-  - Installing stuff on EC2
-  - Develop standardized email from admin => researchers in documentation
   - Requesting more Workspaces for your region
+  - Automated commenting out of AllowUsers
+  - Develop standardized email from admin => researchers in documentation
   - Stata installation instructions on Linux and how to use it
   - Create and link to an example, fake, filled-in PL2 Documentation Template
   - Create a template MSSEI + update(redact(copy(KaiserFlu MSSEI)))
@@ -38,13 +37,16 @@ Before beginning, it is recommended that you review the [PL2 AWS Setup - General
       - **Note**: As you proceed through the setup, this is a "one-stop-shop" for documenting pieces of the project that you have control over (such as usernames, passwords, public keys, etc.) that will be readily accessible and shareable among project members. This is useful from a systems administrator perspective and from a security audit perspective as well.
       - **Note**: You should share this document with anybody involved with the project but be careful with who has access because this document will contain sensitive information. Any researcher or administrator should definitely have read+write access but you should share with individual emails only (including your own, as you'll be responsible for filling it out), rather than sharing it as a link.
 
-3. Next, [log into AWS](https://console.aws.amazon.com/console/home?#). Then, using the services tab from your root account's AWS console, go to the [Identity and Access Management (IAM) console](https://console.aws.amazon.com/iam/home?#). You will need to complete a set of 5 security tasks that are good practices for securing your root account, visible on the bottom of the dashboard. The 5 tasks are:
+3. Next, [navigate to the AWS Identity and Access Management (IAM) console](https://console.aws.amazon.com/iam/home?#). You will need to complete a set of 5 security tasks that are good practices for securing your root account, visible on the bottom of the dashboard. The 5 tasks are:
     - **Delete your root access keys** -- this is to ensure no program or person can use the root account key credentials to authenticate and thus makes [controlling access to the account much easier](https://docs.aws.amazon.com/general/latest/gr/root-vs-iam.html). Follow the steps on the dashboard.
     - **Activate Multi-Factor Authentication (MFA) on your root account** -- this is to ensure that only the systems/security administrator has access to the root account. Follow the steps on the dashboard.
-    - **Create individual IAM users** -- for now we only need to create a single IAM user to get Terraform set up. Once Terraform builds the setup, each researcher will be assigned their own individual IAM user automatically. Follow the [AWS documentation on Creating an Administrator IAM User and Group (Console)](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html). Once the user has been  created, be sure to use the `Download .csv` button to download this IAM user's credentials.
-      - **Note**: you should name this user "Terraform" rather than "Administrator" for additional clarity. The group it is added should still be named "Administrators".
-      - **Note**: at Step 4, rather than enable "Console access" and specify a password, you should check the box to enable "Programmatic access"
-      - **Note**: if you don't download the IAM user's credentials immediately after creating them, they won't be available for download later. Instead, you would need to [Create a new Access Key](https://aws.amazon.com/blogs/security/wheres-my-secret-access-key/).
+    - **Create individual IAM users** -- for now we only need to create a single IAM user to get Terraform set up. Once Terraform builds the setup, each researcher will be assigned their own individual IAM user automatically.
+      - In the navigation pane, start by choosing `Users` and then choose `Add user`.
+      - Specify `Terraform` as the username and check _only_ the `Programmatic Access` box.
+      - To set permissions, click on `Attach existing policies directly`, then add `AdministratorAccess`.
+      - Click through to the review stage and create the user.
+      - Finally, be sure to use the `Download .csv` button to download this IAM user's credentials.
+        - **Note**: if you don't download the IAM user's credentials immediately after creating them, they won't be available for download later. Instead, you would need to [Create a new Access Key](https://aws.amazon.com/blogs/security/wheres-my-secret-access-key/).
     - **Use Groups to assign permissions** -- ignore this for now -- Terraform will help us create IAM groups for researcher, administrators, and log analysts
     - **Apply an IAM Password Policy** -- ignore this for now -- Terraform will set this up to ensure that the passwords required to access the console by the researchers and admin are appropriately secure against standard brute-force and dictionary attacks.
 
@@ -139,6 +141,9 @@ For the remainder of this section, you should be logged into your `Administratio
         - **Note**: Some of the scripts have already been run by Terraform. _They are noted as having been run already_. Their documentation and usage is included only for reference.
     - **SSH Public Keys**
       - While you're ssh'd into the `ubuntu` user, you should set up the SSH key for it as well. That involves creating it (command: `ssh-keygen`), printing it to the console (command: `cat ~/.ssh/id_rsa.pub`), and copying it into the documentation template's bottom-most table for the `ubuntu` user. Remember that copying/pasting in an AWS Workspace works by right-clicking selected text.
+    - **User Passwords**
+      - As part of the software installation step above, users and their passwords were generated in a file named `add_users.log` in the home directory of `ubuntu`. Document the passwords of each newly generated user in the documentation template.
+        - **Note**: all researcher accounts should have passwords, but the `ubuntu` account will not have a listed password.
 
 ## Final Touches
 
