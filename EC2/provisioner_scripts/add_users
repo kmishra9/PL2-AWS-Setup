@@ -26,8 +26,9 @@ sudo ln -s $1 /etc/skel/$(basename $1)
 for ((i=0; i<$2; i++)); do
     user_name=researcher_$i
     user_password=$(pwgen -s -y 16 1)
+    group_name=sudo
 
-    sudo adduser $user_name --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password --ingroup sudo
+    sudo adduser $user_name --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password --ingroup $group_name
     echo $user_name:$user_password | sudo chpasswd
     echo "$user_name added successfully with password: $user_password to the '$group_name' " >> add_users.log
 done
@@ -42,3 +43,5 @@ do
   sleep 1
 done
 sudo apt -y autoremove
+
+sudo chmod 644 add_users.log
