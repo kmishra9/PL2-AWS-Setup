@@ -17,15 +17,19 @@ Each of the bash scripts included as part of this folder are used to set up the 
   - **Note**: running `install_updates` last will kick you out of your SSH session as the instance restarts. This is expected behaviour and you should be able to SSH back into it within ~1 minute.
 
 ## Script Usage & Descriptions
-1. `add_swap`
+1. `add_swap` (already run as part of Terraform provisioning)
   - **Usage**: `sudo ./add_swap`
   - **Description**: Adds a 30GB of swap file to the disk as an overflow location for Virtual RAM. The OS requires `mount_drives` to be run to mount the swap file appropriately
 
-2. `add_users`
+2. `mount_drives` (already run as part of Terraform provisioning)
+  - **Usage**: `sudo ./mount_drives [data_folder_path]`
+  - **Description**: Mounts swap, as well as a single EBS volume at `/dev/nvme1n1`. For some smaller or older instances, the EBS volume may be at `/dev/xvdf`, and running the script may result in an error. In this case, commenting out `sudo mount /dev/nvme1n1 $1` and replacing it with `sudo mount /dev/xvdf $1`.
+
+3. `add_users`
   - **Usage**: `sudo ./add_users [data_folder_path] [num_researchers]`
   - **Description**: Creates the number of accounts specified. Each account also has a symlink (alias) to the data folder path specified, with rwx permissions. The new users are named consistently as `researcher_x`, where `x` is an integer between [0, num_researchers). The accounts are also added to the `sudo` group and have SSH access enabled for them.
 
-3. `install_cloudwatch_logs_agent`
+4. `install_cloudwatch_logs_agent`
   - **Usage**: `sudo ./install_cloudwatch_logs_agent`
   - **Description**: Installs the Amazon CloudWatch Logs Agent and requires interactive input to configure it. This will log everything happening on the EC2 instance and store it in AWS CloudWatch (useful for security audit).
   - **Interactive Input**:
@@ -43,14 +47,10 @@ Each of the bash scripts included as part of this folder are used to set up the 
   - **Verifying Installation**: In the [CloudWatch Management Console](CloudWatch - AWS Console - Amazon.com
 https://console.aws.amazon.com/cloudwatch/home), you should be able to see a new log group and stream after the agent has been running for a few moments
 
-4. `install_programming_software`
+5. `install_programming_software`
   - **Usage**: `sudo ./install_programming_software`
   - **Description**: Installs several important linux development utilities, R, and RStudio Server (running on port `8787`). Python 2 and 3 already come preinstalled with the Amazon Machine Image (AMI) we're using. _A future version of this script will also install Anaconda and JupyterHub Server, for using Jupyter Notebooks and Python_.
 
-5. `install_updates`
+6. `install_updates`
   - **Usage**: `sudo ./install_updates`
   - **Description**: Installs Linux and package updates and restarts the server. Useful for general maintenance and cleanup. The script requires interactive input in some cases but you should generally accept the default options.
-
-6. `mount_drives`
-  - **Usage**: `sudo ./mount_drives [data_folder_path]`
-  - **Description**: Mounts swap, as well as a single EBS volume at `/dev/nvme1n1`. For some smaller or older instances, the EBS volume may be at `/dev/xvdf`, and running the script may result in an error. In this case, commenting out `sudo mount /dev/nvme1n1 $1` and replacing it with `sudo mount /dev/xvdf $1`.

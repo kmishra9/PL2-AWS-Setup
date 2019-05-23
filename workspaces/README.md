@@ -44,4 +44,4 @@ If SSH'ing normally or creating a tunnel doesn't work, there are a couple of thi
 4. Make absolutely sure that the public key you documented is identical to the output of `cat ~/.ssh/id_rsa.pub`. If it is not, run through the steps of SSH setup from the beginning.
 5. Did you misspell anything in the `~/.ssh/config`? Is the casing of the `hostname` correct?
 6. Has your administrator confirmed that they've authorized the public key you documented?
-7.
+7. If none of those apply, it might be a permissions issue. Contact your systems administrator
