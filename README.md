@@ -164,7 +164,7 @@ For the remainder of this section, you should be logged into your `Administratio
         - [AWS WorkDocs Drive - User Guide](https://docs.aws.amazon.com/workdocs/latest/userguide/workdocs_drive_help.html).
     - **From `Administration` Workspace to EC2 Analysis Instance**
       - Once your data is accessible to you on the `Administration` Workspace, there are several ways to transfer it to the EC2 Analysis Instance. I'll outline three below.
-        - **Note**: A reminder to run `./mount_drives` any time you start the EC2 Analysis Instance up (especially before you transfer the data). If you don't do this, the you'll be acidentally storing sensitive data on the (unencrypted) root volume of the instance at the path `/home/[data-folder-name]` instead of its correct place on an encrypted, attached, mounted EBS volume at that path.
+        - **Note**: A reminder to run `./mount_drives [DATA_FOLDER_PATH]` any time you start the EC2 Analysis Instance up (especially before you transfer the data). If you don't do this, the you'll be acidentally storing sensitive data on the (unencrypted) root volume of the instance at the path `/home/[data-folder-name]` instead of its correct place on an encrypted, attached, mounted EBS volume at that path.
         - **Note**: Oops. Maybe you've made a mistake in setting up Terraform and specified too small of a data volume. See the next section for more details on resizing EBS volumes.
         - **Method 1**: [Cyberduck](https://cyberduck.io/) (Recommended)
           - Start by downloading and installing Cyberduck for Windows 10 on your Workspace using the link above. This is a free application and will allow you to transfer things relatively simply and easily.
