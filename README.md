@@ -1,17 +1,13 @@
 # PL2-AWS-Setup
 
 ###### TODO
-  - Requesting more Workspaces for your region
   - Automated commenting out of AllowUsers
-  - Develop standardized email from admin => researchers in documentation
-  - Stata installation instructions on Linux and how to use it
-  - Create and link to an example, fake, filled-in PL2 Documentation Template
+  - Stata installation instructions on Linux and how to use it -- John Siano handling
   - Create a template MSSEI + update(redact(copy(KaiserFlu MSSEI)))
   - Document instructions on changing the device name and/or manual attachment of EBS devices to the AWS_Instance
   - Changing the size of your EBS data volume
   - Adapt [AWS User Setup Instructions](https://docs.google.com/document/d/1TjbceyJ2eE-uaxqfX-cccXCw3MgeO2wU54v6jOz1qj4/edit?usp=sharing) and [Flu AWS User Creation Guide](https://docs.google.com/document/d/1GA8IlGA6cBbR13UBnCRFe8TYaEjSZ3w9tMv6hGDVAj0/edit?usp=sharing)
   - Destroying your Setup + Resetting Up your Setup
-  - Implement GuardDuty, etc.
   - More details needed for sending programmatic credentials to UCB security team
 
 ## Overview
@@ -152,6 +148,7 @@ For the remainder of this section, you should be logged into your `Administratio
     - Follow the same steps you used to create the `Administration` Workspace to create Workspaces for each researcher.
       - **Note**: Each Workspaces username follows a standardized format, such as `Researcher_0` or `Researcher_11`, meaning you'll need to assign real people to these usernames in your copy of the Documentation Template as you create Workspaces for them.
       - **Note**: creating a workspace for each researcher will email them asking them to set up a password, just as the SPA email received one for the `Administration` Workspace.
+      - **Note**: By default, AWS imposes limits on the number of workspaces an account is allowed to create. If you try to create more workspaces than this limit, you will be prompted to explain why you need more workspaces. I'd recommend using [this template](https://docs.google.com/document/d/1DGIdOAucADomA3JPdEtvnhJT2Lv8Y5vrSeuv4ZF2YnE/edit?usp=sharing) I've generated for this setup's users. Turnaround time should be relatively quick (< 2 business days)
     - Immediately after creating the Workspaces, send an email to all researchers receiving a workspace explaining what to do. Here is a [template email](https://docs.google.com/document/d/18D-Rmr3Y5EkalVA8p9kLkrrsRvl12I-7RhPFeMy7fgc/edit?usp=sharing).
       - **Note**: in order to follow all instructions they are instructed to, they need to have several pieces of information in your project's copy of the documentation template, the most important of which is the highlighted `EC2_PRIVATE_IP` field
 
@@ -206,18 +203,20 @@ For the remainder of this section, you should be logged into your `Administratio
     - The Protocol endpoint should be "Email" and you should create subscriptions for the SPA email and any administrators to monitor for accidentally leaving the server running (incurring unnecessary charges).
       - **Note**: As is stated, after a subscription is created, you must confirm it -- do so from each subscribed administrator email, including the SPA's email.
 
-
 4. **MSSEI**
-    - For PL2 projects only, you will also need to complete a document outlining your project and declaring that it fulfills the [Minimum Security Standards for Electronic Information (MSSEI)](https://security.berkeley.edu/minimum-security-standards-electronic-information) that your data must abide by.
+    - For PL2 projects at UC Berkeley only, you will also need to complete a document outlining your project and declaring that it fulfills the [Minimum Security Standards for Electronic Information (MSSEI)](https://security.berkeley.edu/minimum-security-standards-electronic-information) that your data must abide by.
     - You can find a Template MSSEI to begin filling out [here]().
     - An example of a similar, completed MSSEI can be found [here](https://docs.google.com/document/d/1YqaoR8Z0DrhGTk2_UBGsBcFsrapPVFUzkLbekPCxrOU/edit?usp=sharing).
+
+5. **Orientation**
+    - All done! Now you and your teammates should get oriented with the setup and how to use it by checking out [a set of demo & training videos]() I've created for you. This should be sent out to each of your researchers to orient them as well.
 
 ## Administration in the Post-Terraform Era
 
 1. **Adding a New Researchers to the Project**
-    - Adding a new researcher will require you to work outside of the scope of Terraform automatically building things for you. Things are a bit more complicated than Terraform is able to handle, as Terraform's solution would involve destroying the existing setup and creating a new one with more users, which is generally untenable and inefficient. Instead, the new researchers will need to be manually added (likely by hiring a contractor of some sort). Here's a general list of things that would need to be done for a new researcher:
+    - Adding a new researcher will require you to work outside of the scope of Terraform automatically building things for you. Things are a bit more complicated than Terraform is able to handle, as Terraform's solution would involve destroying the existing setup and creating a new one with more users, which is generally untenable and inefficient. Instead, the new researchers will need to be manually added, which to be clear, isn't very difficult, but would likely by hiring a contractor of some sort. Here's a general list of things that would need to be done for a new researcher:
       - New IAM researcher account
-      - New Linux researcher account on EC2 instance
+      - New Linux researcher account on EC2 instance (with sudo access)
       - New AWS Workspace for researcher
       - SSH Tunnel configured from their workspace to EC2
       - Updated documentation template for all new accounts
