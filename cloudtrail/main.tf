@@ -70,3 +70,7 @@ resource "aws_sns_topic_subscription" "project_logs_sqs_target" {
   protocol  = "sqs"
   endpoint  = "${aws_sqs_queue.project_logs_queue.arn}"
 }
+
+resource "aws_guardduty_detector" "MyDetector" {
+  enable = true
+}
