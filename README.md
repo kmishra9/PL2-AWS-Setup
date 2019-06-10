@@ -13,6 +13,7 @@
   - Destroying your Setup + Resetting Up your Setup
   - Implement GuardDuty, etc.
   - More details needed for sending programmatic credentials to UCB security team
+  - cat ~/.ssh/id_rsa.pub | pbcopy
 
 ## Overview
 
