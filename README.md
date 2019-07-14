@@ -222,11 +222,11 @@ For the remainder of this section, you should be logged into your `Administratio
       - Updated documentation template for all new accounts
 
 2. **Changing the size of an EBS volume**
-    - **Note**: EBS volumes can be sized up, but never sized down. This makes "sizing down" far more of a manual process than is preferred (i.e. you must create a smaller volume, attach it to the instance, copy over everything from the larger to the smaller volume, detach both volumes, attach the smaller volume to the point the larger instance was attached to, delete the larger volume, etc.)
     - To do this, I recommend working through the documentation [outlined here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-modify-volume.html).
       - **Note**: If you're using the most up-to-date instance types, its very likely that it's a "Nitro-based instance", which will be helpful to know when you're following the docs.
       - **Note**: Though each of the content links from the top-level page linked above may be helpful, the most important ones will be "Requesting Modifications to Your EBS Volume" and "Extending a Linux filesystem After Resizing a Volume".
       - **Documentation**: This is an additional [step-by-step tutorial](https://hackernoon.com/tutorial-how-to-extend-aws-ebs-volumes-with-no-downtime-ec7d9e82426e) that may be helpful in case you get stuck
+    - **Note**: EBS volumes can be sized up, but never sized down. This makes "sizing down" far more of a manual process than is preferred (i.e. you must create a smaller volume, attach it to the instance, copy over everything from the larger to the smaller volume, detach both volumes, attach the smaller volume to the point the larger instance was attached to, delete the larger volume, etc.)
 
 
 3. **Destroying Your Setup**
