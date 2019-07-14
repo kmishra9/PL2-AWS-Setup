@@ -5,7 +5,6 @@
   - Stata installation instructions on Linux and how to use it -- John Siano handling
   - Create a template MSSEI + update(redact(copy(KaiserFlu MSSEI)))
   - Document instructions on changing the device name and/or manual attachment of EBS devices to the AWS_Instance
-  - Changing the size of your EBS data volume
   - Adapt [AWS User Setup Instructions](https://docs.google.com/document/d/1TjbceyJ2eE-uaxqfX-cccXCw3MgeO2wU54v6jOz1qj4/edit?usp=sharing) and [Flu AWS User Creation Guide](https://docs.google.com/document/d/1GA8IlGA6cBbR13UBnCRFe8TYaEjSZ3w9tMv6hGDVAj0/edit?usp=sharing)
   - Destroying your Setup + Resetting Up your Setup
   - More details needed for sending programmatic credentials to UCB security team
@@ -214,7 +213,7 @@ For the remainder of this section, you should be logged into your `Administratio
 ## Administration in the Post-Terraform Era
 
 1. **Adding a New Researchers to the Project**
-    - Adding a new researcher will require you to work outside of the scope of Terraform automatically building things for you. Things are a bit more complicated than Terraform is able to handle, as Terraform's solution would involve destroying the existing setup and creating a new one with more users, which is generally untenable and inefficient. Instead, the new researchers will need to be manually added, which to be clear, isn't very difficult, but would likely by hiring a contractor of some sort. Here's a general list of things that would need to be done for a new researcher:
+    - Adding a new researcher will require you to work outside of the scope of Terraform automatically building things for you. Things are a bit more complicated than Terraform is able to handle, as Terraform's solution would involve destroying the existing setup and creating a new one with more users, which is generally untenable and inefficient. Instead, the new researchers will need to be manually added, which to be clear, isn't very difficult, but would likely by hiring a AWS contractor of some sort (or [contact me](mailto:kmishra9@berkeley.edu)). Here's a general list of things that would need to be done for a new researcher:
       - New IAM researcher account
       - New Linux researcher account on EC2 instance (with sudo access)
       - New AWS Workspace for researcher
@@ -222,4 +221,15 @@ For the remainder of this section, you should be logged into your `Administratio
       - Updated documentation template for all new accounts
 
 2. **Changing the size of an EBS volume**
-  -
+    - **Note**: EBS volumes can be sized up, but never sized down. This makes "sizing down" far more of a manual process than is preferred (i.e. you must create a smaller volume, attach it to the instance, copy over everything from the larger to the smaller volume, detach both volumes, attach the smaller volume to the point the larger instance was attached to, delete the larger volume, etc.)
+    - To do this, I recommend working through the documentation [outlined here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-modify-volume.html).
+      - **Note**: If you're using the most up-to-date instance types, its very likely that it's a "Nitro-based instance", which will be helpful to know when you're following the docs.
+      - **Note**: Though each of the content links from the top-level page linked above may be helpful, the most important ones will be "Requesting Modifications to Your EBS Volume" and "Extending a Linux filesystem After Resizing a Volume".
+
+
+3. **Destroying Your Setup**
+    - Thankfully, this is one of the easiest sections of this very long document, and much of what is required by DUAs and HIPAA guidelines is abstracted away. The a few ways to destroy your setup include:
+      1. [Close your AWS account](https://aws.amazon.com/premiumsupport/knowledge-center/close-aws-account/). Because it was built using a project-specific email, and because that project has now concluded, this is the most comprehensive and easy-to-use option.
+      2. If you would like to keep the AWS account around, Terraform has a way to destroy all of the infrastructure it is responsible for managing.
+        - **Note**: `terraform destroy`
+      3. [Cloud Nuke](https://blog.gruntwork.io/cloud-nuke-how-we-reduced-our-aws-bill-by-85-f3aced4e5876). This is an unsupported method that I haven't personally used, but one worth checking out if the above options don't quite encompass what you're after.
