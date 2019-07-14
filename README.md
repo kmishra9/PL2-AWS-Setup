@@ -226,6 +226,7 @@ For the remainder of this section, you should be logged into your `Administratio
     - To do this, I recommend working through the documentation [outlined here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-modify-volume.html).
       - **Note**: If you're using the most up-to-date instance types, its very likely that it's a "Nitro-based instance", which will be helpful to know when you're following the docs.
       - **Note**: Though each of the content links from the top-level page linked above may be helpful, the most important ones will be "Requesting Modifications to Your EBS Volume" and "Extending a Linux filesystem After Resizing a Volume".
+      - **Documentation**: This is an additional [step-by-step tutorial](https://hackernoon.com/tutorial-how-to-extend-aws-ebs-volumes-with-no-downtime-ec7d9e82426e) that may be helpful in case you get stuck
 
 
 3. **Destroying Your Setup**
