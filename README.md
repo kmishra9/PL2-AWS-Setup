@@ -8,6 +8,7 @@
   - Adapt [AWS User Setup Instructions](https://docs.google.com/document/d/1TjbceyJ2eE-uaxqfX-cccXCw3MgeO2wU54v6jOz1qj4/edit?usp=sharing) and [Flu AWS User Creation Guide](https://docs.google.com/document/d/1GA8IlGA6cBbR13UBnCRFe8TYaEjSZ3w9tMv6hGDVAj0/edit?usp=sharing)
   - Destroying your Setup + Resetting Up your Setup
   - More details needed for sending programmatic credentials to UCB security team
+  - cat ~/.ssh/id_rsa.pub | pbcopy
 
 ## Overview
 
