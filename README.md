@@ -6,7 +6,7 @@
   - Create a template MSSEI + update(redact(copy(KaiserFlu MSSEI)))
   - Document instructions on changing the device name and/or manual attachment of EBS devices to the AWS_Instance
   - Adapt [AWS User Setup Instructions](https://docs.google.com/document/d/1TjbceyJ2eE-uaxqfX-cccXCw3MgeO2wU54v6jOz1qj4/edit?usp=sharing) and [Flu AWS User Creation Guide](https://docs.google.com/document/d/1GA8IlGA6cBbR13UBnCRFe8TYaEjSZ3w9tMv6hGDVAj0/edit?usp=sharing)
-  - Destroying your Setup + Resetting Up your Setup
+  - Resetting Up your Setup
   - More details needed for sending programmatic credentials to UCB security team
   - cat ~/.ssh/id_rsa.pub | pbcopy
 
@@ -224,8 +224,10 @@ For the remainder of this section, you should be logged into your `Administratio
 2. **Changing the size of an EBS volume**
     - **Note**: EBS volumes can be sized up, but never sized down. This makes "sizing down" far more of a manual process than is preferred (i.e. you must create a smaller volume, attach it to the instance, copy over everything from the larger to the smaller volume, detach both volumes, attach the smaller volume to the point the larger instance was attached to, delete the larger volume, etc.)
     - To do this, I recommend working through the documentation [outlined here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-modify-volume.html).
-      - **Note**: If you're using the most up-to-date instance types, its very likely that it's a "Nitro-based instance", which will be helpful to know when you're following the docs.
       - **Note**: Though each of the content links from the top-level page linked above may be helpful, the most important ones will be "Requesting Modifications to Your EBS Volume" and "Extending a Linux filesystem After Resizing a Volume".
+      - **Note**: If you're using the most up-to-date instance types, its very likely that it's a "Nitro-based instance", which will be helpful to know when you're following the docs.
+      - **Note**: Additionally, the volume, if it is a general purpose EBS volume and attached at a `/dev/nvme`-type path, is likely to be an "XFS" filesystem. Either way, you can confirm this with the output of the command `sudo file -s /dev/nvme?n*`. If it is attached at a `/dev/xvd`-type path, it is likely to be an `ext-4` filesystem. When extending the Linux filesystem, they have distinct steps they need to go through. For nearly all setups, your EBS volume will be an XFS filesystem and you'll need to use the command `xfs_growfs` as it is documented in the "Extending a Linux filesysytem After Resizing a Volume" page. The XFS tools should already be installed on your instance so you can skip the installation. This entire note is especially relevant if you get [this error](https://stackoverflow.com/questions/26305376/resize2fs-bad-magic-number-in-super-block-while-trying-to-open).
+
 
 
 3. **Destroying Your Setup**

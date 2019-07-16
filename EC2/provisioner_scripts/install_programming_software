@@ -14,7 +14,7 @@ do
   echo "Waiting for lock"
   sleep 1
 done
-sudo apt-get -y install libopenblas-base  make gcc git pandoc unzip curl libssl-dev gdebi-core nfs-common
+sudo apt-get -y install libopenblas-base  make gcc git pandoc unzip curl libssl-dev gdebi-core nfs-common ncdu
 
 bash -c "export PKG_CONFIG_PATH=$(sudo find / -name 'openssl.pc')"
 
