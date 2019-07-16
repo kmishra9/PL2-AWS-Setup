@@ -222,14 +222,12 @@ For the remainder of this section, you should be logged into your `Administratio
       - Updated documentation template for all new accounts
 
 2. **Changing the size of an EBS volume**
-    - **Note**: EBS volumes can be sized up, but never sized down. This makes "sizing down" far more of a manual process than is preferred (i.e. you must create a smaller volume, attach it to the instance, copy over everything from the larger to the smaller volume, detach both volumes, attach the smaller volume to the point the larger instance was attached to, delete the larger volume, etc.)
     - To do this, I recommend working through the documentation [outlined here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-modify-volume.html).
       - **Note**: Though each of the content links from the top-level page linked above may be helpful, the most important ones will be "Requesting Modifications to Your EBS Volume" and "Extending a Linux filesystem After Resizing a Volume".
       - **Note**: If you're using the most up-to-date instance types, its very likely that it's a "Nitro-based instance", which will be helpful to know when you're following the docs.
       - **Note**: Additionally, the volume, if it is a general purpose EBS volume and attached at a `/dev/nvme`-type path, is likely to be an "XFS" filesystem. Either way, you can confirm this with the output of the command `sudo file -s /dev/nvme?n*`. If it is attached at a `/dev/xvd`-type path, it is likely to be an `ext-4` filesystem. When extending the Linux filesystem, they have distinct steps they need to go through. For nearly all setups, your EBS volume will be an XFS filesystem and you'll need to use the command `xfs_growfs` as it is documented in the "Extending a Linux filesysytem After Resizing a Volume" page. The XFS tools should already be installed on your instance so you can skip the installation. This entire note is especially relevant if you get [this error](https://stackoverflow.com/questions/26305376/resize2fs-bad-magic-number-in-super-block-while-trying-to-open).
-
-
-
+      - **Documentation**: This is an additional [step-by-step tutorial](https://hackernoon.com/tutorial-how-to-extend-aws-ebs-volumes-with-no-downtime-ec7d9e82426e) that may be helpful in case you get stuck
+    - **Note**: EBS volumes can be sized up, but never sized down. This makes "sizing down" far more of a manual process than is preferred (i.e. you must create a smaller volume, attach it to the instance, copy over everything from the larger to the smaller volume, detach both volumes, attach the smaller volume to the point the larger instance was attached to, delete the larger volume, etc.)
 3. **Destroying Your Setup**
     - Thankfully, this is one of the easiest sections of this very long document, and much of what is required by DUAs and HIPAA guidelines is abstracted away. The a few ways to destroy your setup include:
       1. [Close your AWS account](https://aws.amazon.com/premiumsupport/knowledge-center/close-aws-account/). Because it was built using a project-specific email, and because that project has now concluded, this is the most comprehensive and easy-to-use option.
