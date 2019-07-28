@@ -6,6 +6,7 @@ Each of the bash scripts included as part of this folder are used to set up the 
 ## Getting Started
 1. Start by SSH'ing into your analysis instance from the `Administration` Workspace.
   - **Note**: The `Administration` Workspace has direct SSH access as the "ubuntu" user (command: `ssh ubuntu@[EC2_Private_IP]`, where you can find the EC2_Private_IP for an instance from the [EC2 Management Console](https://us-west-2.console.aws.amazon.com/ec2/v2/home?region=us-west-2#Instances:sort=desc:tag:Name)). Alternatively, if you've already set up SSH tunnels, you can use them to SSH in (command: `ssh tunnel`)
+
 2. Scripts should be run in the following order:
   - `add_swap` (already run as part of Terraform provisioning)
   - `mount_drives` (already run as part of Terraform provisioning)
@@ -15,6 +16,8 @@ Each of the bash scripts included as part of this folder are used to set up the 
   - `install_updates`
   - **Note**: reference the documentation below for details on _how to run_ each script (i.e. the arguments they take, additional instructions, what they do, etc.)
   - **Note**: running `install_updates` last will kick you out of your SSH session as the instance restarts. This is expected behaviour and you should be able to SSH back into it within ~1 minute.
+
+3. Additional, [nonprogrammatic documentation is included for installing Stata](https://docs.google.com/document/d/1PPVvi_2JXKwNhK9b5fVjQY_ua52d1a7-utZ_j7EP6fw/edit?usp=sharing) if that is of interest. This isn't an officially supported software, but other users have had success in the past and I'd be more than willing to answer any questions while you work through the documentation. 
 
 ## Script Usage & Descriptions
 1. `add_swap` (already run as part of Terraform provisioning)
