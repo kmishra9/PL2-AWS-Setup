@@ -43,5 +43,5 @@ If SSH'ing normally or creating a tunnel doesn't work, there are a couple of thi
 3. After creating an entry in `~/.ssh/config` for your ssh tunnel, you need to restart your terminal (close and open again).
 4. Make absolutely sure that the public key you documented is identical to the output of `cat ~/.ssh/id_rsa.pub`. If it is not, run through the steps of SSH setup from the beginning.
 5. Did you misspell anything in the `~/.ssh/config`? Is the casing of the `hostname` correct?
-6. Feel free to reference [additional documentation](https://help.ubuntu.com/community/SSH/OpenSSH/Keys) on SSH troubleshooting.
+6. Feel free to reference [additional documentation](https://help.ubuntu.com/community/SSH/OpenSSH/Keys) on SSH troubleshooting, as well as [examples and walkthroughs](https://blog.trackets.com/2014/05/17/ssh-tunnel-local-and-remote-port-forwarding-explained-with-examples.html) of correct SSH tunnels. 
 7. If none of those apply, contact your systems administrator. Have they checked that there are appropriate permissions on all folders? Have they confirmed that they've authorized the public key you documented? Have they checked out if there are any problems in `/etc/sshd.config`?
