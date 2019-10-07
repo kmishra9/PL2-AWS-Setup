@@ -47,8 +47,7 @@ Each of the bash scripts included as part of this folder are used to set up the 
     - **Initial Position**: Accept recommended initial position
     - **More log files to configure?** Type `N` and press `Enter` to finish
     - **Documentation**: Feel free to reference [additional documentation](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/QuickStartEC2Instance.html) on installing and configuring the CloudWatch Logs Agent
-  - **Verifying Installation**: In the [CloudWatch Management Console](CloudWatch - AWS Console - Amazon.com
-https://console.aws.amazon.com/cloudwatch/home), you should be able to see a new log group and stream after the agent has been running for a few moments
+  - **Verifying Installation**: In the [CloudWatch Management Console](https://console.aws.amazon.com/cloudwatch/home), you should be able to see a new log group and stream after the agent has been running for a few moments
 
 5. `install_programming_software`
   - **Usage**: `sudo ./install_programming_software`
