@@ -25,8 +25,8 @@ Each of the bash scripts included as part of this folder are used to set up the 
   - **Description**: Adds a 30GB of swap file to the disk as an overflow location for Virtual RAM. The OS requires `mount_drives` to be run to mount the swap file appropriately
 
 2. `mount_drives` (already run as part of Terraform provisioning)
-  - **Usage**: `sudo ./mount_drives [data_folder_path]`
-  - **Description**: Mounts swap, as well as a single EBS volume at `/dev/nvme1n1`. For some smaller or older instances, the EBS volume may be at `/dev/xvdf`, and running the script may result in an error. In this case, commenting out `sudo mount /dev/nvme1n1 $1` and replacing it with `sudo mount /dev/xvdf $1`.
+  - **Usage**: `sudo ./mount_drives [data_folder_path=/home/data]`
+  - **Description**: Mounts swap, as well as a single EBS volume at `/dev/nvme1n1`. For some smaller or older instances, the EBS volume may be at `/dev/xvdf`, and running the script may result in an error. In this case, commenting out `sudo mount /dev/nvme1n1 $1` and replacing it with `sudo mount /dev/xvdf $1`. `data_folder_path` defaults to `/home/data` if left unspecified
 
 3. `add_users`
   - **Usage**: `sudo ./add_users [data_folder_path] [num_researchers]`
