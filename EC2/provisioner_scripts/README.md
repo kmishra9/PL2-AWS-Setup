@@ -30,7 +30,7 @@ Each of the bash scripts included as part of this folder are used to set up the 
 
 3. `add_users`
   - **Usage**: `sudo ./add_users [data_folder_path] [num_researchers]`
-  - **Description**: Creates the number of accounts specified. Each account also has a symlink (alias) to the data folder path specified, with rwx permissions. The new users are named consistently as `researcher_x`, where `x` is an integer between [0, num_researchers). The accounts are also added to the `sudo` group and have SSH access enabled for them.
+  - **Description**: Creates the number of accounts specified. Each account also has a symlink (alias) to the data folder path specified, with rwx permissions, as well as the `mount_drives` script (which is assumed to be adjacent to `add_users` when it is run). The new users are named consistently as `researcher_x`, where `x` is an integer between [0, num_researchers). The accounts are also added to the `sudo` group and have SSH access enabled for them.
 
 4. `install_cloudwatch_logs_agent`
   - **Usage**: `sudo ./install_cloudwatch_logs_agent`
